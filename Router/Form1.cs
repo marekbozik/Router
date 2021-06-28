@@ -13,6 +13,18 @@ namespace Router
         public Form1()
         {
             InitializeComponent();
+            //tabc .Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            tabs.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            tableLayoutPanel4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            tableLayoutPanel3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            richTextBox2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            richTextBox3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            richTextBox4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            richTextBox5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            tableLayoutPanel2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+
+
             router = null;
             try
             {
@@ -64,6 +76,26 @@ namespace Router
                 }
             }).Start();
 
+            if (router != null)
+            {
+                Stats s = new Stats();
+                new Thread(() =>
+                {
+                    new Sniffer(router.Port1.DeviceInterface1, s).Sniffing();
+                }).Start();
+                new Thread(() =>
+                {
+                    while (true)
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                        richTextBox1.BeginInvoke(new Action(() =>
+                        {
+                            richTextBox2.Clear();
+                            richTextBox2.AppendText(s.GetStats());
+                        }));
+                    }
+                }).Start();
+            }
             
         }
 
@@ -153,12 +185,13 @@ namespace Router
             router.Port1.Mask1 = port1MaskTextBox.Text;
             router.Port2.IpAddress1 = ip2;
             router.Port2.Mask1 = port2MaskTextBox.Text;
-            routerStatusBar.AppendText(DateTime.Now.ToString() + " IP address changed\n");
 
             port1IpTextBox.Text = router.Port1.IpAddress1.ToString();
             port1MaskTextBox.Text = router.Port1.Mask1.ToString();
             port2IpTextBox.Text = router.Port2.IpAddress1.ToString();
             port2MaskTextBox.Text = router.Port2.Mask1.ToString();
+            routerStatusBar.AppendText(DateTime.Now.ToString() + " IP address changed\n");
+            router.Serialize();
         }
     }
 }
