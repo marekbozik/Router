@@ -17,35 +17,11 @@ namespace Router
     {
         private RouterPort port1;
         private RouterPort port2;
-
+           
+            
+    
         public Router() 
         {
-            /*
-            try
-            {
-                IFormatter formatter = new BinaryFormatter();
-                var stream = new FileStream("port1.txt", FileMode.Open, FileAccess.Read);
-                port1 = (RouterPort)formatter.Deserialize(stream);
-                stream.Close();
-            }
-            catch (Exception)
-            {
-                DialogResult res = MessageBox.Show("No loopback interface configured", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                throw new SerializeException();
-            }
-            try
-            {
-                IFormatter formatter = new BinaryFormatter();
-                var stream = new FileStream("port2.txt", FileMode.Open, FileAccess.Read);
-                port2 = (RouterPort)formatter.Deserialize(stream);
-                stream.Close();
-            }
-            catch (Exception)
-            {
-                DialogResult res = MessageBox.Show("No loopback interface configured", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                throw new SerializeException();
-            } */
-
             try
             {
                 string line;
@@ -116,19 +92,23 @@ namespace Router
                 throw new SerializeException();
             }
 
-
-
-
+            Initialize();
         }
 
         public Router(RouterPort rp1, RouterPort rp2)
         {
             port1 = rp1;
             port2 = rp2;
+            Initialize();
         }
 
         public RouterPort Port1 { get => port1; set => port1 = value; }
         public RouterPort Port2 { get => port2; set => port2 = value; }
+
+        private void Initialize()
+        {
+
+        }
 
         public void Serialize()
         {

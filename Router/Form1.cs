@@ -1,6 +1,7 @@
 ﻿using PcapDotNet.Core;
 using PcapDotNet.Packets.IpV4;
 using System;
+using System.Threading;
 using System.Windows.Forms;
 
 
@@ -28,17 +29,41 @@ namespace Router
 
             }
 
-            var devs = Router.GetPacketDevices();
-            for (int i = 0; i != devs.Count; ++i)
+            new Thread(() =>
             {
-                LivePacketDevice device = devs[i];
-                richTextBox1.AppendText((i + 1) + ". " + device.Name);
-                if (device.Description != null)
-                    richTextBox1.AppendText(" (" + device.Description + ")");
-                else
-                    richTextBox1.AppendText(" (No description available)");
-                richTextBox1.AppendText("\n");
-            }
+                var devs = Router.GetPacketDevices();
+                for (int i = 0; i != devs.Count; ++i)
+                {
+                    LivePacketDevice device = devs[i];
+
+                    var x  = richTextBox1.BeginInvoke(new Action(() =>
+                    {
+                        richTextBox1.AppendText((i + 1) + ". " + device.Name);
+                    }));
+
+                    while (!x.IsCompleted) ;
+                    
+                    if (device.Description != null)
+                    {
+                        x = richTextBox1.BeginInvoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText(" (" + device.Description + ")\n");
+                        }));
+                        while (!x.IsCompleted) ;
+                    }
+
+                    else
+                    {
+                        x = richTextBox1.BeginInvoke(new Action(() =>
+                        {
+                            richTextBox1.AppendText(" (No description available)");
+                            richTextBox1.AppendText("\n");
+                        }));
+                        while (!x.IsCompleted) ;
+                    }
+                }
+            }).Start();
+
             
         }
 
@@ -109,6 +134,31 @@ namespace Router
                 port2MaskTextBox.Text = router.Port2.Mask1.ToString();
                 interfaceInfoRich.AppendText(DateTime.Now.ToString() + " Settings changed \n");
             }
+        }
+
+        private void ipAddSetButton_Click(object sender, EventArgs e)
+        {
+            IpV4Address ip1, ip2;
+            try
+            {
+                ip1 = new IpV4Address(port1IpTextBox.Text);
+                ip2 = new IpV4Address(port2IpTextBox.Text);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error occured", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            router.Port1.IpAddress1 = ip1;
+            router.Port1.Mask1 = port1MaskTextBox.Text;
+            router.Port2.IpAddress1 = ip2;
+            router.Port2.Mask1 = port2MaskTextBox.Text;
+            routerStatusBar.AppendText(DateTime.Now.ToString() + " IP address changed\n");
+
+            port1IpTextBox.Text = router.Port1.IpAddress1.ToString();
+            port1MaskTextBox.Text = router.Port1.Mask1.ToString();
+            port2IpTextBox.Text = router.Port2.IpAddress1.ToString();
+            port2MaskTextBox.Text = router.Port2.Mask1.ToString();
         }
     }
 }

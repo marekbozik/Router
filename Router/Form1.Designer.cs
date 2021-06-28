@@ -51,6 +51,7 @@ namespace Router
             this.button1 = new System.Windows.Forms.Button();
             this.interfaceInfoRich = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.routerStatusBar = new System.Windows.Forms.RichTextBox();
             this.tabs.SuspendLayout();
             this.routerTab.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -78,6 +79,7 @@ namespace Router
             // 
             // routerTab
             // 
+            this.routerTab.Controls.Add(this.routerStatusBar);
             this.routerTab.Controls.Add(this.button2);
             this.routerTab.Controls.Add(this.tableLayoutPanel2);
             this.routerTab.Location = new System.Drawing.Point(4, 24);
@@ -96,6 +98,7 @@ namespace Router
             this.button2.TabIndex = 1;
             this.button2.Text = "Set IP address";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.ipAddSetButton_Click);
             // 
             // tableLayoutPanel2
             // 
@@ -294,6 +297,14 @@ namespace Router
             this.label1.TabIndex = 1;
             this.label1.Text = "Interfaces";
             // 
+            // routerStatusBar
+            // 
+            this.routerStatusBar.Location = new System.Drawing.Point(0, 264);
+            this.routerStatusBar.Name = "routerStatusBar";
+            this.routerStatusBar.Size = new System.Drawing.Size(740, 96);
+            this.routerStatusBar.TabIndex = 2;
+            this.routerStatusBar.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -338,6 +349,7 @@ namespace Router
         private System.Windows.Forms.TextBox port2MaskTextBox;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.RichTextBox interfaceInfoRich;
+        private System.Windows.Forms.RichTextBox routerStatusBar;
     }
 }
 
