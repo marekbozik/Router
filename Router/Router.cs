@@ -17,9 +17,9 @@ namespace Router
     {
         private RouterPort port1;
         private RouterPort port2;
-           
-            
-    
+        private static IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
+
+
         public Router() 
         {
             try
@@ -136,11 +136,6 @@ namespace Router
 
         public static IList<LivePacketDevice> GetPacketDevices()
         {
-            IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
-
-            if (allDevices.Count == 0)
-                return null;
-
             return allDevices;
         }
     }

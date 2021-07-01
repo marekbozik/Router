@@ -41,48 +41,31 @@ namespace Router
 
             }
 
-            new Thread(() =>
+            var devs = Router.GetPacketDevices();
+            for (int i = 0; i != devs.Count; ++i)
             {
-                var devs = Router.GetPacketDevices();
-                for (int i = 0; i != devs.Count; ++i)
-                {
-                    LivePacketDevice device = devs[i];
+                LivePacketDevice device = devs[i];
 
-                    var x  = richTextBox1.BeginInvoke(new Action(() =>
-                    {
-                        richTextBox1.AppendText((i + 1) + ". " + device.Name);
-                    }));
-
-                    while (!x.IsCompleted) ;
+                richTextBox1.AppendText((i + 1) + ". " + device.Name);
                     
-                    if (device.Description != null)
-                    {
-                        x = richTextBox1.BeginInvoke(new Action(() =>
-                        {
-                            richTextBox1.AppendText(" (" + device.Description + ")\n");
-                        }));
-                        while (!x.IsCompleted) ;
-                    }
-
-                    else
-                    {
-                        x = richTextBox1.BeginInvoke(new Action(() =>
-                        {
-                            richTextBox1.AppendText(" (No description available)");
-                            richTextBox1.AppendText("\n");
-                        }));
-                        while (!x.IsCompleted) ;
-                    }
+                if (device.Description != null)
+                {
+                    richTextBox1.AppendText(" (" + device.Description + ")\n");
                 }
-            }).Start();
+                else
+                {
+                    richTextBox1.AppendText(" (No description available)");
+                    richTextBox1.AppendText("\n");
+                }
+            }
+
 
             if (router != null)
             {
                 Stats s = new Stats();
-                new Thread(() =>
-                {
-                    new Sniffer(router.Port1.DeviceInterface1, s).Sniffing();
-                }).Start();
+                Stats ss = new Stats();
+                new Thread(() => { new Sniffer(router.Port1.DeviceInterface1, s ).Sniffing();}).Start();
+                new Thread(() => { new Sniffer(router.Port2.DeviceInterface1, ss).Sniffing();}).Start();
                 new Thread(() =>
                 {
                     while (true)
@@ -93,13 +76,15 @@ namespace Router
                             richTextBox2.Clear();
                             richTextBox2.AppendText(s.GetStats());
                         }));
+                        richTextBox1.BeginInvoke(new Action(() =>
+                        {
+                            richTextBox3.Clear();
+                            richTextBox3.AppendText(ss.GetStats());
+                        }));
                     }
                 }).Start();
-            }
-            
+            }   
         }
-
-
 
         private void interfaceSaveButton_Click(object sender, EventArgs e)
         {
