@@ -7,23 +7,25 @@ using System.Windows.Forms;
 
 namespace Router
 {
-    public partial class Form1 : Form
+    public partial class RouterGui : Form
     {
         private Router router;
-        public Form1()
+        public RouterGui()
         {
             InitializeComponent();
-            //tabc .Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            tabs.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            tableLayoutPanel4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            tableLayoutPanel3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            richTextBox2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            richTextBox3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            richTextBox4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            richTextBox5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-            tableLayoutPanel2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-
+            
+            //design 
+            {
+                tabs.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+                tableLayoutPanel4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+                tableLayoutPanel3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+                richTextBox2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+                richTextBox3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+                richTextBox4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+                richTextBox5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+                button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+                tableLayoutPanel2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            }
 
             router = null;
             try
@@ -58,14 +60,19 @@ namespace Router
                     richTextBox1.AppendText("\n");
                 }
             }
+            
+            InStats();
+            
+        }
 
-
+        private void InStats()
+        {
             if (router != null)
             {
-                Stats s = new Stats();
-                Stats ss = new Stats();
-                new Thread(() => { new Sniffer(router.Port1.DeviceInterface1, s ).Sniffing();}).Start();
-                new Thread(() => { new Sniffer(router.Port2.DeviceInterface1, ss).Sniffing();}).Start();
+                Stats s1 = new Stats();
+                Stats s2 = new Stats();
+                new Thread(() => { new Sniffer(router.Port1.DeviceInterface1, s1).Sniffing(); }).Start();
+                new Thread(() => { new Sniffer(router.Port2.DeviceInterface1, s2).Sniffing(); }).Start();
                 new Thread(() =>
                 {
                     while (true)
@@ -74,16 +81,16 @@ namespace Router
                         richTextBox1.BeginInvoke(new Action(() =>
                         {
                             richTextBox2.Clear();
-                            richTextBox2.AppendText(s.GetStats());
+                            richTextBox2.AppendText(s1.GetStats());
                         }));
                         richTextBox1.BeginInvoke(new Action(() =>
                         {
                             richTextBox3.Clear();
-                            richTextBox3.AppendText(ss.GetStats());
+                            richTextBox3.AppendText(s2.GetStats());
                         }));
                     }
                 }).Start();
-            }   
+            }
         }
 
         private void interfaceSaveButton_Click(object sender, EventArgs e)
@@ -119,7 +126,7 @@ namespace Router
                 tabs.TabPages.Remove(appSettingTab);
                 tabs.TabPages.Add(routerTab);
                 tabs.TabPages.Add(appSettingTab);
-
+                InStats();
             }
             else
             {

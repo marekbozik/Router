@@ -10,6 +10,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using System.Threading;
 using PcapDotNet.Packets.IpV4;
+using PcapDotNet.Packets;
+using System.Collections.Concurrent;
+using PcapDotNet.Packets.Ethernet;
 
 namespace Router
 {
@@ -18,8 +21,8 @@ namespace Router
         private RouterPort port1;
         private RouterPort port2;
         private static IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
-
-
+        private MacTable macTable;
+        
         public Router() 
         {
             try
@@ -107,6 +110,30 @@ namespace Router
 
         private void Initialize()
         {
+            macTable = new MacTable();
+        }
+
+        public void Forward(RouterPort rp)
+        {
+            if (rp == port1 || rp == port2)
+            {
+                if (rp.Forwarding) return;
+                else rp.Forwarding = true;
+                
+                using (PacketCommunicator communicator =
+                rp.DeviceInterface1.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 1000))
+                {
+                    communicator.ReceivePackets(0, ForwardHandler);
+                }
+            }
+        }
+
+        private void ForwardHandler(Packet p)
+        {
+            if (Arp.IsArp(p))
+            {
+                p.Ethernet.Arp.
+            }
 
         }
 

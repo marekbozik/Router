@@ -1,7 +1,7 @@
 ﻿
 namespace Router
 {
-    partial class Form1
+    partial class RouterGui
     {
         /// <summary>
         ///  Required designer variable.
