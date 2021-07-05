@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Router
 {
-    abstract class GenericPacket
+    class GenericPacket
     {
         protected Packet packet;
         protected MacAddress sourceMacAddress;

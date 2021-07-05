@@ -31,10 +31,10 @@ namespace Router
             try
             {
                 router = new Router();
-                port1IpTextBox.Text = router.Port1.IpAddress1.ToString();
-                port1MaskTextBox.Text = router.Port1.Mask1.ToString();
-                port2IpTextBox.Text = router.Port2.IpAddress1.ToString();
-                port2MaskTextBox.Text = router.Port2.Mask1.ToString();
+                port1IpTextBox.Text = router.Port1.Ip.ToString();
+                port1MaskTextBox.Text = router.Port1.Mask.ToString();
+                port2IpTextBox.Text = router.Port2.Ip.ToString();
+                port2MaskTextBox.Text = router.Port2.Mask.ToString();
             }
             catch (SerializeException)
             {
@@ -71,8 +71,8 @@ namespace Router
             {
                 Stats s1 = new Stats();
                 Stats s2 = new Stats();
-                new Thread(() => { new Sniffer(router.Port1.DeviceInterface1, s1).Sniffing(); }).Start();
-                new Thread(() => { new Sniffer(router.Port2.DeviceInterface1, s2).Sniffing(); }).Start();
+                new Thread(() => { new Sniffer(router.Port1.DeviceInterface, s1).Sniffing(); }).Start();
+                new Thread(() => { new Sniffer(router.Port2.DeviceInterface, s2).Sniffing(); }).Start();
                 new Thread(() =>
                 {
                     while (true)
@@ -118,10 +118,10 @@ namespace Router
                     return;
                 }
                 router.Serialize();
-                port1IpTextBox.Text = router.Port1.IpAddress1.ToString();
-                port1MaskTextBox.Text = router.Port1.Mask1.ToString();
-                port2IpTextBox.Text = router.Port2.IpAddress1.ToString();
-                port2MaskTextBox.Text = router.Port2.Mask1.ToString();
+                port1IpTextBox.Text = router.Port1.Ip.ToString();
+                port1MaskTextBox.Text = router.Port1.Mask.ToString();
+                port2IpTextBox.Text = router.Port2.Ip.ToString();
+                port2MaskTextBox.Text = router.Port2.Mask.ToString();
                 interfaceInfoRich.AppendText(DateTime.Now.ToString() + " Settings changed \n");
                 tabs.TabPages.Remove(appSettingTab);
                 tabs.TabPages.Add(routerTab);
@@ -148,14 +148,14 @@ namespace Router
                     MessageBox.Show("Error occured", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                router.Port1 = new RouterPort(devs[indx1], router.Port1.IpAddress1, router.Port1.Mask1);
-                router.Port2 = new RouterPort(devs[indx2], router.Port2.IpAddress1, router.Port2.Mask1);
+                router.Port1 = new RouterPort(devs[indx1], router.Port1.Ip, router.Port1.Mask);
+                router.Port2 = new RouterPort(devs[indx2], router.Port2.Ip, router.Port2.Mask);
 
                 router.Serialize();
-                port1IpTextBox.Text = router.Port1.IpAddress1.ToString();
-                port1MaskTextBox.Text = router.Port1.Mask1.ToString();
-                port2IpTextBox.Text = router.Port2.IpAddress1.ToString();
-                port2MaskTextBox.Text = router.Port2.Mask1.ToString();
+                port1IpTextBox.Text = router.Port1.Ip.ToString();
+                port1MaskTextBox.Text = router.Port1.Mask.ToString();
+                port2IpTextBox.Text = router.Port2.Ip.ToString();
+                port2MaskTextBox.Text = router.Port2.Mask.ToString();
                 interfaceInfoRich.AppendText(DateTime.Now.ToString() + " Settings changed \n");
             }
         }
@@ -173,15 +173,15 @@ namespace Router
                 MessageBox.Show("Error occured", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            router.Port1.IpAddress1 = ip1;
-            router.Port1.Mask1 = port1MaskTextBox.Text;
-            router.Port2.IpAddress1 = ip2;
-            router.Port2.Mask1 = port2MaskTextBox.Text;
+            router.Port1.Ip = ip1;
+            router.Port1.Mask = port1MaskTextBox.Text;
+            router.Port2.Ip = ip2;
+            router.Port2.Mask = port2MaskTextBox.Text;
 
-            port1IpTextBox.Text = router.Port1.IpAddress1.ToString();
-            port1MaskTextBox.Text = router.Port1.Mask1.ToString();
-            port2IpTextBox.Text = router.Port2.IpAddress1.ToString();
-            port2MaskTextBox.Text = router.Port2.Mask1.ToString();
+            port1IpTextBox.Text = router.Port1.Ip.ToString();
+            port1MaskTextBox.Text = router.Port1.Mask.ToString();
+            port2IpTextBox.Text = router.Port2.Ip.ToString();
+            port2MaskTextBox.Text = router.Port2.Mask.ToString();
             routerStatusBar.AppendText(DateTime.Now.ToString() + " IP address changed\n");
             router.Serialize();
         }

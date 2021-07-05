@@ -21,7 +21,7 @@ namespace Router
         private RouterPort port1;
         private RouterPort port2;
         private static IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
-        private MacTable macTable;
+        private ArpTable macTable;
         
         public Router() 
         {
@@ -110,7 +110,7 @@ namespace Router
 
         private void Initialize()
         {
-            macTable = new MacTable();
+            macTable = new ArpTable(20);
         }
 
         public void Forward(RouterPort rp)
@@ -120,20 +120,31 @@ namespace Router
                 if (rp.Forwarding) return;
                 else rp.Forwarding = true;
                 
-                using (PacketCommunicator communicator =
-                rp.DeviceInterface1.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 1000))
+                if (rp == port1)
                 {
-                    communicator.ReceivePackets(0, ForwardHandler);
+                    using (PacketCommunicator communicator =
+                    rp.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 1000))
+                    {
+                        communicator.ReceivePackets(0, ForwardHandler1);
+                    }
                 }
             }
         }
 
-        private void ForwardHandler(Packet p)
+        private void ForwardHandler1(Packet p)
         {
-            if (Arp.IsArp(p))
+            GenericPacket gp = new GenericPacket(p);
+            macTable.UpdateTable(gp, 1);
+            if (ArpPacket.IsArp(p))
             {
-                p.Ethernet.Arp.
+                ArpPacket arp = new ArpPacket(p);
+                if (arp.IsRequest())
+                {
+                    arp.TryReply(macTable);
+                }
             }
+
+            
 
         }
 
@@ -143,7 +154,7 @@ namespace Router
             {
                 string[] lines =
                 {
-                    port1.DeviceInterface1.Name.ToString(), port1.IpAddress1.ToString(), port1.Mask1.ToString()
+                    port1.DeviceInterface.Name.ToString(), port1.Ip.ToString(), port1.Mask.ToString()
                 };
 
                 File.WriteAllLines("port1.txt", lines);
@@ -153,7 +164,7 @@ namespace Router
             {
                 string[] lines =
                 {
-                    port2.DeviceInterface1.Name.ToString(), port2.IpAddress1.ToString(), port2.Mask1.ToString()
+                    port2.DeviceInterface.Name.ToString(), port2.Ip.ToString(), port2.Mask.ToString()
                 };
 
                 File.WriteAllLines("port2.txt", lines);
