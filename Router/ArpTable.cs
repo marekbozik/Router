@@ -119,7 +119,40 @@ namespace Router
                 throw new Exception();
         }
 
+        public override string ToString()
+        {               //255.255.255.255.255 | 00:00:00:00:02:02 | 1 
+            string s =   "     IP             |        Mac        | Port | Timer \n";
+            foreach (var i in table)
+            {
+                int len = i.Value.Ip.ToString().Length;
+                s += i.Value.Ip.ToString();
+                for (int j = 0; j < 19 - len; j++)
+                {
+                    s += " ";
+                }
+                s +=  " | " + i.Value.Mac.ToString() + " |   " + i.Value.Port.ToString() + "  | " + Math.Abs((DateTime.Now - i.Value.Time).TotalSeconds).ToString() + "\n";
+            }
+            return s;
+        }
 
+        public List<string> GetTable()
+        {
+            List<string> l = new List<string>();
+            //l.Add("     IP             |        Mac        | Port | Timer \n");
+            foreach (var i in table)
+            {
+                string s = "";
+                int len = i.Value.Ip.ToString().Length;
+                s += i.Value.Ip.ToString();
+                for (int j = 0; j < 19 - len; j++)
+                {
+                    s += " ";
+                }
+                s += " | " + i.Value.Mac.ToString() + " |   " + i.Value.Port.ToString() + "  | " + Math.Abs((DateTime.Now - i.Value.Time).TotalSeconds).ToString() + "\n";
+                l.Add(s);
+            }
+            return l;
+        }
         /*
         //returns oldest mac or broadcast when table is empty
         public MacAddress CleanTable()

@@ -1,4 +1,5 @@
 ﻿using PcapDotNet.Core;
+using PcapDotNet.Packets.Ethernet;
 using PcapDotNet.Packets.IpV4;
 using System;
 using System.Threading;
@@ -62,7 +63,18 @@ namespace Router
             }
             
             InStats();
+            //richTextBox6.AppendText(router.ArpTable.ToString());
+            //var x = listView1.Items.Add("     IP             |        Mac        | Port | Timer");
+            //listView1.Columns[0].Text = "     IP             |        Mac        | Port | Timer";
+            listView1.View = View.Details;
+            foreach (var i in router.ArpTable.GetTable())
+            {
+                listView1.Items.Add(i);
+            }
             
+            //listBox1.Items.Add("Marek");
+            //listBox1.Items.Add("Jozo");
+
         }
 
         private void InStats()
@@ -107,8 +119,8 @@ namespace Router
                 }
                 try
                 {
-                    RouterPort rp1 = new RouterPort(devs[indx1], new IpV4Address("10.0.0.1"), "255.255.255.0");
-                    RouterPort rp2 = new RouterPort(devs[indx2], new IpV4Address("10.0.0.2"), "255.255.255.0");
+                    RouterPort rp1 = new RouterPort(devs[indx1], new IpV4Address("10.0.0.1"), "255.255.255.0", new MacAddress("00:00:00:00:01:01"));
+                    RouterPort rp2 = new RouterPort(devs[indx2], new IpV4Address("10.0.0.2"), "255.255.255.0", new MacAddress("00:00:00:00:02:02"));
                     router = new Router(rp1, rp2);
                 }
                 catch (Exception)
@@ -148,8 +160,8 @@ namespace Router
                     MessageBox.Show("Error occured", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                router.Port1 = new RouterPort(devs[indx1], router.Port1.Ip, router.Port1.Mask);
-                router.Port2 = new RouterPort(devs[indx2], router.Port2.Ip, router.Port2.Mask);
+                router.Port1 = new RouterPort(devs[indx1], router.Port1.Ip, router.Port1.Mask, new MacAddress("00:00:00:00:01:01"));
+                router.Port2 = new RouterPort(devs[indx2], router.Port2.Ip, router.Port2.Mask, new MacAddress("00:00:00:00:02:02"));
 
                 router.Serialize();
                 port1IpTextBox.Text = router.Port1.Ip.ToString();

@@ -21,7 +21,7 @@ namespace Router
         private RouterPort port1;
         private RouterPort port2;
         private static IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
-        private ArpTable macTable;
+        private ArpTable arpTable;
         
         public Router() 
         {
@@ -53,7 +53,7 @@ namespace Router
                 IpV4Address ip = new IpV4Address(l[1]);
                 string mask = l[2];
 
-                port1 = new RouterPort(pd, ip, mask);
+                port1 = new RouterPort(pd, ip, mask, new MacAddress("00:00:00:00:01:01"));
             }
             catch (Exception)
             {
@@ -88,7 +88,7 @@ namespace Router
                 IpV4Address ip = new IpV4Address(l[1]);
                 string mask = l[2];
 
-                port2 = new RouterPort(pd, ip, mask);
+                port2 = new RouterPort(pd, ip, mask, new MacAddress("00:00:00:00:02:02"));
             }
             catch (Exception)
             {
@@ -107,10 +107,11 @@ namespace Router
 
         public RouterPort Port1 { get => port1; set => port1 = value; }
         public RouterPort Port2 { get => port2; set => port2 = value; }
+        internal ArpTable ArpTable { get => arpTable; }
 
         private void Initialize()
         {
-            macTable = new ArpTable(20);
+            arpTable = new ArpTable(20, this);
         }
 
         public void Forward(RouterPort rp)
@@ -134,13 +135,13 @@ namespace Router
         private void ForwardHandler1(Packet p)
         {
             GenericPacket gp = new GenericPacket(p);
-            macTable.UpdateTable(gp, 1);
+            //macTable.UpdateTable(gp, 1);
             if (ArpPacket.IsArp(p))
             {
                 ArpPacket arp = new ArpPacket(p);
                 if (arp.IsRequest())
                 {
-                    arp.TryReply(macTable);
+                    //arp.TryReply(macTable);
                 }
             }
 
