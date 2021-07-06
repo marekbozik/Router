@@ -17,8 +17,8 @@ namespace Router
         public int AgingTime { get => agingTime; set => agingTime = value; }
 
         public ArpTable(int agingTime, Router r)
-        {
-            table = new ConcurrentDictionary<IpV4Address, ArpLog>();
+        {                                                        //concurrent level, initial size
+            table = new ConcurrentDictionary<IpV4Address, ArpLog>(4, 67);
             this.agingTime = agingTime;
             table[r.Port1.Ip] = new ArpLog(r.Port1.Ip, r.Port1.Mac, 1, DateTime.MaxValue);
             table[r.Port2.Ip] = new ArpLog(r.Port2.Ip, r.Port2.Mac, 2, DateTime.MaxValue);
@@ -44,19 +44,23 @@ namespace Router
             table[r.Port2.Ip] = new ArpLog(r.Port2.Ip, r.Port2.Mac, 2, DateTime.MaxValue);
         }
 
-        public IpV4Address FindMinAgingTime()
+        public IpV4Address FindNextDelete()
         {
-            double min = Double.MaxValue;
+            double max = Double.MinValue;
             IpV4Address ip = new IpV4Address();
             foreach (var i in table)
             {
+                if (i.Value.Time == DateTime.MaxValue) continue;
+
                 var x = (DateTime.Now - i.Value.Time).TotalMilliseconds;
-                if (x <= min)
+                if (x >= max)
                 {
-                    min = x;
+                    max = x;
                     ip = new IpV4Address(i.Value.Ip.ToString());
                 }
             }
+            if (max == Double.MinValue)
+                throw new Exception();
             return ip;
         }
 
