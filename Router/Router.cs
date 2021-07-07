@@ -20,8 +20,12 @@ namespace Router
     {
         private RouterPort port1;
         private RouterPort port2;
+        private PacketCommunicator sender1, sender2;
         private static IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
         private ArpTable arpTable;
+
+        private Stats out1;
+        private Stats out2;
         
         public Router() 
         {
@@ -108,10 +112,16 @@ namespace Router
         public RouterPort Port1 { get => port1; set => port1 = value; }
         public RouterPort Port2 { get => port2; set => port2 = value; }
         internal ArpTable ArpTable { get => arpTable; }
+        internal Stats Out1 { get => out1; }
+        internal Stats Out2 { get => out2; }
 
         private void Initialize()
         {
             arpTable = new ArpTable(20, this);
+            sender1 = port1.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous | PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
+            sender2 = port2.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous | PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
+            out1 = new Stats();
+            out2 = new Stats();
         }
 
         public void Forward(RouterPort rp)
@@ -141,7 +151,9 @@ namespace Router
                 ArpPacket arp = new ArpPacket(p);
                 if (arp.IsRequest())
                 {
-                    //arp.TryReply(macTable);
+                    Packet send = arp.MakeReply(arp, arpTable, this);
+                    sender1.SendPacket(send);
+                    out1.Increment(send);
                 }
             }
 

@@ -1,4 +1,5 @@
 ﻿using PcapDotNet.Packets;
+using PcapDotNet.Packets.Ethernet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,25 @@ namespace Router
         private int udp;
         private int icmp;
         private int http;
+        private MacAddress [] macs;
 
+
+        public Stats(Router r)
+        {
+            MacAddress[] mac = { r.Port1.Mac, r.Port2.Mac };
+            macs = mac;
+            this.ethernet = 0;
+            this.arp = 0;
+            this.ip = 0;
+            this.tcp = 0;
+            this.udp = 0;
+            this.icmp = 0;
+            this.http = 0;
+        }
 
         public Stats()
         {
+            macs = null;
             this.ethernet = 0;
             this.arp = 0;
             this.ip = 0;
@@ -82,6 +98,13 @@ namespace Router
 
         public void Increment(Packet p)
         {
+            if (macs != null)
+                foreach (var mac in macs)
+                {
+                    if (p.Ethernet.Source == mac)
+                        return;
+                }
+            
             int ethType = GetEthType(p.Buffer);
             if (ethType >= 2048)
             {

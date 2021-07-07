@@ -11,6 +11,7 @@ namespace Router
     public partial class RouterGui : Form
     {
         private Router router;
+        private Stats in1, in2;
         public RouterGui()
         {
             InitializeComponent();
@@ -62,27 +63,27 @@ namespace Router
                 }
             }
             
-            InStats();
-            //richTextBox6.AppendText(router.ArpTable.ToString());
-            //var x = listView1.Items.Add("     IP             |        Mac        | Port | Timer");
-            //listView1.Columns[0].Text = "     IP             |        Mac        | Port | Timer";
-            listView1.View = View.Details;
+            InOutStats();
+
+            arpListView.View = View.Details;
             foreach (var i in router.ArpTable.GetTable())
             {
-                listView1.Items.Add(i);
+                arpListView.Items.Add(i);
             }
-            
-            //listBox1.Items.Add("Marek");
-            //listBox1.Items.Add("Jozo");
+
+            new Thread(() => { router.Forward(router.Port1); }).Start();
+
 
         }
 
-        private void InStats()
+        private void InOutStats()
         {
             if (router != null)
             {
-                Stats s1 = new Stats();
-                Stats s2 = new Stats();
+                Stats s1 = new Stats(router);
+                in1 = s1;
+                Stats s2 = new Stats(router);
+                in2 = s2;
                 new Thread(() => { new Sniffer(router.Port1.DeviceInterface, s1).Sniffing(); }).Start();
                 new Thread(() => { new Sniffer(router.Port2.DeviceInterface, s2).Sniffing(); }).Start();
                 new Thread(() =>
@@ -90,15 +91,25 @@ namespace Router
                     while (true)
                     {
                         System.Threading.Thread.Sleep(1000);
-                        richTextBox1.BeginInvoke(new Action(() =>
+                        richTextBox2.BeginInvoke(new Action(() =>
                         {
                             richTextBox2.Clear();
                             richTextBox2.AppendText(s1.GetStats());
                         }));
-                        richTextBox1.BeginInvoke(new Action(() =>
+                        richTextBox3.BeginInvoke(new Action(() =>
                         {
                             richTextBox3.Clear();
                             richTextBox3.AppendText(s2.GetStats());
+                        }));
+                        richTextBox5.BeginInvoke(new Action(() =>
+                        {
+                            richTextBox5.Clear();
+                            richTextBox5.AppendText(router.Out1.GetStats());
+                        }));
+                        richTextBox4.BeginInvoke(new Action(() =>
+                        {
+                            richTextBox4.Clear();
+                            richTextBox4.AppendText(router.Out2.GetStats());
                         }));
                     }
                 }).Start();
@@ -138,7 +149,7 @@ namespace Router
                 tabs.TabPages.Remove(appSettingTab);
                 tabs.TabPages.Add(routerTab);
                 tabs.TabPages.Add(appSettingTab);
-                InStats();
+                InOutStats();
             }
             else
             {
@@ -196,6 +207,17 @@ namespace Router
             port2MaskTextBox.Text = router.Port2.Mask.ToString();
             routerStatusBar.AppendText(DateTime.Now.ToString() + " IP address changed\n");
             router.Serialize();
+        }
+
+        private void clearStatsButton_Click(object sender, EventArgs e)
+        {
+            if (router != null)
+            {
+                in1.ResetStats();
+                in2.ResetStats();
+                router.Out1.ResetStats();
+                router.Out2.ResetStats();
+            }
         }
     }
 }

@@ -66,9 +66,13 @@ namespace Router
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.label13 = new System.Windows.Forms.Label();
-            this.richTextBox7 = new System.Windows.Forms.RichTextBox();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.arpListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.richTextBox7 = new System.Windows.Forms.RichTextBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.tabs.SuspendLayout();
             this.routerTab.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -263,13 +267,15 @@ namespace Router
             this.tableLayoutPanel3.Controls.Add(this.label10, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.label11, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.label12, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.button5, 2, 3);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 3;
+            this.tableLayoutPanel3.RowCount = 4;
             this.tableLayoutPanel4.SetRowSpan(this.tableLayoutPanel3, 2);
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66666F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.66667F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.66667F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.86842F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.11842F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.11842F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.894736F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(659, 477);
             this.tableLayoutPanel3.TabIndex = 3;
             // 
@@ -278,7 +284,7 @@ namespace Router
             this.label8.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label8.Location = new System.Drawing.Point(3, 24);
+            this.label8.Location = new System.Drawing.Point(3, 8);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(57, 30);
             this.label8.TabIndex = 0;
@@ -287,7 +293,7 @@ namespace Router
             // 
             // richTextBox2
             // 
-            this.richTextBox2.Location = new System.Drawing.Point(70, 82);
+            this.richTextBox2.Location = new System.Drawing.Point(70, 50);
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.Size = new System.Drawing.Size(199, 91);
             this.richTextBox2.TabIndex = 1;
@@ -295,7 +301,7 @@ namespace Router
             // 
             // richTextBox3
             // 
-            this.richTextBox3.Location = new System.Drawing.Point(365, 82);
+            this.richTextBox3.Location = new System.Drawing.Point(365, 50);
             this.richTextBox3.Name = "richTextBox3";
             this.richTextBox3.Size = new System.Drawing.Size(200, 91);
             this.richTextBox3.TabIndex = 2;
@@ -303,7 +309,7 @@ namespace Router
             // 
             // richTextBox4
             // 
-            this.richTextBox4.Location = new System.Drawing.Point(365, 280);
+            this.richTextBox4.Location = new System.Drawing.Point(365, 246);
             this.richTextBox4.Name = "richTextBox4";
             this.richTextBox4.Size = new System.Drawing.Size(200, 93);
             this.richTextBox4.TabIndex = 3;
@@ -311,7 +317,7 @@ namespace Router
             // 
             // richTextBox5
             // 
-            this.richTextBox5.Location = new System.Drawing.Point(70, 280);
+            this.richTextBox5.Location = new System.Drawing.Point(70, 246);
             this.richTextBox5.Name = "richTextBox5";
             this.richTextBox5.Size = new System.Drawing.Size(199, 93);
             this.richTextBox5.TabIndex = 4;
@@ -321,7 +327,7 @@ namespace Router
             // 
             this.label9.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(491, 64);
+            this.label9.Location = new System.Drawing.Point(491, 32);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(38, 15);
             this.label9.TabIndex = 5;
@@ -331,7 +337,7 @@ namespace Router
             // 
             this.label10.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(47, 170);
+            this.label10.Location = new System.Drawing.Point(47, 137);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(17, 15);
             this.label10.TabIndex = 6;
@@ -341,7 +347,7 @@ namespace Router
             // 
             this.label11.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(37, 369);
+            this.label11.Location = new System.Drawing.Point(37, 333);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(27, 15);
             this.label11.TabIndex = 7;
@@ -351,7 +357,7 @@ namespace Router
             // 
             this.label12.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(195, 64);
+            this.label12.Location = new System.Drawing.Point(195, 32);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(38, 15);
             this.label12.TabIndex = 8;
@@ -475,17 +481,24 @@ namespace Router
             this.tableLayoutPanel5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.ColumnCount = 5;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel5.Controls.Add(this.label13, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.richTextBox7, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this.listView1, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.arpListView, 0, 2);
+            this.tableLayoutPanel5.Controls.Add(this.button3, 1, 1);
+            this.tableLayoutPanel5.Controls.Add(this.button4, 3, 1);
+            this.tableLayoutPanel5.Controls.Add(this.textBox1, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.richTextBox7, 4, 2);
             this.tableLayoutPanel5.Location = new System.Drawing.Point(6, 6);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 2;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 83.33334F));
+            this.tableLayoutPanel5.RowCount = 3;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 84F));
             this.tableLayoutPanel5.Size = new System.Drawing.Size(994, 482);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
@@ -493,45 +506,90 @@ namespace Router
             // 
             this.label13.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label13.AutoSize = true;
+            this.tableLayoutPanel5.SetColumnSpan(this.label13, 4);
             this.label13.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label13.Location = new System.Drawing.Point(196, 25);
+            this.label13.Location = new System.Drawing.Point(196, 4);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(104, 30);
             this.label13.TabIndex = 2;
             this.label13.Text = "ARP table";
+            // 
+            // arpListView
+            // 
+            this.arpListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.arpListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.tableLayoutPanel5.SetColumnSpan(this.arpListView, 4);
+            this.arpListView.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.arpListView.HideSelection = false;
+            this.arpListView.Location = new System.Drawing.Point(3, 79);
+            this.arpListView.Name = "arpListView";
+            this.arpListView.Scrollable = false;
+            this.arpListView.Size = new System.Drawing.Size(490, 400);
+            this.arpListView.TabIndex = 4;
+            this.arpListView.UseCompatibleStateImageBehavior = false;
+            this.arpListView.View = System.Windows.Forms.View.List;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "     IP             |        Mac        | Port | Timer";
+            this.columnHeader1.Width = 1000;
+            // 
+            // button3
+            // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Location = new System.Drawing.Point(127, 50);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(118, 23);
+            this.button3.TabIndex = 6;
+            this.button3.Text = "Set Timer";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button4.Location = new System.Drawing.Point(375, 50);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(118, 23);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "Remove";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(3, 50);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(118, 23);
+            this.textBox1.TabIndex = 5;
             // 
             // richTextBox7
             // 
             this.richTextBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox7.Location = new System.Drawing.Point(500, 3);
+            this.richTextBox7.Location = new System.Drawing.Point(499, 79);
             this.richTextBox7.Name = "richTextBox7";
-            this.richTextBox7.Size = new System.Drawing.Size(491, 74);
+            this.richTextBox7.Size = new System.Drawing.Size(492, 400);
             this.richTextBox7.TabIndex = 1;
             this.richTextBox7.Text = "";
             // 
-            // listView1
+            // button5
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this.listView1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(3, 83);
-            this.listView1.Name = "listView1";
-            this.listView1.Scrollable = false;
-            this.listView1.Size = new System.Drawing.Size(491, 396);
-            this.listView1.TabIndex = 4;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.List;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "     IP             |        Mac        | Port | Timer";
-            this.columnHeader1.Width = 1000;
+            this.button5.Location = new System.Drawing.Point(365, 442);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(291, 23);
+            this.button5.TabIndex = 9;
+            this.button5.Text = "Clear stats";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.clearStatsButton_Click);
             // 
             // RouterGui
             // 
@@ -601,8 +659,12 @@ namespace Router
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.RichTextBox richTextBox7;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView arpListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button5;
     }
 }
 
