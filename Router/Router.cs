@@ -151,7 +151,7 @@ namespace Router
                 ArpPacket arp = new ArpPacket(p);
                 if (arp.IsRequest())
                 {
-                    Packet send = arp.MakeReply(arp, arpTable, this);
+                    Packet send = arp.MakeReply(arp, arpTable, this, 1);
                     sender1.SendPacket(send);
                     out1.Increment(send);
                 }

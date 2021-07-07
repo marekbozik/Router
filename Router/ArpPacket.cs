@@ -72,10 +72,10 @@ namespace Router
             return builder.Build(DateTime.Now);
         }
 
-        private Packet RouterReply(ArpPacket req, Router r)
+        private Packet RouterReply(ArpPacket req, Router r, int incomePort)
         {
             RouterPort rp;
-            if (req.destinationIp == r.Port1.Ip)
+            if (incomePort == 1)
                 rp = r.Port1;
             else
                 rp = r.Port2;
@@ -83,7 +83,7 @@ namespace Router
             return ArpPacketBuilder( ArpOperation.Reply,
                                      rp.Mac,
                                      req.SourceMacAddress,
-                                     rp.Ip,
+                                     req.DestinationIp,
                                      req.SourceIp
                                     );
         }
@@ -93,7 +93,7 @@ namespace Router
             return null;
         }
 
-        public Packet MakeReply(ArpPacket req, ArpTable tab, Router r)
+        public Packet MakeReply(ArpPacket req, ArpTable tab, Router r, int incomePort)
         {
             if (!req.IsRequest()) throw new Exception();
             
@@ -104,7 +104,7 @@ namespace Router
                 throw new Exception();
 
             if (req.DestinationIp == r.Port1.Ip || req.DestinationIp == r.Port2.Ip)
-                return RouterReply(req, r);
+                return RouterReply(req, r, incomePort);
             else
                 return TableReply(req, tab);
 
