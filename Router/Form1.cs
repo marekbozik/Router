@@ -196,6 +196,17 @@ namespace Router
                 MessageBox.Show("Error occured", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            if (IpV4.IsConflict(ip1, port1MaskTextBox.Text, ip2, port2MaskTextBox.Text))
+            {
+                MessageBox.Show("Ip adress conflict!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (!IpV4.IsMask(port1MaskTextBox.Text) | !IpV4.IsMask(port2MaskTextBox.Text))
+            {
+                MessageBox.Show("Mask error", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             router.Port1.Ip = ip1;
             router.Port1.Mask = port1MaskTextBox.Text;
             router.Port2.Ip = ip2;
