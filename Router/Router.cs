@@ -13,6 +13,7 @@ using PcapDotNet.Packets.IpV4;
 using PcapDotNet.Packets;
 using System.Collections.Concurrent;
 using PcapDotNet.Packets.Ethernet;
+using PcapDotNet.Packets.Arp;
 
 namespace Router
 {
@@ -139,26 +140,192 @@ namespace Router
                         communicator.ReceivePackets(0, ForwardHandler1);
                     }
                 }
+                else
+                {
+                    using (PacketCommunicator communicator =
+                    rp.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 1000))
+                    {
+                        communicator.ReceivePackets(0, ForwardHandler2);
+                    }
+                }
             }
         }
 
         private void ForwardHandler1(Packet p)
         {
-            GenericPacket gp = new GenericPacket(p);
-            //macTable.UpdateTable(gp, 1);
-            if (ArpPacket.IsArp(p))
+            //GenericPacket gp = new GenericPacket(p);
+            if (IpV4Packet.IsIpV4Packet(p))
             {
-                ArpPacket arp = new ArpPacket(p);
-                if (arp.IsRequest())
+                IpV4Packet ip = new IpV4Packet(p);
+                //if(!IpV4.IsInSubnet(port1.Ip, port1.Mask, ip.SrcIp)) return;
+                
+                if (ArpPacket.IsArp(p))
                 {
-                    Packet send = arp.MakeReply(arp, arpTable, this, 1);
-                    sender1.SendPacket(send);
-                    out1.Increment(send);
+                    ArpPacket arp = new ArpPacket(p);
+                    if (arp.IsRequest())
+                    {
+                        Packet send = MakeArpReply(arp, 1);
+                        try { sender1.SendPacket(send); }
+                        catch (Exception) { }
+
+                        out1.Increment(send);
+                    }
+                    else if (arp.IsReply())
+                    {
+                        ArpReply(arp, ip);
+                    }
+                }
+            }
+        }
+
+        private void ForwardHandler2(Packet p)
+        {
+            //GenericPacket gp = new GenericPacket(p);
+            if (IpV4Packet.IsIpV4Packet(p))
+            {
+                IpV4Packet ip = new IpV4Packet(p);
+                //if(!IpV4.IsInSubnet(port1.Ip, port1.Mask, ip.SrcIp)) return;
+
+                if (ArpPacket.IsArp(p))
+                {
+                    ArpPacket arp = new ArpPacket(p);
+                    if (arp.IsRequest())
+                    {
+                        Packet send = MakeArpReply(arp, 2);
+                        try { sender2.SendPacket(send); }
+                        catch (Exception) { }
+
+                        out2.Increment(send);
+                    }
+                    else if (arp.IsReply())
+                    {
+                        ArpReply(arp, ip);
+                    }
+                }
+            }
+        }
+
+        private void ArpReply(ArpPacket arp, IpV4Packet ip)
+        {
+            if (arpTable.IsExpectedReply(ip.SrcIp, 1))
+            {
+                arpTable.Add(arp, 1);
+                new Thread(() => {
+                    Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
+                                                            port2.Mac,
+                                                            arpTable.GetRegistredArp(arp.SourceIp).SrcMac,
+                                                            arp.SourceIp,
+                                                            arpTable.GetRegistredArp(arp.SourceIp).SrcIp
+                                                           );
+                    arpTable.RegisterArpReply(ip.SrcIp);
+                    sender2.SendPacket(pac);
+                    out2.Increment(pac);
+                }).Start();
+            }
+            if (arpTable.IsExpectedReply(ip.SrcIp, 2))
+            {
+                arpTable.Add(arp, 2);
+                new Thread(() => {
+                    Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
+                                                            port1.Mac,
+                                                            arpTable.GetRegistredArp(arp.SourceIp).SrcMac,
+                                                            arp.SourceIp,
+                                                            arpTable.GetRegistredArp(arp.SourceIp).SrcIp
+                                                           );
+                    arpTable.RegisterArpReply(ip.SrcIp);
+                    sender1.SendPacket(pac);
+                    out1.Increment(pac);
+                }).Start();
+            }
+        }
+
+        private Packet ArpRouterReply(ArpPacket req, int incomePort)
+        {
+            RouterPort rp;
+            if (incomePort == 1)
+                rp = Port1;
+            else
+                rp = Port2;
+
+            return ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
+                                     rp.Mac,
+                                     req.SourceMacAddress,
+                                     req.DestinationIp,
+                                     req.SourceIp
+                                    );
+        }
+
+        private Packet ArpTableReply(ArpPacket req, ArpLog l, int incomePort)
+        {
+            RouterPort rp;
+            if (incomePort == 1)
+                rp = Port1;
+            else
+                rp = Port2;
+            return ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
+                                     rp.Mac,
+                                     req.SourceMacAddress,
+                                     req.DestinationIp,
+                                     req.SourceIp
+                                    );
+        }
+
+        private Packet MakeArpReply(ArpPacket req, int incomePort)
+        {
+            if (!req.IsRequest()) throw new Exception();
+
+            if (req.DestinationIp == Port1.Ip || req.DestinationIp == Port2.Ip)
+                return ArpRouterReply(req, incomePort);
+
+            ArpLog l;
+            if (arpTable.Contains(req.DestinationIp))
+            {
+                l = arpTable.GetLog(req.DestinationIp);
+                if (l.Port != incomePort)
+                {
+                    return ArpTableReply(req, l, incomePort);
+                }
+            }
+            else
+            {
+                if (incomePort == 1)
+                {
+                    if (IpV4.IsInSubnet(port2.Ip, port2.Mask, req.DestinationIp))
+                    {
+                        new Thread(() => {
+                            Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Request,
+                                                                    port2.Mac,
+                                                                    new MacAddress("FF:FF:FF:FF:FF:FF"),
+                                                                    port2.Ip,
+                                                                    req.DestinationIp
+                                                                   );
+                            arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 2);
+                            sender2.SendPacket(pac);
+                            out2.Increment(pac);
+                        }).Start();
+                    }
+                }
+                else if (incomePort == 2)
+                {
+                    if (IpV4.IsInSubnet(port1.Ip, port1.Mask, req.DestinationIp))
+                    {
+                        new Thread(() => {
+                            Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Request,
+                                                                    port1.Mac,
+                                                                    new MacAddress("FF:FF:FF:FF:FF:FF"),
+                                                                    port1.Ip,
+                                                                    req.DestinationIp
+                                                                   );
+                            arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 1);
+                            sender1.SendPacket(pac);
+                            out1.Increment(pac);
+                        }).Start();
+                    }
                 }
             }
 
-            
 
+            return null;
         }
 
         public void Serialize()

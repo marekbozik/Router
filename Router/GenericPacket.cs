@@ -23,5 +23,6 @@ namespace Router
 
         public MacAddress SourceMacAddress { get => sourceMacAddress; set => sourceMacAddress = value; }
         public MacAddress DestinationMacAddress { get => destinationMacAddress; set => destinationMacAddress = value; }
+        public Packet Packet { get => packet; }
     }
 }

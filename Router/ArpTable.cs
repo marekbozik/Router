@@ -12,6 +12,8 @@ namespace Router
     class ArpTable
     {
         private ConcurrentDictionary<IpV4Address, ArpLog> table;
+        private ConcurrentDictionary<IpV4Address, ArpRequestLog> requestsTable;
+
         private int agingTime;
 
         public int AgingTime { get => agingTime; set => agingTime = value; }
@@ -19,9 +21,37 @@ namespace Router
         public ArpTable(int agingTime, Router r)
         {                                                        //concurrent level, initial size
             table = new ConcurrentDictionary<IpV4Address, ArpLog>(4, 67);
+            requestsTable = new ConcurrentDictionary<IpV4Address, ArpRequestLog>(4, 19);
+
             this.agingTime = agingTime;
             table[r.Port1.Ip] = new ArpLog(r.Port1.Ip, r.Port1.Mac, 1, DateTime.MaxValue);
             table[r.Port2.Ip] = new ArpLog(r.Port2.Ip, r.Port2.Mac, 2, DateTime.MaxValue);
+        }
+
+        public void RegisterArpRequest(IpV4Address ip, IpV4Address srcIp, MacAddress srcMac, int port)
+        {
+            requestsTable[ip] = new ArpRequestLog(port, srcMac, srcIp);
+        }
+
+        public ArpRequestLog GetRegistredArp(IpV4Address ip)
+        {
+            if (requestsTable.ContainsKey(ip))
+                return requestsTable[ip];
+            else
+                throw new Exception();
+        }
+
+        public bool IsExpectedReply(IpV4Address ip, int port)
+        {
+            if (requestsTable.ContainsKey(ip))
+                if (requestsTable[ip].Port == port)
+                    return true;
+            return false;
+        }
+
+        public void RegisterArpReply(IpV4Address ip)
+        {
+            requestsTable.TryRemove(ip, out _);
         }
 
         public void UpdatePortsIp(Router r)

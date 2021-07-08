@@ -41,7 +41,7 @@ namespace Router
             return false;
         }
 
-        public Packet ArpPacketBuilder( ArpOperation operation,
+        public static Packet ArpPacketBuilder( ArpOperation operation,
                                         MacAddress srcMac,
                                         MacAddress dstMac,
                                         IpV4Address srcIp,
@@ -70,44 +70,6 @@ namespace Router
             PacketBuilder builder = new PacketBuilder(ethernetLayer, arpLayer);
 
             return builder.Build(DateTime.Now);
-        }
-
-        private Packet RouterReply(ArpPacket req, Router r, int incomePort)
-        {
-            RouterPort rp;
-            if (incomePort == 1)
-                rp = r.Port1;
-            else
-                rp = r.Port2;
-
-            return ArpPacketBuilder( ArpOperation.Reply,
-                                     rp.Mac,
-                                     req.SourceMacAddress,
-                                     req.DestinationIp,
-                                     req.SourceIp
-                                    );
-        }
-
-        private Packet TableReply(ArpPacket req, ArpTable tab)
-        {
-            return null;
-        }
-
-        public Packet MakeReply(ArpPacket req, ArpTable tab, Router r, int incomePort)
-        {
-            if (!req.IsRequest()) throw new Exception();
-            
-            ArpLog l;
-            if (tab.Contains(req.DestinationIp))
-                l = tab.GetLog(req.DestinationIp);
-            else
-                throw new Exception();
-
-            if (req.DestinationIp == r.Port1.Ip || req.DestinationIp == r.Port2.Ip)
-                return RouterReply(req, r, incomePort);
-            else
-                return TableReply(req, tab);
-
         }
 
         public static bool IsArp(Packet p)

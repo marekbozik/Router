@@ -63,7 +63,7 @@ namespace Router
                 }
             }
             
-            InOutStats();
+            Stats();
 
             arpListView.View = View.Details;
             foreach (var i in router.ArpTable.GetTable())
@@ -72,11 +72,12 @@ namespace Router
             }
 
             new Thread(() => { router.Forward(router.Port1); }).Start();
+            new Thread(() => { router.Forward(router.Port2); }).Start();
 
 
         }
 
-        private void InOutStats()
+        private void Stats()
         {
             if (router != null)
             {
@@ -111,6 +112,17 @@ namespace Router
                             richTextBox4.Clear();
                             richTextBox4.AppendText(router.Out2.GetStats());
                         }));
+                        arpListView.BeginInvoke(new Action(() =>
+                        {
+                            arpListView.Items.Clear();
+                            arpListView.View = View.Details;
+                            foreach (var i in router.ArpTable.GetTable())
+                            {
+                                arpListView.Items.Add(i);
+                            }
+                        }
+                        ));
+
                     }
                 }).Start();
             }
@@ -149,7 +161,7 @@ namespace Router
                 tabs.TabPages.Remove(appSettingTab);
                 tabs.TabPages.Add(routerTab);
                 tabs.TabPages.Add(appSettingTab);
-                InOutStats();
+                Stats();
             }
             else
             {

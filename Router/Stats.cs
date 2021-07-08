@@ -98,6 +98,8 @@ namespace Router
 
         public void Increment(Packet p)
         {
+            if (p == null) return;
+
             if (macs != null)
                 foreach (var mac in macs)
                 {

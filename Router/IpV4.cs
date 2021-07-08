@@ -11,6 +11,13 @@ namespace Router
     {
         private static readonly HashSet<string> masks = new HashSet<string> { "0.0.0.0", "128.0.0.0", "192.0.0.0", "224.0.0.0", "240.0.0.0", "248.0.0.0", "252.0.0.0", "254.0.0.0", "255.0.0.0", "255.128.0.0", "255.192.0.0", "255.224.0.0", "255.240.0.0", "255.248.0.0", "255.252.0.0", "255.254.0.0", "255.255.0.0", "255.255.128.0", "255.255.192.0", "255.255.224.0", "255.255.240.0", "255.255.248.0", "255.255.252.0", "255.255.254.0", "255.255.255.0", "255.255.255.128", "255.255.255.192", "255.255.255.224", "255.255.255.240", "255.255.255.248", "255.255.255.252", "255.255.255.254", "255.255.255.255" };
 
+        public static bool IsInSubnet(IpV4Address routerIp, string mask, IpV4Address other)
+        {
+            IpMatcher.Matcher m = new IpMatcher.Matcher();
+            m.Add(routerIp.ToString(), mask);
+            return m.MatchExists(other.ToString());
+        }
+
         public static bool IsConflict(IpV4Address ip1, string mask1, IpV4Address ip2, string mask2)
         {
             IpMatcher.Matcher m = new IpMatcher.Matcher();
