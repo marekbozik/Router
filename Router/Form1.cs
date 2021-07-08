@@ -114,12 +114,28 @@ namespace Router
                         }));
                         arpListView.BeginInvoke(new Action(() =>
                         {
+                            int q = 0;
+                            try
+                            {
+                                var x = arpListView.SelectedItems[0];
+                                q = x.Index;
+                            }
+                            catch (Exception) { }
+                            
                             arpListView.Items.Clear();
                             arpListView.View = View.Details;
+                            //int j = 0, q = 0;
                             foreach (var i in router.ArpTable.GetTable())
                             {
                                 arpListView.Items.Add(i);
                             }
+                            try
+                            {
+                                arpListView.Items[q].Selected = true;
+                                arpListView.Select();
+                            }
+                            catch (Exception) { }
+
                         }
                         ));
 
