@@ -151,58 +151,63 @@ namespace Router
             }
         }
 
+
         private void ForwardHandler1(Packet p)
         {
-            //GenericPacket gp = new GenericPacket(p);
             if (IpV4Packet.IsIpV4Packet(p))
             {
-                IpV4Packet ip = new IpV4Packet(p);
-                //if(!IpV4.IsInSubnet(port1.Ip, port1.Mask, ip.SrcIp)) return;
+                //IpV4Packet ip = new IpV4Packet(p);
                 
-                if (ArpPacket.IsArp(p))
-                {
-                    ArpPacket arp = new ArpPacket(p);
-                    if (arp.IsRequest())
-                    {
-                        Packet send = MakeArpReply(arp, 1);
-                        try { sender1.SendPacket(send); }
-                        catch (Exception) { }
+                if (ArpPacket.IsArp(p)) { ArpHandle(p, 1); }
 
-                        out1.Increment(send);
-                    }
-                    else if (arp.IsReply())
-                    {
-                        ArpReply(arp, ip);
-                    }
-                }
             }
         }
 
         private void ForwardHandler2(Packet p)
         {
-            //GenericPacket gp = new GenericPacket(p);
             if (IpV4Packet.IsIpV4Packet(p))
             {
-                IpV4Packet ip = new IpV4Packet(p);
-                //if(!IpV4.IsInSubnet(port1.Ip, port1.Mask, ip.SrcIp)) return;
+                //IpV4Packet ip = new IpV4Packet(p);
 
-                if (ArpPacket.IsArp(p))
+                if (ArpPacket.IsArp(p)) { ArpHandle(p, 2); }
+            }
+        }
+
+        private void ArpHandle(Packet p, int port)
+        {
+            if (port == 1)
+            {
+                ArpPacket arp = new ArpPacket(p);
+                if (arp.IsRequest())
                 {
-                    ArpPacket arp = new ArpPacket(p);
-                    if (arp.IsRequest())
-                    {
-                        Packet send = MakeArpReply(arp, 2);
-                        try { sender2.SendPacket(send); }
-                        catch (Exception) { }
+                    Packet send = MakeArpReply(arp, 1);
+                    try { sender1.SendPacket(send); }
+                    catch (Exception) { }
 
-                        out2.Increment(send);
-                    }
-                    else if (arp.IsReply())
-                    {
-                        ArpReply(arp, ip);
-                    }
+                    out1.Increment(send);
+                }
+                else if (arp.IsReply())
+                {
+                    ArpReply(arp, new IpV4Packet(p));
                 }
             }
+            else if (port == 2)
+            {
+                ArpPacket arp = new ArpPacket(p);
+                if (arp.IsRequest())
+                {
+                    Packet send = MakeArpReply(arp, 2);
+                    try { sender2.SendPacket(send); }
+                    catch (Exception) { }
+
+                    out2.Increment(send);
+                }
+                else if (arp.IsReply())
+                {
+                    ArpReply(arp, new IpV4Packet(p));
+                }
+            }
+
         }
 
         private void ArpReply(ArpPacket arp, IpV4Packet ip)
