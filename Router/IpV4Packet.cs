@@ -41,5 +41,12 @@ namespace Router
         {
             return IsIpV4Packet(p.Packet);
         }
+
+        public bool IsIcmp()
+        {
+            if (packet.Ethernet.IpV4.Protocol == IpV4Protocol.InternetControlMessageProtocol)
+                return true;
+            return false;
+        }
     }
 }
