@@ -200,112 +200,92 @@ namespace Router
         {
             if (arpTable.Contains(ipp.DstIp))
             {
-                /*
-                if (ipp.IsIcmp())//ipp.IsIcmp())
+                ContainsForward(ipp, port);
+            }
+            else
+            {
+                RouterPort rp = null;
+                if (port == 1) rp = port1;
+                else if (port == 2) rp = port2;
+                else return;
+                Packet p = ArpPacket.ArpPacketBuilder(ArpOperation.Request, rp.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), rp.Ip, ipp.DstIp);
+                if (port == 1)
                 {
-
-                    MacAddress srcM = new MacAddress(), dstM = new MacAddress();
-                    if (port == 1) { srcM = new MacAddress(port1.Mac.ToString()); }
-                    else if (port == 2) { srcM = new MacAddress(port2.Mac.ToString()); }
-
-                    dstM = new MacAddress(arpTable.GetLog(ipp.DstIp).Mac.ToString());
-
-                    EthernetLayer ethernetLayer = new EthernetLayer
-                    {
-                        Source = srcM,
-                        Destination = dstM,
-                        EtherType = EthernetType.None, 
-                    };
-
-                    IpV4Layer ipV4Layer =
-                        new IpV4Layer
-                        {
-                            Source = ipp.SrcIp,
-                            CurrentDestination = ipp.DstIp,
-                            Fragmentation = IpV4Fragmentation.None,
-                            HeaderChecksum = null, 
-                            Identification = 123,
-                            Options = IpV4Options.None,
-                            Protocol = null, 
-                            Ttl = 100,
-                            TypeOfService = 0,
-                        };
-
-                    List<byte> l = new List<byte>(2); // ipp.Packet.IpV4.Icmp[]
-                    l.Add(ipp.Packet.IpV4.Icmp[2]);
-                    l.Add(ipp.Packet.IpV4.Icmp[3]);
-                    string hexs = BitConverter.ToString(l.ToArray()).Replace("-", string.Empty);
-                    int iden = Convert.ToInt32(hexs, 16);
-
-                    l.Clear();
-                    l.Add(ipp.Packet.IpV4.Icmp[4]);
-                    l.Add(ipp.Packet.IpV4.Icmp[5]);
-                    hexs = BitConverter.ToString(l.ToArray()).Replace("-", string.Empty);
-                    int seq = Convert.ToInt32(hexs, 16);
-
-                    IcmpEchoLayer icmpLayer =
-                        new IcmpEchoLayer
-                        {
-                            Checksum = null, 
-                            Identifier = (ushort)iden,
-                            SequenceNumber = (ushort)seq,
-                        };
-
-                    PacketBuilder builder = new PacketBuilder(ethernetLayer, ipV4Layer, icmpLayer);
-                    if (port == 1) sender1.SendPacket(builder.Build(DateTime.Now));
-                    else if (port == 2) sender2.SendPacket(builder.Build(DateTime.Now));
-                   // return builder.Build(DateTime.Now);
-                }
-                */
-                
-                MacAddress srcM = new MacAddress(), dstM = new MacAddress();
-                //IpV4Address srcIp = new IpV4Address();
-                if (port == 1) 
-                {
-                    srcM = new MacAddress(port1.Mac.ToString());
-                   // srcIp = new IpV4Address(port1.Ip.ToString());
+                    sender1.SendPacket(p);
+                    out1.Increment(p);
                 }
                 else if (port == 2)
                 {
-                    srcM = new MacAddress(port2.Mac.ToString());
-                    //srcIp = new IpV4Address(port2.Ip.ToString());
+                    sender2.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, rp.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), rp.Ip, ipp.DstIp));
+                    out2.Increment(p);
                 }
-                dstM = new MacAddress(arpTable.GetLog(ipp.DstIp).Mac.ToString());
-
-                EthernetLayer ethernetLayer = new EthernetLayer
+                
+                new Thread(() =>
                 {
-                    Source = srcM,
-                    Destination = dstM,
-                    EtherType = EthernetType.IpV4
-                };
-                PayloadLayer payloadLayer =
-                new PayloadLayer
-                {
-                    Data = new Datagram(Encoding.ASCII.GetBytes(" ")),
-                };
-
-                PacketBuilder pb = new PacketBuilder(ethernetLayer); //, payloadLayer);
-                Packet pE = pb.Build(DateTime.Now);
-                Packet pI = ipp.Packet;
-
-                var eBytes = pE.Buffer;
-                var iBytes = pI.Buffer;
-
-                for (int i = 0; i < eBytes.Length-1; i++)
-                {
-                    iBytes[i] = eBytes[i];
-                }
-
-                string hexS = BitConverter.ToString(iBytes).Replace("-", string.Empty); ;
-
-                Packet p = Packet.FromHexadecimalString(hexS, DateTime.Now, DataLinkKind.Ethernet);
-
-                if (port == 1) sender1.SendPacket(p);
-                else if (port == 2) sender2.SendPacket(p);
+                    //Try to get arp response in max 1s 
+                    for (int i = 0; i < 20; i++)
+                    {
+                        if (arpTable.Contains(ipp.DstIp))
+                        {
+                            ContainsForward(ipp, port);
+                            return;
+                        }
+                        Thread.Sleep(50);
+                    }
+                }).Start();
                 
             }
 
 
+        }
+
+        private void ContainsForward(IpV4Packet ipp, int port)
+        {
+            MacAddress srcM = new MacAddress(), dstM = new MacAddress();
+            if (port == 1) { srcM = new MacAddress(port1.Mac.ToString()); }
+            else if (port == 2) { srcM = new MacAddress(port2.Mac.ToString()); }
+
+            dstM = new MacAddress(arpTable.GetLog(ipp.DstIp).Mac.ToString());
+
+            EthernetLayer ethernetLayer = new EthernetLayer
+            {
+                Source = srcM,
+                Destination = dstM,
+                EtherType = EthernetType.IpV4
+            };
+
+            PayloadLayer payloadLayer =
+            new PayloadLayer
+            {
+                Data = new Datagram(Encoding.ASCII.GetBytes(" ")),
+            };
+
+            PacketBuilder pb = new PacketBuilder(ethernetLayer);
+            Packet pE = pb.Build(DateTime.Now);
+            Packet pI = ipp.Packet;
+
+            var eBytes = pE.Buffer;
+            var iBytes = pI.Buffer;
+
+            for (int i = 0; i < eBytes.Length - 1; i++)
+            {
+                iBytes[i] = eBytes[i];
+            }
+
+            string hexS = BitConverter.ToString(iBytes).Replace("-", string.Empty); ;
+
+            Packet p = Packet.FromHexadecimalString(hexS, DateTime.Now, DataLinkKind.Ethernet);
+
+            if (port == 1)
+            {
+                sender1.SendPacket(p);
+                out1.Increment(p);
+            }
+            else if (port == 2)
+            {
+                sender2.SendPacket(p);
+                out2.Increment(p);
+            }
         }
 
         private void ArpHandle(Packet p, int port)
@@ -323,7 +303,7 @@ namespace Router
                 }
                 else if (arp.IsReply())
                 {
-                    ArpReply(arp, new IpV4Packet(p));
+                    ArpReply(arp, new IpV4Packet(p), port);
                 }
             }
             else if (port == 2)
@@ -339,14 +319,19 @@ namespace Router
                 }
                 else if (arp.IsReply())
                 {
-                    ArpReply(arp, new IpV4Packet(p));
+                    ArpReply(arp, new IpV4Packet(p), port);
                 }
             }
 
         }
 
-        private void ArpReply(ArpPacket arp, IpV4Packet ip)
+        private void ArpReply(ArpPacket arp, IpV4Packet ip, int port)
         {
+            if (arp.DestinationIp == port1.Ip || arp.DestinationIp == port2.Ip)
+            {
+                arpTable.Add(arp, port);
+                return;
+            }
             if (arpTable.IsExpectedReply(ip.SrcIp, 1))
             {
                 arpTable.Add(arp, 1);
