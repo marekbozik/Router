@@ -117,6 +117,8 @@ namespace Router
 
         public void Remove(IpV4Address ip)
         {
+            if (table[ip].Time == DateTime.MaxValue)
+                return;
             ArpLog log;
             table.TryRemove(ip, out log);
         }
@@ -199,11 +201,18 @@ namespace Router
                 string s = "";
                 int len = i.Value.Ip.ToString().Length;
                 s += i.Value.Ip.ToString();
+
+                string time = null;
+                if (i.Value.Time != DateTime.MaxValue)
+                    time = Math.Abs((DateTime.Now - i.Value.Time).TotalSeconds).ToString();
+                else
+                    time = "-";
+
                 for (int j = 0; j < 19 - len; j++)
                 {
                     s += " ";
                 }
-                s += " | " + i.Value.Mac.ToString() + " |   " + i.Value.Port.ToString() + "  | " + Math.Abs((DateTime.Now - i.Value.Time).TotalSeconds).ToString() + "\n";
+                s += " | " + i.Value.Mac.ToString() + " |   " + i.Value.Port.ToString() + "  | " + time + "\n";
                 l.Add(s);
             }
             return l;

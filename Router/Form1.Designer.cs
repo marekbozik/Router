@@ -54,6 +54,7 @@ namespace Router
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.button5 = new System.Windows.Forms.Button();
             this.appSettingTab = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.intPort1 = new System.Windows.Forms.TextBox();
@@ -72,7 +73,6 @@ namespace Router
             this.button4 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox7 = new System.Windows.Forms.RichTextBox();
-            this.button5 = new System.Windows.Forms.Button();
             this.tabs.SuspendLayout();
             this.routerTab.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -363,6 +363,18 @@ namespace Router
             this.label12.TabIndex = 8;
             this.label12.Text = "Port 1";
             // 
+            // button5
+            // 
+            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button5.Location = new System.Drawing.Point(365, 442);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(291, 23);
+            this.button5.TabIndex = 9;
+            this.button5.Text = "Clear stats";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.clearStatsButton_Click);
+            // 
             // appSettingTab
             // 
             this.appSettingTab.Controls.Add(this.tableLayoutPanel1);
@@ -531,6 +543,8 @@ namespace Router
             this.arpListView.TabIndex = 4;
             this.arpListView.UseCompatibleStateImageBehavior = false;
             this.arpListView.View = System.Windows.Forms.View.List;
+            this.arpListView.Enter += new System.EventHandler(this.arpListView_Enter);
+            this.arpListView.Leave += new System.EventHandler(this.arpListView_Leave);
             // 
             // columnHeader1
             // 
@@ -558,6 +572,7 @@ namespace Router
             this.button4.TabIndex = 7;
             this.button4.Text = "Remove";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.arpTableRemove_Click);
             // 
             // textBox1
             // 
@@ -578,18 +593,6 @@ namespace Router
             this.richTextBox7.Size = new System.Drawing.Size(492, 400);
             this.richTextBox7.TabIndex = 1;
             this.richTextBox7.Text = "";
-            // 
-            // button5
-            // 
-            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(365, 442);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(291, 23);
-            this.button5.TabIndex = 9;
-            this.button5.Text = "Clear stats";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.clearStatsButton_Click);
             // 
             // RouterGui
             // 

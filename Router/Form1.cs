@@ -12,6 +12,7 @@ namespace Router
     {
         private Router router;
         private Stats in1, in2;
+        private bool arpViewFocus;
         public RouterGui()
         {
             InitializeComponent();
@@ -73,7 +74,7 @@ namespace Router
 
             new Thread(() => { router.Forward(router.Port1); }).Start();
             new Thread(() => { router.Forward(router.Port2); }).Start();
-
+            arpViewFocus = false;
 
         }
 
@@ -116,6 +117,7 @@ namespace Router
                         {
                             if (tabs.SelectedTab == tabPage1)
                             {
+                                
                                 int q = 0;
                                 try
                                 {
@@ -131,12 +133,16 @@ namespace Router
                                 {
                                     arpListView.Items.Add(i);
                                 }
-                                try
+                                if (arpViewFocus)
                                 {
-                                    arpListView.Items[q].Selected = true;
-                                    arpListView.Select();
+                                    try
+                                    {
+                                        arpListView.Items[q].Selected = true;
+                                        arpListView.Select();
+                                    }
+                                    catch (Exception) { }
                                 }
-                                catch (Exception) { }
+
                             }
                         }
                         ));
@@ -251,6 +257,33 @@ namespace Router
 
             routerStatusBar.AppendText(DateTime.Now.ToString() + " IP address changed\n");
             router.Serialize();
+        }
+
+        private void arpTableRemove_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var x = arpListView.SelectedItems[0];
+                var s = x.Text.Split(' ');
+                router.ArpTable.Remove(new IpV4Address(s[0]));
+
+            }
+            catch (Exception)
+            {
+
+                
+            }
+            
+        }
+
+        private void arpListView_Enter(object sender, EventArgs e)
+        {
+            arpViewFocus = true;
+        }
+
+        private void arpListView_Leave(object sender, EventArgs e)
+        {
+            arpViewFocus = false;
         }
 
         private void clearStatsButton_Click(object sender, EventArgs e)
