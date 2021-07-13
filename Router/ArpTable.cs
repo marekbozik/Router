@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Router
@@ -26,6 +27,39 @@ namespace Router
             this.agingTime = agingTime;
             table[r.Port1.Ip] = new ArpLog(r.Port1.Ip, r.Port1.Mac, 1, DateTime.MaxValue);
             table[r.Port2.Ip] = new ArpLog(r.Port2.Ip, r.Port2.Mac, 2, DateTime.MaxValue);
+            new Thread(() => { AutoRemove(); }).Start();
+        }
+
+        private void AutoRemove()
+        {
+            while (true)
+            {
+                int time = agingTime;
+                var ip = FindNextDelete();
+                double x;
+                if (Contains(ip))
+                {
+                    x = agingTime - (GetLog(ip).Time - DateTime.Now).TotalSeconds;
+                    bool flag = false;
+                    for (int i = 0; i < x; i++)
+                    {
+                        if (time != agingTime)
+                        {
+                            flag = true;
+                            break;
+                        }
+                        Thread.Sleep(1000);
+                    }
+                    if (flag == false)
+                    {
+                        Remove(ip);
+                    }
+                    
+                }
+                Thread.Sleep(100);
+
+            }
+
         }
 
         public void RegisterArpRequest(IpV4Address ip, IpV4Address srcIp, MacAddress srcMac, int port)
