@@ -72,6 +72,27 @@ namespace Router
 
             table[r.Port1.Ip] = new ArpLog(r.Port1.Ip, r.Port1.Mac, 1, DateTime.MaxValue);
             table[r.Port2.Ip] = new ArpLog(r.Port2.Ip, r.Port2.Mac, 2, DateTime.MaxValue);
+
+            List<IpV4Address> toRemoveList = new List<IpV4Address>();
+            foreach (var a in table)
+            {
+                if (a.Value.Ip == r.Port1.Ip || a.Value.Ip == r.Port2.Ip) continue;
+                else
+                {
+                    if (IpV4.IsInSubnet(r.Port1.Ip, r.Port1.Mask, a.Value.Ip) || IpV4.IsInSubnet(r.Port2.Ip, r.Port2.Mask, a.Value.Ip))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        toRemoveList.Add(new IpV4Address(a.Value.Ip.ToString()));
+                    }
+                }
+            }
+            foreach (var rem in toRemoveList)
+            {
+                table.TryRemove(rem, out log);
+            }
         }
 
         public IpV4Address FindNextDelete()

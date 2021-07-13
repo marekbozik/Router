@@ -114,28 +114,30 @@ namespace Router
                         }));
                         arpListView.BeginInvoke(new Action(() =>
                         {
-                            int q = 0;
-                            try
+                            if (tabs.SelectedTab == tabPage1)
                             {
-                                var x = arpListView.SelectedItems[0];
-                                q = x.Index;
-                            }
-                            catch (Exception) { }
-                            
-                            arpListView.Items.Clear();
-                            arpListView.View = View.Details;
-                            //int j = 0, q = 0;
-                            foreach (var i in router.ArpTable.GetTable())
-                            {
-                                arpListView.Items.Add(i);
-                            }
-                            try
-                            {
-                                arpListView.Items[q].Selected = true;
-                                arpListView.Select();
-                            }
-                            catch (Exception) { }
+                                int q = 0;
+                                try
+                                {
+                                    var x = arpListView.SelectedItems[0];
+                                    q = x.Index;
+                                }
+                                catch (Exception) { }
 
+                                arpListView.Items.Clear();
+                                arpListView.View = View.Details;
+                                //int j = 0, q = 0;
+                                foreach (var i in router.ArpTable.GetTable())
+                                {
+                                    arpListView.Items.Add(i);
+                                }
+                                try
+                                {
+                                    arpListView.Items[q].Selected = true;
+                                    arpListView.Select();
+                                }
+                                catch (Exception) { }
+                            }
                         }
                         ));
 
@@ -207,6 +209,7 @@ namespace Router
                 port1MaskTextBox.Text = router.Port1.Mask.ToString();
                 port2IpTextBox.Text = router.Port2.Ip.ToString();
                 port2MaskTextBox.Text = router.Port2.Mask.ToString();
+                router.ArpTable.UpdatePortsIp(router);
                 interfaceInfoRich.AppendText(DateTime.Now.ToString() + " Settings changed \n");
             }
         }
@@ -244,6 +247,8 @@ namespace Router
             port1MaskTextBox.Text = router.Port1.Mask.ToString();
             port2IpTextBox.Text = router.Port2.Ip.ToString();
             port2MaskTextBox.Text = router.Port2.Mask.ToString();
+            router.ArpTable.UpdatePortsIp(router);
+
             routerStatusBar.AppendText(DateTime.Now.ToString() + " IP address changed\n");
             router.Serialize();
         }

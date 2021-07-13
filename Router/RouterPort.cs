@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PcapDotNet.Core;
+using PcapDotNet.Packets;
 using PcapDotNet.Packets.Ethernet;
 using PcapDotNet.Packets.IpV4;
 
@@ -16,7 +17,6 @@ namespace Router
         private MacAddress mac;
         private string mask;
         private bool forwarding;
-
 
         public RouterPort(PacketDevice DeviceInterface, IpV4Address ip, string Mask, MacAddress mac)
         {
@@ -37,7 +37,7 @@ namespace Router
             else
                 return "255.255.255.0";
         }
-
+        
         public string Mask { get => mask; set => mask = SetMask(value);  }
         public IpV4Address Ip { get => ipAddress; set => ipAddress = value; }
         public PacketDevice DeviceInterface { get => deviceInterface; set => deviceInterface = value; }

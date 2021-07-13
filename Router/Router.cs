@@ -241,23 +241,15 @@ namespace Router
 
         private void ContainsForward(IpV4Packet ipp, int port)
         {
-            MacAddress srcM = new MacAddress(), dstM = new MacAddress();
-            if (port == 1) { srcM = new MacAddress(port1.Mac.ToString()); }
-            else if (port == 2) { srcM = new MacAddress(port2.Mac.ToString()); }
-
-            dstM = new MacAddress(arpTable.GetLog(ipp.DstIp).Mac.ToString());
+            MacAddress srcM = new MacAddress();
+            if (port == 1) srcM = new MacAddress(port1.Mac.ToString()); 
+            else if (port == 2) srcM = new MacAddress(port2.Mac.ToString()); 
 
             EthernetLayer ethernetLayer = new EthernetLayer
             {
                 Source = srcM,
-                Destination = dstM,
+                Destination = new MacAddress(arpTable.GetLog(ipp.DstIp).Mac.ToString()),
                 EtherType = EthernetType.IpV4
-            };
-
-            PayloadLayer payloadLayer =
-            new PayloadLayer
-            {
-                Data = new Datagram(Encoding.ASCII.GetBytes(" ")),
             };
 
             PacketBuilder pb = new PacketBuilder(ethernetLayer);
@@ -267,10 +259,8 @@ namespace Router
             var eBytes = pE.Buffer;
             var iBytes = pI.Buffer;
 
-            for (int i = 0; i < eBytes.Length - 1; i++)
-            {
+            for (int i = 0; i < eBytes.Length; i++)
                 iBytes[i] = eBytes[i];
-            }
 
             string hexS = BitConverter.ToString(iBytes).Replace("-", string.Empty); ;
 
