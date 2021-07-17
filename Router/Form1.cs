@@ -79,6 +79,10 @@ namespace Router
             new Thread(() => { router.Forward(router.Port2); }).Start();
             arpViewFocus = false;
 
+            tabs.TabPages.Remove(appSettingTab);
+            tabs.TabPages.Add(appSettingTab);
+
+
         }
 
         private void Stats()
