@@ -71,8 +71,8 @@ namespace Router
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.richTextBox7 = new System.Windows.Forms.RichTextBox();
+            this.arpAgingTimerBox = new System.Windows.Forms.TextBox();
+            this.tablesRich = new System.Windows.Forms.RichTextBox();
             this.tabs.SuspendLayout();
             this.routerTab.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -500,17 +500,18 @@ namespace Router
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel5.Controls.Add(this.label13, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.tablesRich, 0, 3);
             this.tableLayoutPanel5.Controls.Add(this.arpListView, 0, 2);
             this.tableLayoutPanel5.Controls.Add(this.button3, 1, 1);
             this.tableLayoutPanel5.Controls.Add(this.button4, 3, 1);
-            this.tableLayoutPanel5.Controls.Add(this.textBox1, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.richTextBox7, 4, 2);
+            this.tableLayoutPanel5.Controls.Add(this.arpAgingTimerBox, 0, 1);
             this.tableLayoutPanel5.Location = new System.Drawing.Point(6, 6);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 3;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 84F));
+            this.tableLayoutPanel5.RowCount = 4;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.54717F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.54717F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 79.24529F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5.660378F));
             this.tableLayoutPanel5.Size = new System.Drawing.Size(994, 482);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
@@ -520,7 +521,7 @@ namespace Router
             this.label13.AutoSize = true;
             this.tableLayoutPanel5.SetColumnSpan(this.label13, 4);
             this.label13.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label13.Location = new System.Drawing.Point(196, 4);
+            this.label13.Location = new System.Drawing.Point(196, 3);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(104, 30);
             this.label13.TabIndex = 2;
@@ -536,10 +537,10 @@ namespace Router
             this.tableLayoutPanel5.SetColumnSpan(this.arpListView, 4);
             this.arpListView.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.arpListView.HideSelection = false;
-            this.arpListView.Location = new System.Drawing.Point(3, 79);
+            this.arpListView.Location = new System.Drawing.Point(3, 75);
             this.arpListView.Name = "arpListView";
             this.arpListView.Scrollable = false;
-            this.arpListView.Size = new System.Drawing.Size(490, 400);
+            this.arpListView.Size = new System.Drawing.Size(490, 375);
             this.arpListView.TabIndex = 4;
             this.arpListView.UseCompatibleStateImageBehavior = false;
             this.arpListView.View = System.Windows.Forms.View.List;
@@ -555,18 +556,19 @@ namespace Router
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(127, 50);
+            this.button3.Location = new System.Drawing.Point(127, 46);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(118, 23);
             this.button3.TabIndex = 6;
             this.button3.Text = "Set Timer";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.arpAgingTimeSetButton_Click);
             // 
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(375, 50);
+            this.button4.Location = new System.Drawing.Point(375, 46);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(118, 23);
             this.button4.TabIndex = 7;
@@ -574,25 +576,26 @@ namespace Router
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.arpTableRemove_Click);
             // 
-            // textBox1
+            // arpAgingTimerBox
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.arpAgingTimerBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(3, 50);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(118, 23);
-            this.textBox1.TabIndex = 5;
+            this.arpAgingTimerBox.Location = new System.Drawing.Point(3, 46);
+            this.arpAgingTimerBox.Name = "arpAgingTimerBox";
+            this.arpAgingTimerBox.Size = new System.Drawing.Size(118, 23);
+            this.arpAgingTimerBox.TabIndex = 5;
             // 
-            // richTextBox7
+            // tablesRich
             // 
-            this.richTextBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tablesRich.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox7.Location = new System.Drawing.Point(499, 79);
-            this.richTextBox7.Name = "richTextBox7";
-            this.richTextBox7.Size = new System.Drawing.Size(492, 400);
-            this.richTextBox7.TabIndex = 1;
-            this.richTextBox7.Text = "";
+            this.tableLayoutPanel5.SetColumnSpan(this.tablesRich, 5);
+            this.tablesRich.Location = new System.Drawing.Point(3, 456);
+            this.tablesRich.Name = "tablesRich";
+            this.tablesRich.Size = new System.Drawing.Size(988, 23);
+            this.tablesRich.TabIndex = 1;
+            this.tablesRich.Text = "";
             // 
             // RouterGui
             // 
@@ -660,13 +663,13 @@ namespace Router
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
-        private System.Windows.Forms.RichTextBox richTextBox7;
+        private System.Windows.Forms.RichTextBox tablesRich;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.ListView arpListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox arpAgingTimerBox;
         private System.Windows.Forms.Button button5;
     }
 }

@@ -72,6 +72,9 @@ namespace Router
                 arpListView.Items.Add(i);
             }
 
+            if (router != null)
+                arpAgingTimerBox.Text = router.ArpTable.AgingTime.ToString();
+
             new Thread(() => { router.Forward(router.Port1); }).Start();
             new Thread(() => { router.Forward(router.Port2); }).Start();
             arpViewFocus = false;
@@ -284,6 +287,24 @@ namespace Router
         private void arpListView_Leave(object sender, EventArgs e)
         {
             arpViewFocus = false;
+        }
+
+        private void arpAgingTimeSetButton_Click(object sender, EventArgs e)
+        {
+            uint x;
+            try
+            {
+                x = UInt32.Parse(arpAgingTimerBox.Text);
+            }
+            catch (Exception)
+            {
+                arpAgingTimerBox.Text = router.ArpTable.AgingTime.ToString();
+                return;
+            }
+            router.ArpTable.AgingTime = (int)x;
+            tablesRich.AppendText("\n" + DateTime.Now + " Arp table remove timer set to " + x + "s");
+            tablesRich.SelectionStart = tablesRich.Text.Length;
+            tablesRich.ScrollToCaret();
         }
 
         private void clearStatsButton_Click(object sender, EventArgs e)

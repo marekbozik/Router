@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Router
 {
@@ -32,34 +33,108 @@ namespace Router
 
         private void AutoRemove()
         {
+            IpV4Address nextD = new IpV4Address();
             while (true)
             {
-                int time = agingTime;
-                var ip = FindNextDelete();
-                double x;
-                if (Contains(ip))
+                try
                 {
-                    x = agingTime - (GetLog(ip).Time - DateTime.Now).TotalSeconds;
-                    bool flag = false;
-                    for (int i = 0; i < x; i++)
+                    nextD = FindNextDelete();
+                }
+                catch (Exception)
+                {
+                    Thread.Sleep(1000);
+                    continue;
+                }
+
+                int ttd = TimeToDelete(GetLog(nextD).Time);
+                if (ttd < 0)
+                {
+                    try
                     {
-                        if (time != agingTime)
+                        Remove(nextD);
+                    }
+                    catch (Exception) { }
+                    continue;
+                }
+
+                if (ttd < 1000)
+                {
+                    Thread.Sleep(ttd);
+                    try
+                    {
+                        Remove(nextD);
+                    }
+                    catch (Exception) { }
+                    
+                }
+                else
+                {
+                    bool change = false;
+                    int oldTimer = agingTime;
+                    for (int i = 0; i < ttd/1000; i++)
+                    {
+                        if (oldTimer != agingTime)
                         {
-                            flag = true;
+                            change = true;
                             break;
                         }
                         Thread.Sleep(1000);
                     }
-                    if (flag == false)
+                    if (change)
                     {
-                        Remove(ip);
+                        continue;
                     }
+
+                    try
+                    {
+                        Remove(nextD);
+                    }
+                    catch (Exception) { }
                     
                 }
-                Thread.Sleep(100);
+
+
 
             }
 
+
+            //while (true)
+            //{
+            //    int time = agingTime;
+            //    var ip = FindNextDelete();
+            //    double x;
+            //    if (Contains(ip))
+            //    {
+            //        x = agingTime - (GetLog(ip).Time - DateTime.Now).TotalSeconds;
+            //        bool flag = false;
+            //        for (int i = 0; i < x; i++)
+            //        {
+            //            if (time != agingTime)
+            //            {
+            //                flag = true;
+            //                break;
+            //            }
+            //            Thread.Sleep(1000);
+            //        }
+            //        if (flag == false)
+            //        {
+            //            Remove(ip);
+            //        }
+                    
+            //    }
+            //    Thread.Sleep(100);
+
+            //}
+
+        }
+
+        private int TimeToDelete(DateTime dt)
+        {
+            if ((DateTime.Now - dt).TotalSeconds > agingTime)
+            {
+                return -1;
+            }
+            return (int)( (agingTime - (DateTime.Now- dt).TotalSeconds) * 1000);
         }
 
         public void RegisterArpRequest(IpV4Address ip, IpV4Address srcIp, MacAddress srcMac, int port)
@@ -131,22 +206,26 @@ namespace Router
 
         public IpV4Address FindNextDelete()
         {
-            double max = Double.MinValue;
-            IpV4Address ip = new IpV4Address();
+            DateTime min = DateTime.MaxValue;
+            IpV4Address ip = new IpV4Address("255.255.255.255");
             foreach (var i in table)
             {
                 if (i.Value.Time == DateTime.MaxValue) continue;
 
-                var x = (DateTime.Now - i.Value.Time).TotalMilliseconds;
-                if (x >= max)
+                if (i.Value.Time < min)
                 {
-                    max = x;
+                    min = i.Value.Time;
                     ip = new IpV4Address(i.Value.Ip.ToString());
                 }
             }
-            if (max == Double.MinValue)
+            //MessageBox.Show(ip.ToString());
+            //Console.WriteLine();
+            if (min == DateTime.MaxValue)
                 throw new Exception();
-            return ip;
+            if (ip != new IpV4Address("255.255.255.255"))
+                return ip;
+            else
+                throw new Exception();
         }
 
         public void Remove(IpV4Address ip)
@@ -251,46 +330,6 @@ namespace Router
             }
             return l;
         }
-        /*
-        //returns oldest mac or broadcast when table is empty
-        public MacAddress CleanTable()
-        {
-            List<MacAddress> removeL = new List<MacAddress>();
-            DateTime min = DateTime.Now;
-            MacAddress last = new MacAddress("FF:FF:FF:FF:FF:FF");
-            foreach (var i in table)
-            {
-                if ((DateTime.Now - i.Value.Time).TotalSeconds > agingTime)
-                {
-                    removeL.Add(new MacAddress(i.Key.ToString()));
-                }
-                else if (i.Value.Time < min)
-                {
-                    min = i.Value.Time;
-                    last = new MacAddress(i.Value.Mac.ToString());
-                }
-            }
-
-            foreach (var i in removeL)
-            {
-                var x = table[i];
-                table.TryRemove(i, out x);
-            }
-
-            return last;
-        }
-
-        public double LogAgeMiliseconds(IpV4Address m)
-        {
-            double x = 0;
-            try
-            {
-                x = (DateTime.Now - table[m].Time).TotalMilliseconds;
-            }
-            catch (Exception) { }
-
-            return x;
-        }
-        */
+       
     }
 }
