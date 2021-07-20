@@ -153,7 +153,16 @@ namespace Router
                             }
                         }
                         ));
+                        routingTableListView.BeginInvoke(new Action(() =>
+                        {
+                            routingTableListView.Items.Clear();
+                            routingTableListView.View = View.Details;
 
+                            foreach (var i in router.RoutingTable.GetTable())
+                            {
+                                routingTableListView.Items.Add(i);
+                            }
+                        }));
                     }
                 }).Start();
             }
@@ -189,6 +198,9 @@ namespace Router
                 port2IpTextBox.Text = router.Port2.Ip.ToString();
                 port2MaskTextBox.Text = router.Port2.Mask.ToString();
                 interfaceInfoRich.AppendText(DateTime.Now.ToString() + " Settings changed \n");
+                router.ArpTable.UpdatePortsIp(router);
+                router.RoutingTable.SetConnected(router);
+                
                 tabs.TabPages.Remove(appSettingTab);
                 tabs.TabPages.Add(routerTab);
                 tabs.TabPages.Add(appSettingTab);
@@ -223,6 +235,8 @@ namespace Router
                 port2IpTextBox.Text = router.Port2.Ip.ToString();
                 port2MaskTextBox.Text = router.Port2.Mask.ToString();
                 router.ArpTable.UpdatePortsIp(router);
+                router.RoutingTable.SetConnected(router);
+
                 interfaceInfoRich.AppendText(DateTime.Now.ToString() + " Settings changed \n");
             }
         }
@@ -260,7 +274,10 @@ namespace Router
             port1MaskTextBox.Text = router.Port1.Mask.ToString();
             port2IpTextBox.Text = router.Port2.Ip.ToString();
             port2MaskTextBox.Text = router.Port2.Mask.ToString();
+            //
             router.ArpTable.UpdatePortsIp(router);
+            router.RoutingTable.SetConnected(router);
+
 
             routerStatusBar.AppendText(DateTime.Now.ToString() + " IP address changed\n");
             router.Serialize();

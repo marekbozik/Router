@@ -25,6 +25,7 @@ namespace Router
         private PacketCommunicator sender1, sender2;
         private static IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
         private ArpTable arpTable;
+        private RoutingTable routingTable;
 
         private Stats out1;
         private Stats out2;
@@ -111,11 +112,13 @@ namespace Router
             Initialize();
         }
 
-        public RouterPort Port1 { get => port1; set => port1 = value; }
-        public RouterPort Port2 { get => port2; set => port2 = value; }
+        public RouterPort Port1 { get => port1; set { port1 = value; arpTable.UpdatePortsIp(this); } }
+        public RouterPort Port2 { get => port2; set { port2 = value; arpTable.UpdatePortsIp(this); } }
         internal ArpTable ArpTable { get => arpTable; }
         internal Stats Out1 { get => out1; }
         internal Stats Out2 { get => out2; }
+        internal RoutingTable RoutingTable { get => routingTable; }
+
 
         private void Initialize()
         {
@@ -124,6 +127,7 @@ namespace Router
             sender2 = port2.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous | PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
             out1 = new Stats();
             out2 = new Stats();
+            routingTable = new RoutingTable(this);
         }
 
         public void Forward(RouterPort rp)
