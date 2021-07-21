@@ -13,6 +13,8 @@ namespace Router
         private Router router;
         private Stats in1, in2;
         private bool arpViewFocus;
+        private bool routingTableViewFocus;
+
         public RouterGui()
         {
             InitializeComponent();
@@ -78,6 +80,12 @@ namespace Router
             new Thread(() => { router.Forward(router.Port1); }).Start();
             new Thread(() => { router.Forward(router.Port2); }).Start();
             arpViewFocus = false;
+            routingTableViewFocus = false;
+            routingTableListView.Scrollable = false;
+
+            routingTableListView.Items.Clear();
+            routingTableListView.View = View.Details;
+
 
             tabs.TabPages.Remove(appSettingTab);
             tabs.TabPages.Add(appSettingTab);
@@ -120,11 +128,11 @@ namespace Router
                             richTextBox4.Clear();
                             richTextBox4.AppendText(router.Out2.GetStats());
                         }));
+                        
                         arpListView.BeginInvoke(new Action(() =>
                         {
                             if (tabs.SelectedTab == tabPage1)
                             {
-                                
                                 int q = 0;
                                 try
                                 {
@@ -149,20 +157,45 @@ namespace Router
                                     }
                                     catch (Exception) { }
                                 }
-
                             }
+                                
                         }
                         ));
                         routingTableListView.BeginInvoke(new Action(() =>
                         {
-                            routingTableListView.Items.Clear();
-                            routingTableListView.View = View.Details;
-
-                            foreach (var i in router.RoutingTable.GetTable())
+                            if (tabs.SelectedTab == tabPage1)
                             {
-                                routingTableListView.Items.Add(i);
+                                int q = 0;
+                                try
+                                {
+                                    var x = routingTableListView.SelectedItems[0];
+                                    q = x.Index;
+                                }
+                                catch (Exception) { }
+
+                                routingTableListView.Items.Clear();
+                                routingTableListView.View = View.Details;
+
+                                foreach (var i in router.RoutingTable.GetTable())
+                                {
+                                    routingTableListView.Items.Add(i);
+                                }
+                                if (routingTableViewFocus)
+                                {
+                                    try
+                                    {
+                                        routingTableListView.Items[q].Selected = true;
+                                        routingTableListView.Select();
+                                    }
+                                    catch (Exception) { }
+                                }
+                                //routingTableListView.Scrollable = true;
+                                //routingTableListView.Scrollable = false;
                             }
                         }));
+
+                        
+
                     }
                 }).Start();
             }
@@ -336,6 +369,44 @@ namespace Router
                 tablesRich.AppendText("\n" + DateTime.Now + " [FAIL] static ip route set");
             tablesRich.SelectionStart = tablesRich.Text.Length;
             tablesRich.ScrollToCaret();
+        }
+
+        private void routingTableListView_MouseEnter(object sender, EventArgs e)
+        {
+        }
+
+        private void routingTableListView_MouseLeave(object sender, EventArgs e)
+        {
+        }
+
+        private void RouterGui_SizeChanged(object sender, EventArgs e)
+        {
+            routingTableListView.Scrollable = true;
+            routingTableListView.Scrollable = false;
+
+        }
+
+        private void routingTableListView_Enter(object sender, EventArgs e)
+        {
+            routingTableViewFocus = true;
+
+        }
+
+        private void routingTableListView_Leave(object sender, EventArgs e)
+        {
+            routingTableViewFocus = false;
+
+        }
+
+        private void staticRouteRemoveButton_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                router.RoutingTable.Remove(routingTableListView.SelectedItems[0].Index);
+            }
+            catch (Exception) { }
+            
         }
 
         private void clearStatsButton_Click(object sender, EventArgs e)

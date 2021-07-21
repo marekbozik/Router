@@ -175,8 +175,19 @@ namespace Router
                 if (ArpPacket.IsArp(p)) { ArpHandle(p, 1); return; }
                 else if (IpV4.IsInSubnet(port2.Ip, port2.Mask, ipp.DstIp))
                     ForwardTo(ipp, 2);
+                else
+                {
+                    int port = 0;
+                    try
+                    {
+                        port = routingTable.GetOutInt(ipp.DstIp);
+                    }
+                    catch (Exception) { return; }
+                    ForwardTo(ipp, port);
+                }
 
             }
+
         }
 
         private void ForwardHandler2(Packet p)
@@ -197,6 +208,16 @@ namespace Router
                 if (ArpPacket.IsArp(p)) { ArpHandle(p, 2); }
                 else if (IpV4.IsInSubnet(port1.Ip, port1.Mask, ipp.DstIp))
                     ForwardTo(ipp, 1);
+                else
+                {
+                    int port = 0;
+                    try
+                    {
+                        port = routingTable.GetOutInt(ipp.DstIp);
+                    }
+                    catch (Exception) { return; }
+                    ForwardTo(ipp, port);
+                }
             }
         }
 

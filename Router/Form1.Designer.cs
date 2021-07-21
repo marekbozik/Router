@@ -759,14 +759,18 @@ namespace Router
             this.columnHeader2});
             this.tableLayoutPanel6.SetColumnSpan(this.routingTableListView, 5);
             this.routingTableListView.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.routingTableListView.FullRowSelect = true;
             this.routingTableListView.HideSelection = false;
             this.routingTableListView.Location = new System.Drawing.Point(3, 67);
             this.routingTableListView.Name = "routingTableListView";
-            this.routingTableListView.Scrollable = false;
             this.routingTableListView.Size = new System.Drawing.Size(534, 341);
             this.routingTableListView.TabIndex = 9;
             this.routingTableListView.UseCompatibleStateImageBehavior = false;
             this.routingTableListView.View = System.Windows.Forms.View.List;
+            this.routingTableListView.Enter += new System.EventHandler(this.routingTableListView_Enter);
+            this.routingTableListView.Leave += new System.EventHandler(this.routingTableListView_Leave);
+            this.routingTableListView.MouseEnter += new System.EventHandler(this.routingTableListView_MouseEnter);
+            this.routingTableListView.MouseLeave += new System.EventHandler(this.routingTableListView_MouseLeave);
             // 
             // columnHeader2
             // 
@@ -782,6 +786,7 @@ namespace Router
             this.button6.TabIndex = 10;
             this.button6.Text = "Remove";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.staticRouteRemoveButton_Click);
             // 
             // RouterGui
             // 
@@ -793,6 +798,7 @@ namespace Router
             this.Name = "RouterGui";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Router";
+            this.SizeChanged += new System.EventHandler(this.RouterGui_SizeChanged);
             this.tabs.ResumeLayout(false);
             this.routerTab.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);

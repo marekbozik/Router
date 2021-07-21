@@ -40,9 +40,9 @@ namespace Router
 
             try
             {
-                foreach (var a in arr)
+                for (int j = 1; j >= 0; j--)
                 {
-                    logs.RemoveAt(a);
+                    logs.RemoveAt(arr[j]);
                 }
             }
             catch (Exception) { }
@@ -67,8 +67,13 @@ namespace Router
 
 		public void Remove(int i)
         {
+
             try
             {
+                if (logs[i].Type == RoutingLog.typeConnected)
+                {
+                    return;
+                }
                 logs.RemoveAt(i);
             }
             catch (Exception) { }
