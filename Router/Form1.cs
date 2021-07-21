@@ -328,6 +328,16 @@ namespace Router
             tablesRich.ScrollToCaret();
         }
 
+        private void setStaticRouteButton_Click(object sender, EventArgs e)
+        {
+            if (router.TryAddStaticRoute(staticRouteDestIpTextBox.Text, staticRouteMaskTextBox.Text, staticRouteInterfaceTextBox.Text, staticRouteNextHopTextBox.Text))
+                tablesRich.AppendText("\n" + DateTime.Now + " static ip route set");
+            else
+                tablesRich.AppendText("\n" + DateTime.Now + " [FAIL] static ip route set");
+            tablesRich.SelectionStart = tablesRich.Text.Length;
+            tablesRich.ScrollToCaret();
+        }
+
         private void clearStatsButton_Click(object sender, EventArgs e)
         {
             if (router != null)

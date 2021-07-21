@@ -18,7 +18,7 @@ namespace Router
         private string mask;
         private int outInt;
         private IpV4Address nextHop;
-        private bool removed;
+        
 
         public RoutingLog(int type, IpV4Address ip, string mask, int outInt)
         {
@@ -26,7 +26,7 @@ namespace Router
             this.ip = ip;
             this.mask = mask;
             this.outInt = outInt;
-            removed = false;
+
         }
 
         public RoutingLog(int type, IpV4Address ip, string mask, IpV4Address nextHop)
@@ -35,7 +35,7 @@ namespace Router
             this.ip = ip;
             this.mask = mask;
             this.nextHop = nextHop;
-            removed = false;
+            
         }
 
         public RoutingLog(int type, IpV4Address ip, string mask, int outInt, IpV4Address nextHop) : this(type, ip, mask, outInt)
@@ -51,13 +51,15 @@ namespace Router
             else if (type == RoutingLog.typeStatic) c = 'S';
 
             string ipp = ip.ToString();
-            for (int j = 0; j < 19 - ipp.Length; j++)
+            int len = ipp.Length;
+            for (int j = 0; j < 15 - len; j++)
             {
                 ipp += " ";
             }
 
             string maskk = mask;
-            for (int j = 0; j < 19 - mask.Length; j++)
+            len = mask.Length;
+            for (int j = 0; j < 15 - len; j++)
             {
                 maskk += " ";
             }
@@ -75,6 +77,6 @@ namespace Router
         public IpV4Address Ip { get => ip; set => ip = value; }
         public int OutInt { get => outInt; set => outInt = value; }
         public IpV4Address NextHop { get => nextHop; set => nextHop = value; }
-        public bool Removed { get => removed; set => removed = value; }
+
     }
 }

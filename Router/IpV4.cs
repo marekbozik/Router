@@ -1,5 +1,6 @@
 ﻿using PcapDotNet.Packets.IpV4;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,5 +33,88 @@ namespace Router
         {
             return masks.Contains(s);
         }
-    }
+
+        public static IpV4Address ToNetworkAdress(IpV4Address ip, string mask)
+        {
+
+			string ip1 = ip.ToString();
+			var x = ip1.Split('.');
+			List<byte> l = new List<byte>(4);
+			foreach (var ii in x)
+			{
+				l.Add(Byte.Parse(ii));
+			}
+
+			BitArray bits = new BitArray(l.ToArray());
+
+
+			var xx = mask.Split('.');
+			List<byte> ll = new List<byte>(4);
+			foreach (var ii in xx)
+			{
+				ll.Add(Byte.Parse(ii));
+			}
+
+			bits = bits.And(new BitArray(ll.ToArray()));
+
+			string s = "";
+
+			double num = 0;
+			for (int i = 0; i < 8; i++)
+			{
+				char c = bits[i] ? '1' : '0';
+				if (c == '1')
+				{
+					num += Math.Pow(2, i);
+				}
+
+			}
+
+			s += num + ".";
+			//Console.Write(num + ".");
+
+			num = 0;
+			for (int i = 0; i < 8; i++)
+			{
+				char c = bits[i + 8] ? '1' : '0';
+				if (c == '1')
+				{
+					num += Math.Pow(2, i);
+				}
+
+			}
+
+			s += num + ".";
+
+
+			num = 0;
+			for (int i = 0; i < 8; i++)
+			{
+				char c = bits[i + 8 + 8] ? '1' : '0';
+				if (c == '1')
+				{
+					num += Math.Pow(2, i);
+				}
+
+			}
+
+			s += num + ".";
+
+
+			num = 0;
+			for (int i = 0; i < 8; i++)
+			{
+				char c = bits[i + 8 + 8 + 8] ? '1' : '0';
+				if (c == '1')
+				{
+					num += Math.Pow(2, i);
+				}
+
+			}
+
+			s += num;
+
+			return new IpV4Address(s);
+		}
+	}
 }

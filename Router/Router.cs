@@ -470,6 +470,62 @@ namespace Router
             return null;
         }
 
+        public bool TryAddStaticRoute(string ip, string mask, string outInt, string nextHop)
+        {
+            IpV4Address ipp, nextHopp;
+            int intf = -1;
+            try
+            {
+                ipp = new IpV4Address(ip);
+                if (!IpV4.IsMask(mask)) return false;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+
+            bool b = false;
+            try
+            {
+                intf = Int32.Parse(outInt);
+            }
+            catch (Exception)
+            {
+                b = true;
+            }
+
+            if (b)
+            {
+                try
+                {
+                    nextHopp = new IpV4Address(nextHop);
+                }
+                catch (Exception)
+                {
+
+                    return false;
+                }
+            }
+            else
+            {
+                try
+                {
+                    nextHopp = new IpV4Address(nextHop);
+                }
+                catch (Exception)
+                {
+                    nextHopp = new IpV4Address();
+                }
+
+            }
+
+            routingTable.Add(RoutingLog.typeStatic, ipp, mask, intf, nextHopp);
+
+            return true;
+            
+        }
+
         public void Serialize()
         {
             new Thread(() =>

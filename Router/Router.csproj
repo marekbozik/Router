@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="IpMatcher" Version="1.0.4.1" />
     <PackageReference Include="Pcap.Net.x64" Version="1.0.4.1" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.8.1" />
   </ItemGroup>
 
 </Project>

@@ -75,17 +75,18 @@ namespace Router
             this.arpAgingTimerBox = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.button6 = new System.Windows.Forms.Button();
+            this.staticRouteDestIpTextBox = new System.Windows.Forms.TextBox();
+            this.staticRouteMaskTextBox = new System.Windows.Forms.TextBox();
+            this.staticRouteInterfaceTextBox = new System.Windows.Forms.TextBox();
+            this.staticRouteNextHopTextBox = new System.Windows.Forms.TextBox();
+            this.setStaticRouteButton = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.routingTableListView = new System.Windows.Forms.ListView();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.button6 = new System.Windows.Forms.Button();
             this.tabs.SuspendLayout();
             this.routerTab.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -635,16 +636,17 @@ namespace Router
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel6.Controls.Add(this.textBox1, 0, 1);
-            this.tableLayoutPanel6.Controls.Add(this.textBox2, 1, 1);
-            this.tableLayoutPanel6.Controls.Add(this.textBox3, 2, 1);
-            this.tableLayoutPanel6.Controls.Add(this.textBox4, 3, 1);
-            this.tableLayoutPanel6.Controls.Add(this.button6, 4, 1);
+            this.tableLayoutPanel6.Controls.Add(this.staticRouteDestIpTextBox, 0, 1);
+            this.tableLayoutPanel6.Controls.Add(this.staticRouteMaskTextBox, 1, 1);
+            this.tableLayoutPanel6.Controls.Add(this.staticRouteInterfaceTextBox, 2, 1);
+            this.tableLayoutPanel6.Controls.Add(this.staticRouteNextHopTextBox, 3, 1);
+            this.tableLayoutPanel6.Controls.Add(this.setStaticRouteButton, 4, 1);
             this.tableLayoutPanel6.Controls.Add(this.label15, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.label16, 1, 0);
             this.tableLayoutPanel6.Controls.Add(this.label17, 2, 0);
             this.tableLayoutPanel6.Controls.Add(this.label18, 3, 0);
             this.tableLayoutPanel6.Controls.Add(this.routingTableListView, 0, 2);
+            this.tableLayoutPanel6.Controls.Add(this.button6, 4, 0);
             this.tableLayoutPanel6.Location = new System.Drawing.Point(451, 39);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 3;
@@ -655,57 +657,58 @@ namespace Router
             this.tableLayoutPanel6.Size = new System.Drawing.Size(540, 411);
             this.tableLayoutPanel6.TabIndex = 9;
             // 
-            // textBox1
+            // staticRouteDestIpTextBox
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.staticRouteDestIpTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(3, 35);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(102, 23);
-            this.textBox1.TabIndex = 0;
+            this.staticRouteDestIpTextBox.Location = new System.Drawing.Point(3, 35);
+            this.staticRouteDestIpTextBox.Name = "staticRouteDestIpTextBox";
+            this.staticRouteDestIpTextBox.Size = new System.Drawing.Size(102, 23);
+            this.staticRouteDestIpTextBox.TabIndex = 0;
             // 
-            // textBox2
+            // staticRouteMaskTextBox
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.staticRouteMaskTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(111, 35);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(102, 23);
-            this.textBox2.TabIndex = 1;
+            this.staticRouteMaskTextBox.Location = new System.Drawing.Point(111, 35);
+            this.staticRouteMaskTextBox.Name = "staticRouteMaskTextBox";
+            this.staticRouteMaskTextBox.Size = new System.Drawing.Size(102, 23);
+            this.staticRouteMaskTextBox.TabIndex = 1;
             // 
-            // textBox3
+            // staticRouteInterfaceTextBox
             // 
-            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.staticRouteInterfaceTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox3.Location = new System.Drawing.Point(219, 35);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(102, 23);
-            this.textBox3.TabIndex = 2;
+            this.staticRouteInterfaceTextBox.Location = new System.Drawing.Point(219, 35);
+            this.staticRouteInterfaceTextBox.Name = "staticRouteInterfaceTextBox";
+            this.staticRouteInterfaceTextBox.Size = new System.Drawing.Size(102, 23);
+            this.staticRouteInterfaceTextBox.TabIndex = 2;
             // 
-            // textBox4
+            // staticRouteNextHopTextBox
             // 
-            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.staticRouteNextHopTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox4.Location = new System.Drawing.Point(327, 35);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(102, 23);
-            this.textBox4.TabIndex = 3;
+            this.staticRouteNextHopTextBox.Location = new System.Drawing.Point(327, 35);
+            this.staticRouteNextHopTextBox.Name = "staticRouteNextHopTextBox";
+            this.staticRouteNextHopTextBox.Size = new System.Drawing.Size(102, 23);
+            this.staticRouteNextHopTextBox.TabIndex = 3;
             // 
-            // button6
+            // setStaticRouteButton
             // 
-            this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.setStaticRouteButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button6.AutoSize = true;
-            this.button6.Location = new System.Drawing.Point(435, 35);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(102, 26);
-            this.button6.TabIndex = 4;
-            this.button6.Text = "Set static route";
-            this.button6.UseVisualStyleBackColor = true;
+            this.setStaticRouteButton.AutoSize = true;
+            this.setStaticRouteButton.Location = new System.Drawing.Point(435, 35);
+            this.setStaticRouteButton.Name = "setStaticRouteButton";
+            this.setStaticRouteButton.Size = new System.Drawing.Size(102, 26);
+            this.setStaticRouteButton.TabIndex = 4;
+            this.setStaticRouteButton.Text = "Set static route";
+            this.setStaticRouteButton.UseVisualStyleBackColor = true;
+            this.setStaticRouteButton.Click += new System.EventHandler(this.setStaticRouteButton_Click);
             // 
             // label15
             // 
@@ -759,6 +762,7 @@ namespace Router
             this.routingTableListView.HideSelection = false;
             this.routingTableListView.Location = new System.Drawing.Point(3, 67);
             this.routingTableListView.Name = "routingTableListView";
+            this.routingTableListView.Scrollable = false;
             this.routingTableListView.Size = new System.Drawing.Size(534, 341);
             this.routingTableListView.TabIndex = 9;
             this.routingTableListView.UseCompatibleStateImageBehavior = false;
@@ -766,8 +770,18 @@ namespace Router
             // 
             // columnHeader2
             // 
-            this.columnHeader2.Text = "Type |        Ip       |         Mask        |  Out int  | NextHop";
+            this.columnHeader2.Text = "Type |        Ip       |        Mask     |  Out int  | NextHop";
             this.columnHeader2.Width = 6000;
+            // 
+            // button6
+            // 
+            this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.button6.Location = new System.Drawing.Point(435, 4);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(102, 23);
+            this.button6.TabIndex = 10;
+            this.button6.Text = "Remove";
+            this.button6.UseVisualStyleBackColor = true;
             // 
             // RouterGui
             // 
@@ -847,17 +861,18 @@ namespace Router
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.TextBox staticRouteDestIpTextBox;
+        private System.Windows.Forms.TextBox staticRouteMaskTextBox;
+        private System.Windows.Forms.TextBox staticRouteInterfaceTextBox;
+        private System.Windows.Forms.TextBox staticRouteNextHopTextBox;
+        private System.Windows.Forms.Button setStaticRouteButton;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.ListView routingTableListView;
         private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Button button6;
     }
 }
 
