@@ -449,7 +449,48 @@ namespace Router
             }
             else
             {
-                if (incomePort == 1)
+                bool stop = false;
+                int pp = 0;
+                try
+                {
+                    pp = routingTable.GetOutInt(req.DestinationIp);
+                }
+                catch (Exception)
+                {
+
+                    stop = true;
+                }
+
+                if (!stop)
+                {
+                    new Thread(() =>
+                    {
+                        if (incomePort == 1)
+                        {
+                            Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
+                                                                    port1.Mac,
+                                                                    req.SourceMacAddress,
+                                                                    req.DestinationIp,
+                                                                    req.SourceIp
+                                                                   );
+                            sender1.SendPacket(pac);
+                            out1.Increment(pac);
+                        }
+                        else if (incomePort == 2)
+                        {
+                            Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
+                                                                    port2.Mac,
+                                                                    req.SourceMacAddress,
+                                                                    req.DestinationIp,
+                                                                    req.SourceIp
+                                                                   );
+                            sender2.SendPacket(pac);
+                            out2.Increment(pac);
+                        }
+
+                    }).Start();
+                }
+                else if (incomePort == 1)
                 {
                     if (IpV4.IsInSubnet(port2.Ip, port2.Mask, req.DestinationIp))
                     {
