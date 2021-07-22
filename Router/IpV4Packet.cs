@@ -48,5 +48,17 @@ namespace Router
                 return true;
             return false;
         }
+
+        public bool IsRIPv2()
+        {
+            if (packet.Ethernet.IpV4.Protocol == IpV4Protocol.Udp)
+            {
+                if (packet.Ethernet.IpV4.Udp.SourcePort == RIPv2Packet.RIPUdpPort && packet.Ethernet.IpV4.Udp.DestinationPort == RIPv2Packet.RIPUdpPort)
+                {
+                    if (dstIp == new IpV4Address("224.0.0.9")) return true;
+                }
+            }
+            return false;
+        }
     }
 }
