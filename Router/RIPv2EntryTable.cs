@@ -21,7 +21,7 @@ namespace Router
             {
                 byte[] rec = new byte[20];
                 int q = 0;
-                for (int j = offset; j < offset + offset; j++)
+                for (int j = offset; j < offset + 20; j++)
                 {
                     rec[q++] = raw[j]; 
                 }

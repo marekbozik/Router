@@ -172,6 +172,11 @@ namespace Router
             {
                 IpV4Packet ipp = new IpV4Packet(p);
 
+                if (ipp.IsRIPv2())
+                {
+                    RIPv2Packet rip;
+                    rip = new RIPv2Packet(ipp.Packet);
+                }
                 if (ArpPacket.IsArp(p)) { ArpHandle(p, 1); return; }
                 else if (IpV4.IsInSubnet(port2.Ip, port2.Mask, ipp.DstIp))
                     ForwardTo(ipp, 2);

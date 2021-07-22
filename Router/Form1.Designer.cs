@@ -87,6 +87,8 @@ namespace Router
             this.routingTableListView = new System.Windows.Forms.ListView();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.button6 = new System.Windows.Forms.Button();
+            this.RIPv2 = new System.Windows.Forms.TabPage();
+            this.richTextBox6 = new System.Windows.Forms.RichTextBox();
             this.tabs.SuspendLayout();
             this.routerTab.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -97,6 +99,7 @@ namespace Router
             this.tabPage1.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
+            this.RIPv2.SuspendLayout();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -115,6 +118,7 @@ namespace Router
             this.tabs.Controls.Add(this.routerTab);
             this.tabs.Controls.Add(this.appSettingTab);
             this.tabs.Controls.Add(this.tabPage1);
+            this.tabs.Controls.Add(this.RIPv2);
             this.tabs.Location = new System.Drawing.Point(12, 12);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
@@ -788,6 +792,25 @@ namespace Router
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.staticRouteRemoveButton_Click);
             // 
+            // RIPv2
+            // 
+            this.RIPv2.Controls.Add(this.richTextBox6);
+            this.RIPv2.Location = new System.Drawing.Point(4, 24);
+            this.RIPv2.Name = "RIPv2";
+            this.RIPv2.Padding = new System.Windows.Forms.Padding(3);
+            this.RIPv2.Size = new System.Drawing.Size(1006, 494);
+            this.RIPv2.TabIndex = 3;
+            this.RIPv2.Text = "RIPv2";
+            this.RIPv2.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox6
+            // 
+            this.richTextBox6.Location = new System.Drawing.Point(17, 17);
+            this.richTextBox6.Name = "richTextBox6";
+            this.richTextBox6.Size = new System.Drawing.Size(792, 412);
+            this.richTextBox6.TabIndex = 0;
+            this.richTextBox6.Text = "";
+            // 
             // RouterGui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -815,6 +838,7 @@ namespace Router
             this.tableLayoutPanel5.PerformLayout();
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel6.PerformLayout();
+            this.RIPv2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -879,6 +903,8 @@ namespace Router
         private System.Windows.Forms.ListView routingTableListView;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.TabPage RIPv2;
+        private System.Windows.Forms.RichTextBox richTextBox6;
     }
 }
 

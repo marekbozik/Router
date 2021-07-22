@@ -20,7 +20,7 @@ namespace Router
         public RIPv2Packet(Packet p) : base(p)
         {
             if (!base.IsRIPv2()) throw new Exception();
-            raw = p.Ethernet.IpV4.Udp.ToArray();
+            raw = p.Ethernet.IpV4.Udp.Payload.ToArray();
             command = raw[0];
             List<byte> l = new List<byte>(20);
             for (int i = 0; i < raw.Length; i++)
