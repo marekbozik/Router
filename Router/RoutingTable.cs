@@ -53,11 +53,11 @@ namespace Router
 
         }
 
-        public bool Contains(int hash)
+        public bool Contains(RoutingLog rl)
         {
             foreach (var i in logs)
             {
-                if (i.GetHashCode() == hash) return true;
+                if (i == rl) return true;
             }
             return false;
         }

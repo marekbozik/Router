@@ -60,14 +60,17 @@ namespace Router
                 {
                     RIPv2Packet rip;
                     rip = new RIPv2Packet(ipp.Packet);
-                    foreach (var entry in rip.Entries.Table)
+                    if (rip.Command == RIPv2Packet.RIPv2CommandResponse)
                     {
-                        var rl = new RoutingLog(RoutingLog.typeRIPv2, entry.Ip, entry.Mask, port);
-                        if (!router.RoutingTable.Contains(rl.GetHashCode()))
+                        foreach (var entry in rip.Entries.Table)
                         {
-                            router.RoutingTable.Add(rl);
-                        }
+                            var rl = new RoutingLog(RoutingLog.typeRIPv2, entry.Ip, entry.Mask, port);
+                            if (!router.RoutingTable.Contains(rl))
+                            {
+                                router.RoutingTable.Add(rl);
+                            }
 
+                        }
                     }
                 }
             }

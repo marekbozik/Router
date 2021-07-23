@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Router
 {
-    class RoutingLog
+    class RoutingLog 
     {
         public static readonly int typeConnected = 0;
         public static readonly int typeStatic = 1;
@@ -71,6 +71,29 @@ namespace Router
                 return "  " + c + "  | " + ipp + " | " + maskk + " |     " + "-     | " + nextHop.ToString();
 
         }
+
+        public static bool operator ==(RoutingLog obj1, RoutingLog obj2)
+        {
+            if (obj1.Type == obj2.Type &&
+                obj1.Ip == obj2.Ip &&
+                obj1.Mask == obj2.Mask &&
+                (obj1.OutInt == obj2.OutInt || obj1.NextHop == obj2.NextHop)
+                )
+                return true;
+            return false;
+        }
+
+        public static bool operator !=(RoutingLog obj1, RoutingLog obj2)
+        {
+            if (obj1.Type == obj2.Type &&
+                obj1.Ip == obj2.Ip &&
+                obj1.Mask == obj2.Mask &&
+                (obj1.OutInt == obj2.OutInt || obj1.NextHop == obj2.NextHop)
+                )
+                return false;
+            return true;
+        }
+
 
         public string Mask { get => mask; set => mask = value; }
         public int Type { get => type; set => type = value; }
