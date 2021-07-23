@@ -53,6 +53,20 @@ namespace Router
 
         }
 
+        public bool Contains(int hash)
+        {
+            foreach (var i in logs)
+            {
+                if (i.GetHashCode() == hash) return true;
+            }
+            return false;
+        }
+
+        public void Add (RoutingLog rl)
+        {
+            logs.Add(rl);
+        }
+
         public void Add(int type, IpV4Address ip, string mask, int outInt, IpV4Address nextHop)
         {
             ip = IpV4.ToNetworkAdress(ip, mask);

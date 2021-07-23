@@ -79,6 +79,10 @@ namespace Router
 
             new Thread(() => { router.Forward(router.Port1); }).Start();
             new Thread(() => { router.Forward(router.Port2); }).Start();
+            new Thread(() => { new RIPv2Handler(router.Port1, router, 1).Reciever.StartRecieving(); }).Start();
+            new Thread(() => { new RIPv2Handler(router.Port2, router, 2).Reciever.StartRecieving(); }).Start();
+
+
             arpViewFocus = false;
             routingTableViewFocus = false;
             routingTableListView.Scrollable = false;
