@@ -11,12 +11,12 @@ namespace Router
 {
     class RoutingTable
     {
-		ConcurrentBag<RoutingLog> bag;
-        SynchronizedCollection<RoutingLog> logs;
+		//ConcurrentBag<RoutingLog> bag;
+        private SynchronizedCollection<RoutingLog> logs;
 
         public RoutingTable(Router r)
         {
-            bag = new ConcurrentBag<RoutingLog>();
+            //bag = new ConcurrentBag<RoutingLog>();
             logs = new SynchronizedCollection<RoutingLog>();
             SetConnected(r);
         }
@@ -79,18 +79,74 @@ namespace Router
 
 		}
 
+        public void Add(RIPv2Packet p, RIPv2Entry e)
+        {
+            logs.Add(new RIPv2RoutingLog(p, e));
+        }
+
 		public void Remove(int i)
         {
 
             try
             {
-                if (logs[i].Type == RoutingLog.typeConnected)
+                if (logs[i].Type == RoutingLog.typeConnected || logs[i].Type == RoutingLog.typeRIPv2)
                 {
                     return;
                 }
                 logs.RemoveAt(i);
             }
             catch (Exception) { }
+
+        }
+
+        public void RIPv2TimersHandle(RIPv2Timer t)
+        {
+            List<int> toRemove = new List<int>();
+            int i = 0;
+            foreach (var log in logs)
+            {
+                if (log.Type == RoutingLog.typeRIPv2)
+                {
+                    var r = (RIPv2RoutingLog)log;
+                    if (r.IsFlushed)
+                    {
+                        if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > (t.Holddown + t.Invalid))
+                            toRemove.Add(i);
+                    }
+                    else if (r.IsInvalid)
+                    {
+                        if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > t.Flush)
+                        {
+                            r.IsFlushed = true;
+                            if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > (t.Holddown + t.Invalid))
+                                toRemove.Add(i);
+                        }
+                    }
+                    else
+                    {
+                        if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > t.Invalid)
+                        {
+                            r.IsInvalid = true;
+                            if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > t.Flush)
+                            {
+                                r.IsFlushed = true;
+                                if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > (t.Holddown + t.Invalid))
+                                    toRemove.Add(i);
+                            }
+                        }
+                    }
+                }
+                i++;
+            }
+
+            if (toRemove.Count > 0)
+            {
+                toRemove.Reverse();
+                foreach (var rem in toRemove)
+                {
+                    logs.RemoveAt(rem);
+                }
+            }
 
         }
 
@@ -103,6 +159,11 @@ namespace Router
 				
                 if (IpV4.IsInSubnet(z.Ip, z.Mask, ip))
                 {
+                    if (z.Type == RoutingLog.typeRIPv2)
+                    {
+                        var log = (RIPv2RoutingLog)z;
+                        if (log.IsFlushed) throw new Exception(); 
+                    }
                     if (z.OutInt == 1 || z.OutInt == 2)
                     {
 						return z.OutInt;
@@ -186,7 +247,11 @@ namespace Router
             // "  C  | 255.255.255.255 | 255.255.255.255 |    1    | "
             foreach (var log in logs)
             {
-               l.Add(log.ToString());
+                if (log.Type == RoutingLog.typeRIPv2)
+                {
+                    if (((RIPv2RoutingLog)log).IsFlushed) continue;
+                }
+                l.Add(log.ToString());
             }
             return l;
         }

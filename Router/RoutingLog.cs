@@ -13,12 +13,13 @@ namespace Router
         public static readonly int typeStatic = 1;
         public static readonly int typeRIPv2 = 2;
 
-        private int type;
-        private IpV4Address ip;
-        private string mask;
-        private int outInt;
-        private IpV4Address nextHop;
+        protected int type;
+        protected IpV4Address ip;
+        protected string mask;
+        protected int outInt;
+        protected IpV4Address nextHop;
         
+
 
         public RoutingLog(int type, IpV4Address ip, string mask, int outInt)
         {
@@ -41,6 +42,10 @@ namespace Router
         public RoutingLog(int type, IpV4Address ip, string mask, int outInt, IpV4Address nextHop) : this(type, ip, mask, outInt)
         {
             this.nextHop = nextHop;
+        }
+
+        protected RoutingLog()
+        {
         }
 
         public override string ToString()
