@@ -13,12 +13,14 @@ namespace Router
     {
 		//ConcurrentBag<RoutingLog> bag;
         private SynchronizedCollection<RoutingLog> logs;
+        private Router router;
 
         public RoutingTable(Router r)
         {
             //bag = new ConcurrentBag<RoutingLog>();
             logs = new SynchronizedCollection<RoutingLog>();
             SetConnected(r);
+            router = r;
         }
 
         public void SetConnected(Router r)
@@ -94,6 +96,19 @@ namespace Router
                     return;
                 }
                 logs.RemoveAt(i);
+                List<IpV4Address> toRemove = new List<IpV4Address>();
+                foreach (var x in router.ArpTable.Table)
+                {
+                    if (IpV4.IsInSubnet(logs[i].Ip, logs[i].Mask, x.Value.Ip))
+                    {
+                        toRemove.Add(x.Value.Ip);
+                    }
+                }
+                foreach (var x in toRemove)
+                {
+                    try { router.ArpTable.Remove(x); }
+                    catch (Exception) { }
+                }
             }
             catch (Exception) { }
 

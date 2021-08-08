@@ -11,6 +11,7 @@ namespace Router
     public partial class RouterGui : Form
     {
         private Router router;
+        private RIPv2Handler ripHandler;
         private Stats in1, in2;
         private bool arpViewFocus;
         private bool routingTableViewFocus;
@@ -79,8 +80,18 @@ namespace Router
 
             new Thread(() => { router.Forward(router.Port1); }).Start();
             new Thread(() => { router.Forward(router.Port2); }).Start();
-            new Thread(() => { new RIPv2Handler(router.Port1, router, 1).Reciever.StartRecieving(); }).Start();
-            new Thread(() => { new RIPv2Handler(router.Port2, router, 2).Reciever.StartRecieving(); }).Start();
+            /* RIPv2 */
+            ripHandler = new RIPv2Handler(router);
+            new Thread(() => { ripHandler.Reciever1.StartRecieving(); }).Start();
+            new Thread(() => { ripHandler.Reciever2.StartRecieving(); }).Start();
+            new Thread(() => {
+                while (true)
+                {
+                    ripHandler.TimersHandle();
+                    Thread.Sleep(1000);
+                }
+            }).Start();
+
 
 
             arpViewFocus = false;
@@ -411,6 +422,34 @@ namespace Router
             }
             catch (Exception) { }
             
+        }
+
+        private void port1RipStateButton_Click(object sender, EventArgs e)
+        {
+            if (ripHandler.Reciever1.Recieving)
+            {
+                ripHandler.Reciever1.Recieving = false;
+                label21.Text = "Off";
+            }
+            else if (!ripHandler.Reciever1.Recieving)
+            {
+                ripHandler.Reciever1.Recieving = true;
+                label21.Text = "On";
+            }
+        }
+
+        private void port2RipStateButton_Click(object sender, EventArgs e)
+        {
+            if (ripHandler.Reciever2.Recieving)
+            {
+                ripHandler.Reciever2.Recieving = false;
+                label22.Text = "Off";
+            }
+            else if (!ripHandler.Reciever2.Recieving)
+            {
+                ripHandler.Reciever2.Recieving = true;
+                label22.Text = "On";
+            }
         }
 
         private void clearStatsButton_Click(object sender, EventArgs e)

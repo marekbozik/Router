@@ -19,6 +19,7 @@ namespace Router
         private int agingTime;
 
         public int AgingTime { get => agingTime; set => agingTime = value; }
+        internal ConcurrentDictionary<IpV4Address, ArpLog> Table { get => table; set => table = value; }
 
         public ArpTable(int agingTime, Router r)
         {                                                        //concurrent level, initial size

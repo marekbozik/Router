@@ -31,7 +31,7 @@ namespace Router
             metric = e.Metric++;
             lastUpdate = DateTime.Now;
             isInvalid = false;
-            isOnHoldDown = false;
+            //isOnHoldDown = false;
         }
 
         public void RegisterUpdate()

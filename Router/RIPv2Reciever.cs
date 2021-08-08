@@ -22,8 +22,11 @@ namespace Router
             recieving = false;
             this.router = router;
             this.port = port;
+            recieving = false;
             //StartRecieving();
         }
+
+        public bool Recieving { get => recieving; set => recieving = value; }
 
         public void StartRecieving()
         {
@@ -50,6 +53,8 @@ namespace Router
 
         private void Handler(Packet p)
         {
+            if (!recieving) return;
+
             if (p.Ethernet.Source == router.Port1.Mac || p.Ethernet.Source == router.Port2.Mac) return;
 
             if (IpV4Packet.IsIpV4Packet(p))
