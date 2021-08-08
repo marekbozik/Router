@@ -9,10 +9,17 @@ namespace Router
 {
     class RIPv2Entry
     {
-        private byte[] raw;
-        private IpV4Address ip;
-        private string mask;
-        private byte metric;
+        protected byte[] raw;
+        protected IpV4Address ip;
+        protected string mask;
+        protected byte metric;
+
+        protected RIPv2Entry(RIPv2Entry e)
+        {
+            this.ip = e.Ip;
+            this.mask =e.Mask;
+            this.metric = e.Metric;
+        }
 
         public RIPv2Entry(byte[] raw)
         {

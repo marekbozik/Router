@@ -434,11 +434,13 @@ namespace Router
             if (ripHandler.Reciever1.Recieving)
             {
                 ripHandler.Reciever1.Recieving = false;
+                ripHandler.Sender1.Sending = false;
                 label21.Text = "Off";
             }
             else if (!ripHandler.Reciever1.Recieving)
             {
                 ripHandler.Reciever1.Recieving = true;
+                ripHandler.Sender1.Sending = true;
                 label21.Text = "On";
             }
         }
@@ -448,11 +450,13 @@ namespace Router
             if (ripHandler.Reciever2.Recieving)
             {
                 ripHandler.Reciever2.Recieving = false;
+                ripHandler.Sender2.Sending = false;
                 label22.Text = "Off";
             }
             else if (!ripHandler.Reciever2.Recieving)
             {
                 ripHandler.Reciever2.Recieving = true;
+                ripHandler.Sender2.Sending = true;
                 label22.Text = "On";
             }
         }
@@ -483,6 +487,22 @@ namespace Router
             t.Flush = (int)f;
 
             ripHandler.Timers = t; 
+        }
+
+        private void RIPv2StateButton_Click(object sender, EventArgs e)
+        {
+            if (ripHandler.IsRIPv2Enabled)
+            {
+                ripHandler.IsRIPv2Enabled = false;
+                label21.Text = "Off";
+                label22.Text = "Off";
+                label23.Text = "Off";
+            }
+            else
+            {
+                ripHandler.IsRIPv2Enabled = true;
+                label23.Text = "On";
+            }
         }
 
         private void clearStatsButton_Click(object sender, EventArgs e)

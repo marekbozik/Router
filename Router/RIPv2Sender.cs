@@ -8,5 +8,18 @@ namespace Router
 {
     class RIPv2Sender
     {
+        private bool sending;
+
+        public RIPv2Sender()
+        {
+            sending = false;
+        }
+
+        public bool Sending { get => sending; set => sending = value; }
+
+        public void StartSending()
+        {
+
+        }
     }
 }

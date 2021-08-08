@@ -35,5 +35,11 @@ namespace Router
         public byte[] Raw { get => raw; set => raw = value; }
         public byte Command { get => command; set => command = value; }
         internal RIPv2EntryTable Entries { get => entries; set => entries = value; }
+
+        public static Packet RIPv2PacketBuilder()
+        {
+            Packet p = null;
+            return p;
+        }
     }
 }

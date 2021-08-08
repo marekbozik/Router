@@ -6,12 +6,16 @@
         private RIPv2Reciever reciever1, reciever2;
         private RIPv2Timer timers;
         private Router router;
+        private bool isRIPv2Enabled;
+        private RIPv2Process process;
 
         internal RIPv2Sender Sender1 { get => sender1; set => sender1 = value; }
         internal RIPv2Sender Sender2 { get => sender2; set => sender2 = value; }
         internal RIPv2Reciever Reciever1 { get => reciever1; set => reciever1 = value; }
         internal RIPv2Reciever Reciever2 { get => reciever2; set => reciever2 = value; }
         internal RIPv2Timer Timers { get => timers; set => timers = value; }
+        internal RIPv2Process Process { get => process; set => process = value; }
+        public bool IsRIPv2Enabled { get => isRIPv2Enabled; set => isRIPv2Enabled = SetIsEnabled(value); }
 
         public RIPv2Handler(Router router)
         {
@@ -25,6 +29,20 @@
             timers.Holddown = 30; //180
             timers.Flush = 180; //240
             this.router = router;
+            isRIPv2Enabled = false;
+            process = new RIPv2Process();
+        }
+
+        private bool SetIsEnabled(bool enabled)
+        {
+            if (!enabled)
+            {
+                reciever1.Recieving = false;
+                reciever2.Recieving = false;
+                sender1.Sending = false;
+                sender2.Sending = false;
+            }
+            return enabled;
         }
 
         public void TimersHandle()

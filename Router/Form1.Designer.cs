@@ -995,6 +995,7 @@ namespace Router
             this.button9.TabIndex = 0;
             this.button9.Text = "Change RIPv2 state";
             this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.RIPv2StateButton_Click);
             // 
             // label23
             // 
