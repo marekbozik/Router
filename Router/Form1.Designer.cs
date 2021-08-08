@@ -96,6 +96,28 @@ namespace Router
             this.label22 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+            this.button9 = new System.Windows.Forms.Button();
+            this.label23 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.ripFlushTimerTextBox = new System.Windows.Forms.TextBox();
+            this.ripHolddownTimerTextBox = new System.Windows.Forms.TextBox();
+            this.ripInvalidTimerTextBox = new System.Windows.Forms.TextBox();
+            this.ripUpdateTimerTextBox = new System.Windows.Forms.TextBox();
+            this.button10 = new System.Windows.Forms.Button();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
+            this.label29 = new System.Windows.Forms.Label();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.button11 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
+            this.listView1 = new System.Windows.Forms.ListView();
             this.tabs.SuspendLayout();
             this.routerTab.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -109,6 +131,10 @@ namespace Router
             this.RIPv2.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
             this.tableLayoutPanel8.SuspendLayout();
+            this.tableLayoutPanel9.SuspendLayout();
+            this.tableLayoutPanel10.SuspendLayout();
+            this.tableLayoutPanel11.SuspendLayout();
+            this.tableLayoutPanel12.SuspendLayout();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -820,16 +846,17 @@ namespace Router
             this.tableLayoutPanel7.ColumnCount = 2;
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel8, 0, 1);
-            this.tableLayoutPanel7.Controls.Add(this.label19, 0, 0);
-            this.tableLayoutPanel7.Controls.Add(this.label20, 1, 0);
+            this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel8, 0, 2);
+            this.tableLayoutPanel7.Controls.Add(this.label19, 0, 1);
+            this.tableLayoutPanel7.Controls.Add(this.label20, 1, 1);
+            this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel9, 0, 0);
             this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 0);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 3;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(980, 473);
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 87F));
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8F));
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(1000, 491);
             this.tableLayoutPanel7.TabIndex = 1;
             // 
             // tableLayoutPanel8
@@ -849,19 +876,19 @@ namespace Router
             this.tableLayoutPanel8.Controls.Add(this.label21, 1, 0);
             this.tableLayoutPanel8.Controls.Add(this.button8, 2, 0);
             this.tableLayoutPanel8.Controls.Add(this.label22, 3, 0);
-            this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 50);
+            this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 454);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
             this.tableLayoutPanel8.RowCount = 1;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(974, 41);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(994, 34);
             this.tableLayoutPanel8.TabIndex = 0;
             // 
             // button7
             // 
             this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.button7.Location = new System.Drawing.Point(4, 9);
+            this.button7.Location = new System.Drawing.Point(4, 5);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(236, 23);
+            this.button7.Size = new System.Drawing.Size(241, 23);
             this.button7.TabIndex = 0;
             this.button7.Text = "Change state";
             this.button7.UseVisualStyleBackColor = true;
@@ -871,7 +898,7 @@ namespace Router
             // 
             this.label21.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(247, 13);
+            this.label21.Location = new System.Drawing.Point(252, 9);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(24, 15);
             this.label21.TabIndex = 1;
@@ -880,9 +907,9 @@ namespace Router
             // button8
             // 
             this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.button8.Location = new System.Drawing.Point(490, 9);
+            this.button8.Location = new System.Drawing.Point(500, 5);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(236, 23);
+            this.button8.Size = new System.Drawing.Size(241, 23);
             this.button8.TabIndex = 3;
             this.button8.Text = "Change state";
             this.button8.UseVisualStyleBackColor = true;
@@ -892,7 +919,7 @@ namespace Router
             // 
             this.label22.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(733, 13);
+            this.label22.Location = new System.Drawing.Point(748, 9);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(24, 15);
             this.label22.TabIndex = 4;
@@ -903,7 +930,7 @@ namespace Router
             // 
             this.label19.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(226, 32);
+            this.label19.Location = new System.Drawing.Point(231, 436);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(38, 15);
             this.label19.TabIndex = 1;
@@ -913,11 +940,287 @@ namespace Router
             // 
             this.label20.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(716, 32);
+            this.label20.Location = new System.Drawing.Point(731, 436);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(38, 15);
             this.label20.TabIndex = 2;
             this.label20.Text = "Port 2";
+            // 
+            // tableLayoutPanel9
+            // 
+            this.tableLayoutPanel9.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel9.ColumnCount = 1;
+            this.tableLayoutPanel7.SetColumnSpan(this.tableLayoutPanel9, 2);
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel9.Controls.Add(this.tableLayoutPanel10, 0, 0);
+            this.tableLayoutPanel9.Controls.Add(this.tableLayoutPanel11, 0, 1);
+            this.tableLayoutPanel9.Controls.Add(this.tableLayoutPanel12, 0, 2);
+            this.tableLayoutPanel9.Controls.Add(this.listView1, 0, 3);
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel9.Name = "tableLayoutPanel9";
+            this.tableLayoutPanel9.RowCount = 4;
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(994, 421);
+            this.tableLayoutPanel9.TabIndex = 3;
+            // 
+            // tableLayoutPanel10
+            // 
+            this.tableLayoutPanel10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel10.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel10.ColumnCount = 2;
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel10.Controls.Add(this.button9, 0, 0);
+            this.tableLayoutPanel10.Controls.Add(this.label23, 1, 0);
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
+            this.tableLayoutPanel10.RowCount = 1;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(988, 36);
+            this.tableLayoutPanel10.TabIndex = 0;
+            // 
+            // button9
+            // 
+            this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.button9.Location = new System.Drawing.Point(4, 6);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(486, 23);
+            this.button9.TabIndex = 0;
+            this.button9.Text = "Change RIPv2 state";
+            this.button9.UseVisualStyleBackColor = true;
+            // 
+            // label23
+            // 
+            this.label23.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(497, 10);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(24, 15);
+            this.label23.TabIndex = 1;
+            this.label23.Text = "Off";
+            // 
+            // tableLayoutPanel11
+            // 
+            this.tableLayoutPanel11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel11.ColumnCount = 5;
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel11.Controls.Add(this.label27, 4, 0);
+            this.tableLayoutPanel11.Controls.Add(this.label26, 3, 0);
+            this.tableLayoutPanel11.Controls.Add(this.label25, 2, 0);
+            this.tableLayoutPanel11.Controls.Add(this.label24, 1, 0);
+            this.tableLayoutPanel11.Controls.Add(this.ripFlushTimerTextBox, 4, 1);
+            this.tableLayoutPanel11.Controls.Add(this.ripHolddownTimerTextBox, 3, 1);
+            this.tableLayoutPanel11.Controls.Add(this.ripInvalidTimerTextBox, 2, 1);
+            this.tableLayoutPanel11.Controls.Add(this.ripUpdateTimerTextBox, 1, 1);
+            this.tableLayoutPanel11.Controls.Add(this.button10, 0, 1);
+            this.tableLayoutPanel11.Controls.Add(this.label28, 0, 0);
+            this.tableLayoutPanel11.Controls.Add(this.label30, 0, 2);
+            this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 45);
+            this.tableLayoutPanel11.Name = "tableLayoutPanel11";
+            this.tableLayoutPanel11.RowCount = 3;
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 4F));
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(988, 78);
+            this.tableLayoutPanel11.TabIndex = 1;
+            // 
+            // label27
+            // 
+            this.label27.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(870, 22);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(35, 15);
+            this.label27.TabIndex = 3;
+            this.label27.Text = "Flush";
+            // 
+            // label26
+            // 
+            this.label26.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(658, 22);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(63, 15);
+            this.label26.TabIndex = 2;
+            this.label26.Text = "Holddown";
+            // 
+            // label25
+            // 
+            this.label25.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(471, 22);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(42, 15);
+            this.label25.TabIndex = 1;
+            this.label25.Text = "Invalid";
+            // 
+            // label24
+            // 
+            this.label24.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(273, 22);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(45, 15);
+            this.label24.TabIndex = 0;
+            this.label24.Text = "Update";
+            // 
+            // ripFlushTimerTextBox
+            // 
+            this.ripFlushTimerTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ripFlushTimerTextBox.Location = new System.Drawing.Point(791, 40);
+            this.ripFlushTimerTextBox.Name = "ripFlushTimerTextBox";
+            this.ripFlushTimerTextBox.Size = new System.Drawing.Size(194, 23);
+            this.ripFlushTimerTextBox.TabIndex = 7;
+            // 
+            // ripHolddownTimerTextBox
+            // 
+            this.ripHolddownTimerTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ripHolddownTimerTextBox.Location = new System.Drawing.Point(594, 40);
+            this.ripHolddownTimerTextBox.Name = "ripHolddownTimerTextBox";
+            this.ripHolddownTimerTextBox.Size = new System.Drawing.Size(191, 23);
+            this.ripHolddownTimerTextBox.TabIndex = 6;
+            // 
+            // ripInvalidTimerTextBox
+            // 
+            this.ripInvalidTimerTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ripInvalidTimerTextBox.Location = new System.Drawing.Point(397, 40);
+            this.ripInvalidTimerTextBox.Name = "ripInvalidTimerTextBox";
+            this.ripInvalidTimerTextBox.Size = new System.Drawing.Size(191, 23);
+            this.ripInvalidTimerTextBox.TabIndex = 5;
+            // 
+            // ripUpdateTimerTextBox
+            // 
+            this.ripUpdateTimerTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ripUpdateTimerTextBox.Location = new System.Drawing.Point(200, 40);
+            this.ripUpdateTimerTextBox.Name = "ripUpdateTimerTextBox";
+            this.ripUpdateTimerTextBox.Size = new System.Drawing.Size(191, 23);
+            this.ripUpdateTimerTextBox.TabIndex = 4;
+            // 
+            // button10
+            // 
+            this.button10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button10.Location = new System.Drawing.Point(3, 40);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(191, 23);
+            this.button10.TabIndex = 8;
+            this.button10.Text = "Set timers";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.SetRIPv2TimerButton_Click);
+            // 
+            // label28
+            // 
+            this.label28.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label28.Location = new System.Drawing.Point(3, 16);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(104, 21);
+            this.label28.TabIndex = 9;
+            this.label28.Text = "RIPv2 Timers";
+            // 
+            // label30
+            // 
+            this.label30.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label30.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tableLayoutPanel11.SetColumnSpan(this.label30, 5);
+            this.label30.Location = new System.Drawing.Point(3, 75);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(982, 2);
+            this.label30.TabIndex = 10;
+            // 
+            // tableLayoutPanel12
+            // 
+            this.tableLayoutPanel12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel12.ColumnCount = 5;
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel12.Controls.Add(this.label29, 0, 0);
+            this.tableLayoutPanel12.Controls.Add(this.textBox5, 1, 0);
+            this.tableLayoutPanel12.Controls.Add(this.button11, 2, 0);
+            this.tableLayoutPanel12.Controls.Add(this.button12, 4, 0);
+            this.tableLayoutPanel12.Location = new System.Drawing.Point(3, 129);
+            this.tableLayoutPanel12.Name = "tableLayoutPanel12";
+            this.tableLayoutPanel12.RowCount = 1;
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(988, 36);
+            this.tableLayoutPanel12.TabIndex = 2;
+            // 
+            // label29
+            // 
+            this.label29.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(142, 21);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(52, 15);
+            this.label29.TabIndex = 0;
+            this.label29.Text = "Network";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox5.Location = new System.Drawing.Point(200, 10);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(191, 23);
+            this.textBox5.TabIndex = 1;
+            // 
+            // button11
+            // 
+            this.button11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button11.Location = new System.Drawing.Point(397, 10);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(191, 23);
+            this.button11.TabIndex = 2;
+            this.button11.Text = "Add";
+            this.button11.UseVisualStyleBackColor = true;
+            // 
+            // button12
+            // 
+            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button12.Location = new System.Drawing.Point(791, 10);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(194, 23);
+            this.button12.TabIndex = 3;
+            this.button12.Text = "Remove";
+            this.button12.UseVisualStyleBackColor = true;
+            // 
+            // listView1
+            // 
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView1.HideSelection = false;
+            this.listView1.Location = new System.Drawing.Point(3, 171);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(988, 247);
+            this.listView1.TabIndex = 3;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.List;
             // 
             // RouterGui
             // 
@@ -951,6 +1254,13 @@ namespace Router
             this.tableLayoutPanel7.PerformLayout();
             this.tableLayoutPanel8.ResumeLayout(false);
             this.tableLayoutPanel8.PerformLayout();
+            this.tableLayoutPanel9.ResumeLayout(false);
+            this.tableLayoutPanel10.ResumeLayout(false);
+            this.tableLayoutPanel10.PerformLayout();
+            this.tableLayoutPanel11.ResumeLayout(false);
+            this.tableLayoutPanel11.PerformLayout();
+            this.tableLayoutPanel12.ResumeLayout(false);
+            this.tableLayoutPanel12.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1024,6 +1334,28 @@ namespace Router
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox ripFlushTimerTextBox;
+        private System.Windows.Forms.TextBox ripHolddownTimerTextBox;
+        private System.Windows.Forms.TextBox ripInvalidTimerTextBox;
+        private System.Windows.Forms.TextBox ripUpdateTimerTextBox;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.Label label30;
     }
 }
 

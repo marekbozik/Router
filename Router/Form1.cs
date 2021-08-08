@@ -105,6 +105,11 @@ namespace Router
             tabs.TabPages.Remove(appSettingTab);
             tabs.TabPages.Add(appSettingTab);
 
+            ripUpdateTimerTextBox.Text = ripHandler.Timers.Update.ToString();
+            ripInvalidTimerTextBox.Text = ripHandler.Timers.Invalid.ToString();
+            ripHolddownTimerTextBox.Text = ripHandler.Timers.Holddown.ToString();
+            ripFlushTimerTextBox.Text = ripHandler.Timers.Flush.ToString();
+
 
         }
 
@@ -450,6 +455,34 @@ namespace Router
                 ripHandler.Reciever2.Recieving = true;
                 label22.Text = "On";
             }
+        }
+
+        private void SetRIPv2TimerButton_Click(object sender, EventArgs e)
+        {
+            uint u, i, h, f;
+            try
+            {
+                u = UInt32.Parse(ripUpdateTimerTextBox.Text);
+                i = UInt32.Parse(ripInvalidTimerTextBox.Text);
+                h = UInt32.Parse(ripHolddownTimerTextBox.Text);
+                f = UInt32.Parse(ripFlushTimerTextBox.Text);
+
+            }
+            catch (Exception)
+            {
+                ripUpdateTimerTextBox.Text = ripHandler.Timers.Update.ToString();
+                ripInvalidTimerTextBox.Text = ripHandler.Timers.Invalid.ToString();
+                ripHolddownTimerTextBox.Text = ripHandler.Timers.Holddown.ToString();
+                ripFlushTimerTextBox.Text = ripHandler.Timers.Flush.ToString();
+                return;
+            }
+            RIPv2Timer t = new RIPv2Timer();
+            t.Update = (int)u;
+            t.Invalid = (int)i;
+            t.Holddown = (int)h;
+            t.Flush = (int)f;
+
+            ripHandler.Timers = t; 
         }
 
         private void clearStatsButton_Click(object sender, EventArgs e)

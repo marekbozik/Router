@@ -19,6 +19,11 @@
             sender2 = new RIPv2Sender();
             reciever1 = new RIPv2Reciever(router.Port1, router, 1);
             reciever2 = new RIPv2Reciever(router.Port2, router, 2);
+            timers = new RIPv2Timer();
+            timers.Update = 30;
+            timers.Invalid = 60; //180
+            timers.Holddown = 30; //180
+            timers.Flush = 180; //240
             this.router = router;
         }
 

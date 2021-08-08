@@ -23,7 +23,6 @@ namespace Router
             this.router = router;
             this.port = port;
             recieving = false;
-            //StartRecieving();
         }
 
         public bool Recieving { get => recieving; set => recieving = value; }
@@ -36,19 +35,7 @@ namespace Router
             {
                 communicator.ReceivePackets(0, Handler);
             }
-            //new Thread(() =>
-            //{
 
-            //    while (true)
-            //    {
-            //        if (recieving)
-            //        {
-
-            //        }
-
-            //        Thread.Sleep(250);
-            //    }
-            //}).Start();
         }
 
         private void Handler(Packet p)
@@ -69,10 +56,25 @@ namespace Router
                     {
                         foreach (var entry in rip.Entries.Table)
                         {
-                            var rl = new RoutingLog(RoutingLog.typeRIPv2, entry.Ip, entry.Mask, port);
+                            //var rl = new RoutingLog(RoutingLog.typeRIPv2, entry.Ip, entry.Mask, port);
+                            var rl = new RIPv2RoutingLog(rip, entry);
                             if (!router.RoutingTable.Contains(rl))
                             {
                                 router.RoutingTable.Add(rl);
+                            }
+                            else
+                            {
+                                var l = router.RoutingTable.GetLog(entry.Ip, entry.Mask);
+                                if (l.Type == RoutingLog.typeRIPv2)
+                                {
+                                    var r = (RIPv2RoutingLog)l;
+                                    if ((r.Metric + 1) < r.Metric && !r.IsInvalid)
+                                    {
+                                        router.RoutingTable.Remove(l);
+                                        router.RoutingTable.Add(rl);
+                                    }
+
+                                }
                             }
 
                         }

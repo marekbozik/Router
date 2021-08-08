@@ -172,14 +172,13 @@ namespace Router
             {
                 IpV4Packet ipp = new IpV4Packet(p);
 
-                if (ipp.IsRIPv2())
-                {
-                    RIPv2Packet rip;
-                    rip = new RIPv2Packet(ipp.Packet);
-                }
                 if (ArpPacket.IsArp(p)) { ArpHandle(p, 1); return; }
                 else if (IpV4.IsInSubnet(port2.Ip, port2.Mask, ipp.DstIp))
                     ForwardTo(ipp, 2);
+                else if (arpTable.Contains(ipp.DstIp))
+                {
+                    ForwardTo(ipp, arpTable.GetPort(ipp.DstIp));
+                }
                 else
                 {
                     int port = 0;
@@ -213,6 +212,10 @@ namespace Router
                 if (ArpPacket.IsArp(p)) { ArpHandle(p, 2); }
                 else if (IpV4.IsInSubnet(port1.Ip, port1.Mask, ipp.DstIp))
                     ForwardTo(ipp, 1);
+                else if (arpTable.Contains(ipp.DstIp))
+                {
+                    ForwardTo(ipp, arpTable.GetPort(ipp.DstIp));
+                }
                 else
                 {
                     int port = 0;

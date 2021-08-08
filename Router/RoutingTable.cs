@@ -64,6 +64,16 @@ namespace Router
             return false;
         }
 
+        public RoutingLog GetLog(IpV4Address ip, string mask)
+        {
+            foreach (var log in logs)
+            {
+                if (log.Ip == ip && log.Mask == mask)
+                    return log;
+            }
+            throw new Exception();
+        }
+
         public void Add (RoutingLog rl)
         {
             logs.Add(rl);
@@ -86,6 +96,20 @@ namespace Router
             logs.Add(new RIPv2RoutingLog(p, e));
         }
 
+        public void Remove(RoutingLog rl)
+        {
+            int i = 0;
+            foreach (var log in logs)
+            {
+                if (log == rl)
+                {
+                    break;
+                }
+                i++;
+            }
+            logs.RemoveAt(i);
+        }
+
 		public void Remove(int i)
         {
 
@@ -95,10 +119,11 @@ namespace Router
                 {
                     return;
                 }
-                logs.RemoveAt(i);
                 List<IpV4Address> toRemove = new List<IpV4Address>();
                 foreach (var x in router.ArpTable.Table)
                 {
+                    if (x.Value.Ip == router.Port1.Ip || x.Value.Ip == router.Port2.Ip) continue;
+
                     if (IpV4.IsInSubnet(logs[i].Ip, logs[i].Mask, x.Value.Ip))
                     {
                         toRemove.Add(x.Value.Ip);
@@ -109,6 +134,8 @@ namespace Router
                     try { router.ArpTable.Remove(x); }
                     catch (Exception) { }
                 }
+                logs.RemoveAt(i);
+
             }
             catch (Exception) { }
 
