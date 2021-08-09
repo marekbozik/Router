@@ -118,6 +118,8 @@ namespace Router
         internal Stats Out1 { get => out1; }
         internal Stats Out2 { get => out2; }
         internal RoutingTable RoutingTable { get => routingTable; }
+        public PacketCommunicator Sender1 { get => sender1; set => sender1 = value; }
+        public PacketCommunicator Sender2 { get => sender2; set => sender2 = value; }
 
 
         private void Initialize()

@@ -1,4 +1,7 @@
 ﻿using PcapDotNet.Packets;
+using PcapDotNet.Packets.Ethernet;
+using PcapDotNet.Packets.IpV4;
+using PcapDotNet.Packets.Transport;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,10 +39,56 @@ namespace Router
         public byte Command { get => command; set => command = value; }
         internal RIPv2EntryTable Entries { get => entries; set => entries = value; }
 
-        public static Packet RIPv2PacketBuilder()
+        protected static byte[] RIPv2Request()
         {
-            Packet p = null;
-            return p;
+            byte[] arr = new byte[24];
+            arr[0] = 1;
+            arr[1] = 2;
+            arr[23] = 16;
+            return arr;
+        }
+
+        public static Packet RIPv2RequestPacketBuilder(RouterPort senderRp)
+        {
+            EthernetLayer ethernetLayer = new EthernetLayer
+            {
+                Source = senderRp.Mac,
+                Destination = new MacAddress("01:00:5E:00:00:09")
+            };
+
+
+            IpV4Layer ipV4Layer =
+                new IpV4Layer
+                {
+                    Source = senderRp.Ip,
+                    CurrentDestination = new IpV4Address("224.0.0.9"),
+                    Fragmentation = IpV4Fragmentation.None,
+                    HeaderChecksum = null, 
+                    Identification = 0,
+                    Options = IpV4Options.None,
+                    Protocol = null,
+                    Ttl = 2,
+                    TypeOfService = 0,
+                };
+
+            UdpLayer udpLayer =
+                new UdpLayer
+                {
+                    SourcePort = 520,
+                    DestinationPort = 520,
+                    Checksum = null, 
+                    CalculateChecksumValue = true,
+                };
+
+            PayloadLayer payloadLayer =
+                new PayloadLayer
+                {
+                    Data = new Datagram(RIPv2Request()),
+                };
+
+            PacketBuilder builder = new PacketBuilder(ethernetLayer, ipV4Layer, udpLayer, payloadLayer);
+
+            return builder.Build(DateTime.Now);
         }
     }
 }

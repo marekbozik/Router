@@ -1,4 +1,6 @@
-﻿namespace Router
+﻿using System.Threading;
+
+namespace Router
 {
     class RIPv2Handler
     {
@@ -16,11 +18,12 @@
         internal RIPv2Timer Timers { get => timers; set => timers = value; }
         internal RIPv2Process Process { get => process; set => process = value; }
         public bool IsRIPv2Enabled { get => isRIPv2Enabled; set => isRIPv2Enabled = SetIsEnabled(value); }
+        internal Router Router { get => router; set => router = value; }
 
         public RIPv2Handler(Router router)
         {
-            sender1 = new RIPv2Sender();
-            sender2 = new RIPv2Sender();
+            sender1 = new RIPv2Sender(router.Port1, this, router.Sender1);
+            sender2 = new RIPv2Sender(router.Port2, this, router.Sender2);
             reciever1 = new RIPv2Reciever(router.Port1, router, 1);
             reciever2 = new RIPv2Reciever(router.Port2, router, 2);
             timers = new RIPv2Timer();
@@ -42,6 +45,12 @@
                 sender1.Sending = false;
                 sender2.Sending = false;
             }
+            //new Thread(() => { 
+            //    router.Sender1.SendPacket(RIPv2Packet.RIPv2RequestPacketBuilder(router.Port1));
+            //    router.Sender2.SendPacket(RIPv2Packet.RIPv2RequestPacketBuilder(router.Port2));
+            //}).Start();
+
+
             return enabled;
         }
 
