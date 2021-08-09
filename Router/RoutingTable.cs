@@ -55,6 +55,30 @@ namespace Router
 
         }
 
+        public string GetMask(IpV4Address netIp)
+        {
+            foreach (var log in logs)
+            {
+                if (log.Ip == netIp && log.Type != RoutingLog.typeRIPv2)
+                {
+                    return log.Mask;
+                }
+            }
+            throw new Exception();
+        }
+
+        public bool Contains(IpV4Address netIp)
+        {
+            foreach (var log in logs)
+            {
+                if (log.Ip == netIp && log.Type != RoutingLog.typeRIPv2)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool Contains(RoutingLog rl)
         {
             foreach (var i in logs)

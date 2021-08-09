@@ -505,6 +505,57 @@ namespace Router
             }
         }
 
+        private void AddRIPv2NetworkButton_Click(object sender, EventArgs e)
+        {
+            IpV4Address ip;
+            try
+            {
+                ip = new IpV4Address(RIPv2NetworkTextBox.Text);
+            }
+            catch (Exception)
+            {
+
+                return;
+            }
+            if (true)
+            {
+                if (router.RoutingTable.Contains(ip) && !ripHandler.Process.IsInProcess(ip))
+                {
+                    ripHandler.Process.Add(new RIPv2Entry(ip, router.RoutingTable.GetMask(ip), 1));
+                    RIPv2NetworksListView.Items.Clear();
+                    RIPv2NetworksListView.View = View.Details;
+                    var en = ripHandler.Process.GetEntries();
+                    RIPv2EntryOrdered res;
+                    while (en.TryDequeue(out res))
+                    {
+                        RIPv2NetworksListView.Items.Add(res.Id.ToString() + " " + res.Ip.ToString());
+                    }
+                    
+                }
+            }
+        }
+
+        private void RemoveRIPv2NetworkButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var x = RIPv2NetworksListView.SelectedItems[0];
+                var s = x.Text.Split(' ');
+                ripHandler.Process.Delete(Int32.Parse(s[0]));
+                RIPv2NetworksListView.Items.Clear();
+                RIPv2NetworksListView.View = View.Details;
+                var en = ripHandler.Process.GetEntries();
+                RIPv2EntryOrdered res;
+                while (en.TryDequeue(out res))
+                {
+                    RIPv2NetworksListView.Items.Add(res.Id.ToString() + " " + res.Ip.ToString());
+                }
+                //router.ArpTable.Remove(new IpV4Address(s[0]));
+            }
+            catch (Exception)
+            { }
+        }
+
         private void clearStatsButton_Click(object sender, EventArgs e)
         {
             if (router != null)

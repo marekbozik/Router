@@ -114,10 +114,11 @@ namespace Router
             this.label30 = new System.Windows.Forms.Label();
             this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
             this.label29 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.RIPv2NetworkTextBox = new System.Windows.Forms.TextBox();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.RIPv2NetworksListView = new System.Windows.Forms.ListView();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.tabs.SuspendLayout();
             this.routerTab.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -957,7 +958,7 @@ namespace Router
             this.tableLayoutPanel9.Controls.Add(this.tableLayoutPanel10, 0, 0);
             this.tableLayoutPanel9.Controls.Add(this.tableLayoutPanel11, 0, 1);
             this.tableLayoutPanel9.Controls.Add(this.tableLayoutPanel12, 0, 2);
-            this.tableLayoutPanel9.Controls.Add(this.listView1, 0, 3);
+            this.tableLayoutPanel9.Controls.Add(this.RIPv2NetworksListView, 0, 3);
             this.tableLayoutPanel9.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
             this.tableLayoutPanel9.RowCount = 4;
@@ -1159,7 +1160,7 @@ namespace Router
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel12.Controls.Add(this.label29, 0, 0);
-            this.tableLayoutPanel12.Controls.Add(this.textBox5, 1, 0);
+            this.tableLayoutPanel12.Controls.Add(this.RIPv2NetworkTextBox, 1, 0);
             this.tableLayoutPanel12.Controls.Add(this.button11, 2, 0);
             this.tableLayoutPanel12.Controls.Add(this.button12, 4, 0);
             this.tableLayoutPanel12.Location = new System.Drawing.Point(3, 129);
@@ -1179,14 +1180,14 @@ namespace Router
             this.label29.TabIndex = 0;
             this.label29.Text = "Network";
             // 
-            // textBox5
+            // RIPv2NetworkTextBox
             // 
-            this.textBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.RIPv2NetworkTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox5.Location = new System.Drawing.Point(200, 10);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(191, 23);
-            this.textBox5.TabIndex = 1;
+            this.RIPv2NetworkTextBox.Location = new System.Drawing.Point(200, 10);
+            this.RIPv2NetworkTextBox.Name = "RIPv2NetworkTextBox";
+            this.RIPv2NetworkTextBox.Size = new System.Drawing.Size(191, 23);
+            this.RIPv2NetworkTextBox.TabIndex = 1;
             // 
             // button11
             // 
@@ -1198,6 +1199,7 @@ namespace Router
             this.button11.TabIndex = 2;
             this.button11.Text = "Add";
             this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.AddRIPv2NetworkButton_Click);
             // 
             // button12
             // 
@@ -1209,19 +1211,28 @@ namespace Router
             this.button12.TabIndex = 3;
             this.button12.Text = "Remove";
             this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.RemoveRIPv2NetworkButton_Click);
             // 
-            // listView1
+            // RIPv2NetworksListView
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.RIPv2NetworksListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(3, 171);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(988, 247);
-            this.listView1.TabIndex = 3;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.List;
+            this.RIPv2NetworksListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader3});
+            this.RIPv2NetworksListView.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.RIPv2NetworksListView.HideSelection = false;
+            this.RIPv2NetworksListView.Location = new System.Drawing.Point(3, 171);
+            this.RIPv2NetworksListView.Name = "RIPv2NetworksListView";
+            this.RIPv2NetworksListView.Size = new System.Drawing.Size(988, 247);
+            this.RIPv2NetworksListView.TabIndex = 3;
+            this.RIPv2NetworksListView.UseCompatibleStateImageBehavior = false;
+            this.RIPv2NetworksListView.View = System.Windows.Forms.View.List;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "ID | Network";
+            this.columnHeader3.Width = 400;
             // 
             // RouterGui
             // 
@@ -1352,11 +1363,12 @@ namespace Router
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
         private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox RIPv2NetworkTextBox;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView RIPv2NetworksListView;
         private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
     }
 }
 

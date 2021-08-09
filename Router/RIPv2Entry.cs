@@ -21,6 +21,13 @@ namespace Router
             this.metric = e.Metric;
         }
 
+        public RIPv2Entry(IpV4Address ip, string mask, byte metric)
+        {
+            this.ip = ip;
+            this.mask = mask;
+            this.metric = metric;
+        }
+
         public RIPv2Entry(byte[] raw)
         {
             this.raw = raw;

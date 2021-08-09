@@ -51,6 +51,19 @@ namespace Router
             }
         }
 
+        public bool IsInProcess(IpV4Address netIp)
+        {
+            var e = GetEntries();
+            RIPv2EntryOrdered res;
+
+            while (e.TryDequeue(out res))
+            {
+                if (netIp == res.Ip) return true;
+            }
+
+            return false;
+        }
+
         public bool IsInProcess(IpV4Address ip, string mask)
         {
             IpV4Address ipp = IpV4.ToNetworkAdress(ip, mask);
