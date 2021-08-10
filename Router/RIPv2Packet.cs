@@ -48,6 +48,63 @@ namespace Router
             return arr;
         }
 
+        protected static byte[] RIPv2ResponseHeader()
+        {
+            byte[] arr = new byte[4];
+            arr[0] = 2;
+            arr[1] = 2;
+            return arr;
+        }
+
+        public static Packet RIPv2ResponsePacketBuilder(RouterPort senderRp, List<byte[]>entries)
+        {
+            EthernetLayer ethernetLayer = new EthernetLayer
+            {
+                Source = senderRp.Mac,
+                Destination = new MacAddress("01:00:5E:00:00:09")
+            };
+
+            IpV4Layer ipV4Layer =
+                new IpV4Layer
+                {
+                    Source = senderRp.Ip,
+                    CurrentDestination = new IpV4Address("224.0.0.9"),
+                    Fragmentation = IpV4Fragmentation.None,
+                    HeaderChecksum = null,
+                    Identification = 0,
+                    Options = IpV4Options.None,
+                    Protocol = null,
+                    Ttl = 2,
+                    TypeOfService = 0,
+                };
+
+            UdpLayer udpLayer =
+                new UdpLayer
+                {
+                    SourcePort = 520,
+                    DestinationPort = 520,
+                    Checksum = null,
+                    CalculateChecksumValue = true,
+                };
+
+            List<byte> r = new List<byte>(24);
+            r.AddRange(RIPv2ResponseHeader()); 
+            foreach (var entry in entries)
+            {
+                r.AddRange(entry);
+            }
+
+            PayloadLayer payloadLayer =
+                new PayloadLayer
+                {
+                    Data = new Datagram(r.ToArray()),
+                };
+
+            PacketBuilder builder = new PacketBuilder(ethernetLayer, ipV4Layer, udpLayer, payloadLayer);
+
+            return builder.Build(DateTime.Now);
+        }
+
         public static Packet RIPv2RequestPacketBuilder(RouterPort senderRp)
         {
             EthernetLayer ethernetLayer = new EthernetLayer

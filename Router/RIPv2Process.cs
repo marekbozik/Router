@@ -10,7 +10,7 @@ namespace Router
 {
     class RIPv2Process
     {
-        private ConcurrentDictionary<int, RIPv2Entry> entries;
+        private ConcurrentDictionary<int, RIPv2Entry> addedNetworks;
         private ConcurrentQueue<int> tickets;
         private int id;
         private object locker;
@@ -18,7 +18,7 @@ namespace Router
         public RIPv2Process()
         {
             tickets = new ConcurrentQueue<int>();
-            entries = new ConcurrentDictionary<int, RIPv2Entry>();
+            addedNetworks = new ConcurrentDictionary<int, RIPv2Entry>();
             id = 0;
             locker = new object();
         }
@@ -27,12 +27,12 @@ namespace Router
         {
             int i;
             if (tickets.TryDequeue(out i))
-                entries.TryAdd(i, e);
+                addedNetworks.TryAdd(i, e);
             else
             {
                 lock (locker)
                 {
-                    entries.TryAdd(id, e);
+                    addedNetworks.TryAdd(id, e);
                     id++;
                 }
             }
@@ -43,7 +43,7 @@ namespace Router
         {
             try
             {
-                entries.TryRemove(id, out _);
+                addedNetworks.TryRemove(id, out _);
                 tickets.Enqueue(id);
             }
             catch (Exception)
@@ -53,7 +53,7 @@ namespace Router
 
         public bool IsInProcess(IpV4Address netIp)
         {
-            var e = GetEntries();
+            var e = GetAddedNetworks();
             RIPv2EntryOrdered res;
 
             while (e.TryDequeue(out res))
@@ -67,7 +67,7 @@ namespace Router
         public bool IsInProcess(IpV4Address ip, string mask)
         {
             IpV4Address ipp = IpV4.ToNetworkAdress(ip, mask);
-            var e = GetEntries();
+            var e = GetAddedNetworks();
             RIPv2EntryOrdered res;
 
             while (e.TryDequeue(out res))
@@ -78,12 +78,12 @@ namespace Router
             return false;
         }
 
-        public ConcurrentQueue<RIPv2EntryOrdered> GetEntries()
+        public ConcurrentQueue<RIPv2EntryOrdered> GetAddedNetworks()
         {
             ConcurrentQueue<RIPv2EntryOrdered> q = new ConcurrentQueue<RIPv2EntryOrdered>();
             Parallel.For(0, id, i => {
                 RIPv2Entry e;
-                if (entries.TryGetValue(i, out e))
+                if (addedNetworks.TryGetValue(i, out e))
                 {
                     try
                     {

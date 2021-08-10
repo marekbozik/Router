@@ -55,6 +55,26 @@ namespace Router
 
         }
 
+        public List<RIPv2Entry> GetRIPv2LogsFor(IpV4Address netIp, string netMask)
+        {
+            int cap;
+            if (logs.Count - 2 < 0)
+                cap = 0;
+            else cap = logs.Count - 2;
+
+            List<RIPv2Entry> l = new List<RIPv2Entry>(cap);
+
+            foreach (var log in logs)
+            {
+                if (log.Type == RoutingLog.typeRIPv2)
+                {
+                    if (IpV4.IsInSubnet(netIp, netMask, log.NextHop))
+                        l.Add(new RIPv2Entry((RIPv2RoutingLog)log));
+                }
+            }
+            return l;
+        }
+
         public string GetMask(IpV4Address netIp)
         {
             foreach (var log in logs)

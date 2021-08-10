@@ -524,7 +524,7 @@ namespace Router
                     ripHandler.Process.Add(new RIPv2Entry(ip, router.RoutingTable.GetMask(ip), 1));
                     RIPv2NetworksListView.Items.Clear();
                     RIPv2NetworksListView.View = View.Details;
-                    var en = ripHandler.Process.GetEntries();
+                    var en = ripHandler.Process.GetAddedNetworks();
                     RIPv2EntryOrdered res;
                     while (en.TryDequeue(out res))
                     {
@@ -544,7 +544,7 @@ namespace Router
                 ripHandler.Process.Delete(Int32.Parse(s[0]));
                 RIPv2NetworksListView.Items.Clear();
                 RIPv2NetworksListView.View = View.Details;
-                var en = ripHandler.Process.GetEntries();
+                var en = ripHandler.Process.GetAddedNetworks();
                 RIPv2EntryOrdered res;
                 while (en.TryDequeue(out res))
                 {

@@ -31,6 +31,7 @@ namespace Router
             metric = e.Metric++;
             lastUpdate = DateTime.Now;
             isInvalid = false;
+            isFlushed = false;
             //isOnHoldDown = false;
         }
 

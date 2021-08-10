@@ -21,6 +21,13 @@ namespace Router
             this.metric = e.Metric;
         }
 
+        public RIPv2Entry(RIPv2RoutingLog l)
+        {
+            ip = l.Ip;
+            mask = l.Mask;
+            metric = (byte)l.Metric;
+        }
+
         public RIPv2Entry(IpV4Address ip, string mask, byte metric)
         {
             this.ip = ip;
@@ -34,6 +41,25 @@ namespace Router
             ip = ToIp(raw[4], raw[5], raw[6], raw[7]);
             mask = ToIp(raw[8], raw[9], raw[10], raw[11]).ToString();
             metric = raw[19];
+        }
+
+        public byte[] ToBytes()
+        {
+            byte[] b = new byte[20];
+            b[1] = 2;
+            var ipArr = ip.ToString().Split('.');
+            for (int i = 4; i <= 7; i++)
+            {
+                b[i] = Byte.Parse(ipArr[i - 4]);
+            }
+            ipArr = mask.Split('.');
+            for (int i = 8; i <= 11; i++)
+            {
+                b[i] = Byte.Parse(ipArr[i - 8]);
+            }
+            b[19] = metric;
+
+            return b;
         }
 
         private IpV4Address ToIp(byte a, byte b, byte c, byte d)
