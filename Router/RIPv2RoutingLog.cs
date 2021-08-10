@@ -28,7 +28,7 @@ namespace Router
             ip = new IpV4Address(e.Ip.ToString());
             mask = e.Mask;
             nextHop = p.SrcIp;
-            metric = e.Metric++;
+            metric = ++e.Metric;
             lastUpdate = DateTime.Now;
             isInvalid = false;
             isFlushed = false;

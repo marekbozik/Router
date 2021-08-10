@@ -84,6 +84,8 @@ namespace Router
             ripHandler = new RIPv2Handler(router);
             new Thread(() => { ripHandler.Reciever1.StartRecieving(); }).Start();
             new Thread(() => { ripHandler.Reciever2.StartRecieving(); }).Start();
+            new Thread(() => { ripHandler.Sender1.StartSending(); }).Start();
+            new Thread(() => { ripHandler.Sender2.StartSending(); }).Start();
             new Thread(() => {
                 while (true)
                 {

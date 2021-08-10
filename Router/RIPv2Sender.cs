@@ -47,19 +47,26 @@ namespace Router
                     var added = RIPHandler.Process.GetAddedNetworks();
                     List<RIPv2Entry> validAdded = new List<RIPv2Entry>(added.Count);
                     RIPv2EntryOrdered res;
+                    bool allowed = false;
                     while (added.TryDequeue(out res))
                     {
+                        if (IpV4.ToNetworkAdress(rp.Ip, rp.Mask) == res.Ip) allowed = true;
                         if (RIPHandler.Router.RoutingTable.GetOutInt(res.Ip) != port)
                             validAdded.Add(res);
                     }
-                    tableEntriesList.AddRange(validAdded);
 
-                    List<byte[]> entries = new List<byte[]>(tableEntriesList.Count);
-                    foreach (var en in tableEntriesList)
+                    if (allowed)
                     {
-                        entries.Add(en.ToBytes());
+                        tableEntriesList.AddRange(validAdded);
+
+                        List<byte[]> entries = new List<byte[]>(tableEntriesList.Count);
+                        foreach (var en in tableEntriesList)
+                        {
+                            entries.Add(en.ToBytes());
+                        }
+                        if(entries.Count > 0)
+                            sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
                     }
-                    sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
                     sec = 0;
                 }
 

@@ -68,7 +68,7 @@ namespace Router
             {
                 if (log.Type == RoutingLog.typeRIPv2)
                 {
-                    if (IpV4.IsInSubnet(netIp, netMask, log.NextHop))
+                    if (!IpV4.IsInSubnet(netIp, netMask, log.NextHop))
                         l.Add(new RIPv2Entry((RIPv2RoutingLog)log));
                 }
             }
