@@ -24,8 +24,8 @@ namespace Router
         {
             sender1 = new RIPv2Sender(router.Port1, this, router.Sender1, 1);
             sender2 = new RIPv2Sender(router.Port2, this, router.Sender2, 2);
-            reciever1 = new RIPv2Reciever(router.Port1, router, 1);
-            reciever2 = new RIPv2Reciever(router.Port2, router, 2);
+            reciever1 = new RIPv2Reciever(router.Port1, router, this);
+            reciever2 = new RIPv2Reciever(router.Port2, router, this);
             timers = new RIPv2Timer();
             timers.Update = 30;
             timers.Invalid = 60; //180

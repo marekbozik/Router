@@ -161,20 +161,24 @@ namespace Router
 
         private void ForwardHandler1(Packet p)
         {
-            MacAddress[] macs = { port1.Mac, port2.Mac };
-            foreach (var mac in macs)
-            {
-                if (p.Ethernet.Source == mac)
+            //new Thread(() =>
+            //{
+                MacAddress[] macs = { port1.Mac, port2.Mac };
+                foreach (var mac in macs)
                 {
-                    return;
+                    if (p.Ethernet.Source == mac)
+                    {
+                        return;
+                    }
                 }
-            }
 
-            if (IpV4Packet.IsIpV4Packet(p))
-            {
-                IpV4Packet ipp = new IpV4Packet(p);
+                if (IpV4Packet.IsIpV4Packet(p))
+                {
+                    IpV4Packet ipp = new IpV4Packet(p);
 
-                if (ArpPacket.IsArp(p)) { ArpHandle(p, 1); return; }
+                if (ArpPacket.IsArp(ipp.Packet)) { ArpHandle(ipp.Packet, 1); return; }
+                else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
+                    PingHandler(ipp, 1);
                 else if (IpV4.IsInSubnet(port2.Ip, port2.Mask, ipp.DstIp))
                     ForwardTo(ipp, 2);
                 else if (arpTable.Contains(ipp.DstIp))
@@ -192,43 +196,61 @@ namespace Router
                     ForwardTo(ipp, port);
                 }
 
-            }
-
+                }
+            //});
         }
 
         private void ForwardHandler2(Packet p)
         {
-            MacAddress[] macs = { port1.Mac, port2.Mac };
-            foreach (var mac in macs)
-            {
-                if (p.Ethernet.Source == mac)
+            //new Thread(() =>
+            //{
+                MacAddress[] macs = { port1.Mac, port2.Mac };
+                foreach (var mac in macs)
                 {
-                    return;
-                }
-            }
-
-            if (IpV4Packet.IsIpV4Packet(p))
-            {
-                IpV4Packet ipp = new IpV4Packet(p);
-
-                if (ArpPacket.IsArp(p)) { ArpHandle(p, 2); }
-                else if (IpV4.IsInSubnet(port1.Ip, port1.Mask, ipp.DstIp))
-                    ForwardTo(ipp, 1);
-                else if (arpTable.Contains(ipp.DstIp))
-                {
-                    ForwardTo(ipp, arpTable.GetPort(ipp.DstIp));
-                }
-                else
-                {
-                    int port = 0;
-                    try
+                    if (p.Ethernet.Source == mac)
                     {
-                        port = routingTable.GetOutInt(ipp.DstIp);
+                        return;
                     }
-                    catch (Exception) { return; }
-                    ForwardTo(ipp, port);
                 }
-            }
+
+                if (IpV4Packet.IsIpV4Packet(p))
+                {
+                    IpV4Packet ipp = new IpV4Packet(p);
+
+                    if (ArpPacket.IsArp(p)) { ArpHandle(p, 2); }
+                    else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
+                        PingHandler(ipp, 2);
+                    else if (IpV4.IsInSubnet(port1.Ip, port1.Mask, ipp.DstIp))
+                        ForwardTo(ipp, 1);
+                    else if (arpTable.Contains(ipp.DstIp))
+                    {
+                        ForwardTo(ipp, arpTable.GetPort(ipp.DstIp));
+                    }
+                    else
+                    {
+                        int port = 0;
+                        try
+                        {
+                            port = routingTable.GetOutInt(ipp.DstIp);
+                        }
+                        catch (Exception) { return; }
+                        ForwardTo(ipp, port);
+                    }
+                }
+            //});
+        }
+
+        private void PingHandler(IpV4Packet ipp, int port)
+        {
+            if (port == 1 && ipp.DstIp == port1.Ip)
+                sender1.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port1.Mac, port1.Ip));
+            else if (port == 1 && ipp.DstIp == port2.Ip)
+                sender1.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port1.Mac, port2.Ip));
+            else if (port == 2 && ipp.DstIp == port1.Ip)
+                sender2.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port2.Mac, port1.Ip));
+            else if (port == 2 && ipp.DstIp == port2.Ip)
+                sender1.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port2.Mac, port2.Ip));
+
         }
 
         private void ForwardTo(IpV4Packet ipp, int port)

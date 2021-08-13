@@ -55,7 +55,8 @@ namespace Router
             {
                 if (packet.Ethernet.IpV4.Udp.SourcePort == RIPv2Packet.RIPUdpPort && packet.Ethernet.IpV4.Udp.DestinationPort == RIPv2Packet.RIPUdpPort)
                 {
-                    if (dstIp == new IpV4Address("224.0.0.9")) return true;
+                    return true;
+                    //if (dstIp == new IpV4Address("224.0.0.9")) return true;
                 }
             }
             return false;

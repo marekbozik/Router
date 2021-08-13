@@ -1,4 +1,5 @@
 ﻿using PcapDotNet.Core;
+using PcapDotNet.Packets.IpV4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace Router
         }
 
         public bool Sending { get => sending; set => sending = SetSending(value); }
+        internal RouterPort Rp { get => rp; }
 
         private bool SetSending(bool b)
         {
@@ -35,6 +37,62 @@ namespace Router
             }
             return b;
         }
+        
+        private void SendRIPv2()
+        {
+            var tableEntriesList = RIPHandler.Router.RoutingTable.GetRIPv2LogsFor(rp.Ip, rp.Mask);
+            var added = RIPHandler.Process.GetAddedNetworks();
+            List<RIPv2Entry> validAdded = new List<RIPv2Entry>(added.Count);
+            RIPv2EntryOrdered res;
+            bool allowed = false;
+            while (added.TryDequeue(out res))
+            {
+                if (IpV4.ToNetworkAdress(rp.Ip, rp.Mask) == res.Ip) allowed = true;
+                if (RIPHandler.Router.RoutingTable.GetOutInt(res.Ip) != port)
+                    validAdded.Add(res);
+            }
+
+            if (allowed)
+            {
+                tableEntriesList.AddRange(validAdded);
+
+                List<byte[]> entries = new List<byte[]>(tableEntriesList.Count);
+                foreach (var en in tableEntriesList)
+                {
+                    entries.Add(en.ToBytes());
+                }
+                if (entries.Count > 0)
+                    sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+            }
+        }
+
+        public void TriggeredSend(IpV4Address dstIP)
+        {
+            var tableEntriesList = RIPHandler.Router.RoutingTable.GetRIPv2LogsFor(rp.Ip, rp.Mask);
+            var added = RIPHandler.Process.GetAddedNetworks();
+            List<RIPv2Entry> validAdded = new List<RIPv2Entry>(added.Count);
+            RIPv2EntryOrdered res;
+            bool allowed = false;
+            while (added.TryDequeue(out res))
+            {
+                if (IpV4.ToNetworkAdress(rp.Ip, rp.Mask) == res.Ip) allowed = true;
+                if (RIPHandler.Router.RoutingTable.GetOutInt(res.Ip) != port)
+                    validAdded.Add(res);
+            }
+
+            if (allowed)
+            {
+                tableEntriesList.AddRange(validAdded);
+
+                List<byte[]> entries = new List<byte[]>(tableEntriesList.Count);
+                foreach (var en in tableEntriesList)
+                {
+                    entries.Add(en.ToBytes());
+                }
+                if (entries.Count > 0)
+                    sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries, dstIP));
+            }
+        }
 
         public void StartSending()
         {
@@ -43,30 +101,7 @@ namespace Router
             {
                 if (sec >= RIPHandler.Timers.Update && sending)
                 {
-                    var tableEntriesList = RIPHandler.Router.RoutingTable.GetRIPv2LogsFor(rp.Ip, rp.Mask);
-                    var added = RIPHandler.Process.GetAddedNetworks();
-                    List<RIPv2Entry> validAdded = new List<RIPv2Entry>(added.Count);
-                    RIPv2EntryOrdered res;
-                    bool allowed = false;
-                    while (added.TryDequeue(out res))
-                    {
-                        if (IpV4.ToNetworkAdress(rp.Ip, rp.Mask) == res.Ip) allowed = true;
-                        if (RIPHandler.Router.RoutingTable.GetOutInt(res.Ip) != port)
-                            validAdded.Add(res);
-                    }
-
-                    if (allowed)
-                    {
-                        tableEntriesList.AddRange(validAdded);
-
-                        List<byte[]> entries = new List<byte[]>(tableEntriesList.Count);
-                        foreach (var en in tableEntriesList)
-                        {
-                            entries.Add(en.ToBytes());
-                        }
-                        if(entries.Count > 0)
-                            sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
-                    }
+                    SendRIPv2();
                     sec = 0;
                 }
 

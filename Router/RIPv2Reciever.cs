@@ -14,14 +14,15 @@ namespace Router
         private bool recieving;
         private RouterPort rp;
         private Router router;
+        private RIPv2Handler RIPHandler;
         private int port;
 
-        public RIPv2Reciever(RouterPort rp, Router router, int port)
+        public RIPv2Reciever(RouterPort rp, Router router, RIPv2Handler RIPHandler)
         {
             this.rp = rp;
             recieving = false;
             this.router = router;
-            this.port = port;
+            this.RIPHandler = RIPHandler;
             recieving = false;
         }
 
@@ -78,6 +79,13 @@ namespace Router
                             }
 
                         }
+                    }
+                    else if (rip.Command == RIPv2Packet.RIPv2CommandRequest)
+                    {
+                        if (RIPHandler.Sender1.Rp == rp)
+                            RIPHandler.Sender1.TriggeredSend(rip.SrcIp);
+                        else if (RIPHandler.Sender2.Rp == rp)
+                            RIPHandler.Sender2.TriggeredSend(rip.SrcIp);
                     }
                 }
             }
