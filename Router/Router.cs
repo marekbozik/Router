@@ -240,7 +240,7 @@ namespace Router
             //});
         }
 
-        private void PingHandler(IpV4Packet ipp, int port)
+        private void PingAutoReply(IpV4Packet ipp, int port)
         {
             if (port == 1 && ipp.DstIp == port1.Ip)
                 sender1.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port1.Mac, port1.Ip));
@@ -250,7 +250,35 @@ namespace Router
                 sender2.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port2.Mac, port1.Ip));
             else if (port == 2 && ipp.DstIp == port2.Ip)
                 sender1.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port2.Mac, port2.Ip));
+        }
 
+        private void PingHandler(IpV4Packet ipp, int port)
+        {
+            if (!arpTable.Contains(ipp.SrcIp))
+            {
+                new Thread(() =>
+                {
+                    if (port == 1)
+                        sender1.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port1.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port1.Ip, ipp.SrcIp));
+                    else if (port == 2)
+                        sender2.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port2.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port2.Ip, ipp.SrcIp));
+                
+                    //Try to get arp response in max 1s 
+                    for (int i = 0; i < 20; i++)
+                    {
+                        if (arpTable.Contains(ipp.SrcIp))
+                        {
+                            PingAutoReply(ipp, port);
+                            return;
+                        }
+                        Thread.Sleep(50);
+                    }
+                }).Start();
+            }
+            else
+            {
+                PingAutoReply(ipp, port);
+            }
         }
 
         private void ForwardTo(IpV4Packet ipp, int port)

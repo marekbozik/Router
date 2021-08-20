@@ -41,37 +41,29 @@ namespace Router
                 Source = srcIp,
                 CurrentDestination = req.SrcIp,
                 Ttl = 255,
-                
-
-                // The rest of the important parameters will be set for each packet
             };
 
             // ICMP Layer
             IcmpEchoReplyLayer icmpLayer = new IcmpEchoReplyLayer();
 
-            icmpLayer.Identifier = (ushort)req.Packet.Ethernet.IpV4.Icmp[3+2];// 3;//req.packet.Ethernet.IpV4.Icmp.Payload. [1];
-            icmpLayer.SequenceNumber = (ushort)req.Packet.Ethernet.IpV4.Icmp[5+2];//req.packet.Ethernet.IpV4.Icmp.Payload[3];
+            byte[] iden = { req.Packet.Ethernet.IpV4.Icmp[3 + 1], req.Packet.Ethernet.IpV4.Icmp[3 + 2] };
+            string hex = BitConverter.ToString(iden).Replace("-", string.Empty);
+            icmpLayer.Identifier = ushort.Parse(hex, System.Globalization.NumberStyles.HexNumber);
 
- 
+            byte[] seq = { req.Packet.Ethernet.IpV4.Icmp[5 + 1], req.Packet.Ethernet.IpV4.Icmp[5 + 2] };
+            hex = BitConverter.ToString(seq).Replace("-", string.Empty);
+            icmpLayer.SequenceNumber = ushort.Parse(hex, System.Globalization.NumberStyles.HexNumber);
 
-            // Create the builder that will build our packets
-            //PacketBuilder builder = new PacketBuilder(ethernetLayer, ipV4Layer, icmpLayer);
-            //var p = builder.Build(DateTime.Now);
-            //List<byte> load = new List<byte>(p.Buffer);
-            List<byte> load = new List<byte>();
+
+            List<byte> data = new List<byte>(req.Packet.Buffer.Length - 42);
 
             for (int i = 42; i < req.Packet.Buffer.Length; i++)
             {
-                load.Add(req.Packet.Buffer[i]);
+                data.Add(req.Packet.Buffer[i]);
             }
-            //load[17] = 100;
-            //string hexS = BitConverter.ToString(load.ToArray()).Replace("-", string.Empty);
-
-            //return Packet.FromHexadecimalString(hexS, DateTime.Now, DataLinkKind.Ethernet);
 
             PayloadLayer payloadLayer = new PayloadLayer();
-            payloadLayer.Data = new Datagram(load.ToArray());
-            //builder = new PacketBuilder(load.ToArray());
+            payloadLayer.Data = new Datagram(data.ToArray());
 
             PacketBuilder builder = new PacketBuilder(ethernetLayer, ipV4Layer, icmpLayer, payloadLayer);
             return builder.Build(DateTime.Now);
