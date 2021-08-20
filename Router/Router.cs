@@ -319,7 +319,7 @@ namespace Router
             for (int i = 0; i < eBytes.Length; i++)
                 iBytes[i] = eBytes[i];
 
-            string hexS = BitConverter.ToString(iBytes).Replace("-", string.Empty); ;
+            string hexS = BitConverter.ToString(iBytes).Replace("-", string.Empty); 
 
             Packet p = Packet.FromHexadecimalString(hexS, DateTime.Now, DataLinkKind.Ethernet);
 

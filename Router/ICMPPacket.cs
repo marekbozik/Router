@@ -41,6 +41,7 @@ namespace Router
                 Source = srcIp,
                 CurrentDestination = req.SrcIp,
                 Ttl = 255,
+                
 
                 // The rest of the important parameters will be set for each packet
             };
@@ -48,11 +49,31 @@ namespace Router
             // ICMP Layer
             IcmpEchoReplyLayer icmpLayer = new IcmpEchoReplyLayer();
 
-            icmpLayer.Identifier = 3;//req.packet.Ethernet.IpV4.Icmp.Payload. [1];
-            icmpLayer.SequenceNumber = 0;//req.packet.Ethernet.IpV4.Icmp.Payload[3];
+            icmpLayer.Identifier = (ushort)req.Packet.Ethernet.IpV4.Icmp[3+2];// 3;//req.packet.Ethernet.IpV4.Icmp.Payload. [1];
+            icmpLayer.SequenceNumber = (ushort)req.Packet.Ethernet.IpV4.Icmp[5+2];//req.packet.Ethernet.IpV4.Icmp.Payload[3];
+
+ 
 
             // Create the builder that will build our packets
-            PacketBuilder builder = new PacketBuilder(ethernetLayer, ipV4Layer, icmpLayer);
+            //PacketBuilder builder = new PacketBuilder(ethernetLayer, ipV4Layer, icmpLayer);
+            //var p = builder.Build(DateTime.Now);
+            //List<byte> load = new List<byte>(p.Buffer);
+            List<byte> load = new List<byte>();
+
+            for (int i = 42; i < req.Packet.Buffer.Length; i++)
+            {
+                load.Add(req.Packet.Buffer[i]);
+            }
+            //load[17] = 100;
+            //string hexS = BitConverter.ToString(load.ToArray()).Replace("-", string.Empty);
+
+            //return Packet.FromHexadecimalString(hexS, DateTime.Now, DataLinkKind.Ethernet);
+
+            PayloadLayer payloadLayer = new PayloadLayer();
+            payloadLayer.Data = new Datagram(load.ToArray());
+            //builder = new PacketBuilder(load.ToArray());
+
+            PacketBuilder builder = new PacketBuilder(ethernetLayer, ipV4Layer, icmpLayer, payloadLayer);
             return builder.Build(DateTime.Now);
         }
     }
