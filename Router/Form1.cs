@@ -558,6 +558,25 @@ namespace Router
             { }
         }
 
+        private void pingButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                new IpV4Address(IPtoPingTextBox.Text);
+            }
+            catch (Exception)
+            {
+                routerStatusBar.AppendText(DateTime.Now.ToString() + " Invalid ping IP Adress\n");
+                return;
+            }
+
+            pingButton.Enabled = false;
+            new Thread(() =>
+            {
+                router.Ping(new IpV4Address(IPtoPingTextBox.Text), pingProgressBar, pingTextBox, label31, pingButton);
+            }).Start();
+        }
+
         private void clearStatsButton_Click(object sender, EventArgs e)
         {
             if (router != null)

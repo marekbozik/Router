@@ -132,6 +132,8 @@ namespace Router
             routingTable = new RoutingTable(this);
         }
 
+
+
         public void Forward(RouterPort rp)
         {
             if (rp == port1 || rp == port2)
@@ -240,6 +242,16 @@ namespace Router
             //});
         }
 
+        public void Ping(IpV4Address dstIp, ProgressBar bar, TextBox textBox, Label summaryLabel, Button pingButton)
+        {
+
+        }
+
+        private void PingRepliesHandler(ICMPPacket icmp, int port)
+        {
+
+        }
+
         private void PingAutoReply(IpV4Packet ipp, int port)
         {
             if (port == 1 && ipp.DstIp == port1.Ip)
@@ -252,33 +264,43 @@ namespace Router
                 sender1.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port2.Mac, port2.Ip));
         }
 
+
+
         private void PingHandler(IpV4Packet ipp, int port)
         {
-            if (!arpTable.Contains(ipp.SrcIp))
+            if (new ICMPPacket(ipp.Packet).IsRequest())
             {
-                new Thread(() =>
+                if (!arpTable.Contains(ipp.SrcIp))
                 {
-                    if (port == 1)
-                        sender1.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port1.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port1.Ip, ipp.SrcIp));
-                    else if (port == 2)
-                        sender2.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port2.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port2.Ip, ipp.SrcIp));
-                
-                    //Try to get arp response in max 1s 
-                    for (int i = 0; i < 20; i++)
+                    new Thread(() =>
                     {
-                        if (arpTable.Contains(ipp.SrcIp))
+                        if (port == 1)
+                            sender1.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port1.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port1.Ip, ipp.SrcIp));
+                        else if (port == 2)
+                            sender2.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port2.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port2.Ip, ipp.SrcIp));
+
+                        //Try to get arp response in max 1s 
+                        for (int i = 0; i < 20; i++)
                         {
-                            PingAutoReply(ipp, port);
-                            return;
+                            if (arpTable.Contains(ipp.SrcIp))
+                            {
+                                PingAutoReply(ipp, port);
+                                return;
+                            }
+                            Thread.Sleep(50);
                         }
-                        Thread.Sleep(50);
-                    }
-                }).Start();
+                    }).Start();
+                }
+                else
+                {
+                    PingAutoReply(ipp, port);
+                }
             }
-            else
+            else if (new ICMPPacket(ipp.Packet).IsReply())
             {
-                PingAutoReply(ipp, port);
+                PingRepliesHandler(new ICMPPacket(ipp.Packet), port);
             }
+
         }
 
         private void ForwardTo(IpV4Packet ipp, int port)

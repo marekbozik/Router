@@ -33,7 +33,6 @@ namespace Router
             this.tabs = new System.Windows.Forms.TabControl();
             this.routerTab = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.routerStatusBar = new System.Windows.Forms.RichTextBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -45,6 +44,7 @@ namespace Router
             this.port1MaskTextBox = new System.Windows.Forms.TextBox();
             this.port2MaskTextBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.routerStatusBar = new System.Windows.Forms.RichTextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.richTextBox3 = new System.Windows.Forms.RichTextBox();
@@ -55,6 +55,13 @@ namespace Router
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
+            this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
+            this.label32 = new System.Windows.Forms.Label();
+            this.pingTextBox = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.pingButton = new System.Windows.Forms.Button();
+            this.IPtoPingTextBox = new System.Windows.Forms.TextBox();
+            this.pingProgressBar = new System.Windows.Forms.ProgressBar();
             this.appSettingTab = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.intPort1 = new System.Windows.Forms.TextBox();
@@ -124,6 +131,7 @@ namespace Router
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel13.SuspendLayout();
             this.appSettingTab.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -177,9 +185,9 @@ namespace Router
             this.tableLayoutPanel4.ColumnCount = 2;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 66.66666F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.Controls.Add(this.routerStatusBar, 1, 1);
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel2, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel3, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel13, 1, 1);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 2;
@@ -187,17 +195,6 @@ namespace Router
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel4.Size = new System.Drawing.Size(998, 483);
             this.tableLayoutPanel4.TabIndex = 4;
-            // 
-            // routerStatusBar
-            // 
-            this.routerStatusBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.routerStatusBar.Location = new System.Drawing.Point(668, 244);
-            this.routerStatusBar.Name = "routerStatusBar";
-            this.routerStatusBar.Size = new System.Drawing.Size(327, 236);
-            this.routerStatusBar.TabIndex = 2;
-            this.routerStatusBar.Text = "";
             // 
             // tableLayoutPanel2
             // 
@@ -313,6 +310,7 @@ namespace Router
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.3172F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 44.8414F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 44.8414F));
+            this.tableLayoutPanel3.Controls.Add(this.routerStatusBar, 1, 3);
             this.tableLayoutPanel3.Controls.Add(this.label8, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.richTextBox2, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.richTextBox3, 2, 1);
@@ -333,6 +331,17 @@ namespace Router
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.894736F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(659, 477);
             this.tableLayoutPanel3.TabIndex = 3;
+            // 
+            // routerStatusBar
+            // 
+            this.routerStatusBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.routerStatusBar.Location = new System.Drawing.Point(70, 442);
+            this.routerStatusBar.Name = "routerStatusBar";
+            this.routerStatusBar.Size = new System.Drawing.Size(289, 32);
+            this.routerStatusBar.TabIndex = 2;
+            this.routerStatusBar.Text = "";
             // 
             // label8
             // 
@@ -429,6 +438,94 @@ namespace Router
             this.button5.Text = "Clear stats";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.clearStatsButton_Click);
+            // 
+            // tableLayoutPanel13
+            // 
+            this.tableLayoutPanel13.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel13.ColumnCount = 4;
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.00001F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel13.Controls.Add(this.label32, 0, 0);
+            this.tableLayoutPanel13.Controls.Add(this.pingTextBox, 0, 2);
+            this.tableLayoutPanel13.Controls.Add(this.label31, 3, 2);
+            this.tableLayoutPanel13.Controls.Add(this.pingButton, 3, 1);
+            this.tableLayoutPanel13.Controls.Add(this.IPtoPingTextBox, 0, 1);
+            this.tableLayoutPanel13.Controls.Add(this.pingProgressBar, 0, 3);
+            this.tableLayoutPanel13.Location = new System.Drawing.Point(668, 244);
+            this.tableLayoutPanel13.Name = "tableLayoutPanel13";
+            this.tableLayoutPanel13.RowCount = 5;
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 4F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22.22222F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22.22222F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 44.44444F));
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(327, 236);
+            this.tableLayoutPanel13.TabIndex = 4;
+            // 
+            // label32
+            // 
+            this.label32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label32.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tableLayoutPanel13.SetColumnSpan(this.label32, 4);
+            this.label32.Location = new System.Drawing.Point(3, 1);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(321, 2);
+            this.label32.TabIndex = 5;
+            // 
+            // pingTextBox
+            // 
+            this.pingTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel13.SetColumnSpan(this.pingTextBox, 3);
+            this.pingTextBox.Location = new System.Drawing.Point(3, 69);
+            this.pingTextBox.Name = "pingTextBox";
+            this.pingTextBox.ReadOnly = true;
+            this.pingTextBox.Size = new System.Drawing.Size(237, 23);
+            this.pingTextBox.TabIndex = 1;
+            // 
+            // label31
+            // 
+            this.label31.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(246, 73);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(24, 15);
+            this.label31.TabIndex = 2;
+            this.label31.Text = "0/0";
+            // 
+            // pingButton
+            // 
+            this.pingButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.pingButton.Location = new System.Drawing.Point(246, 18);
+            this.pingButton.Name = "pingButton";
+            this.pingButton.Size = new System.Drawing.Size(78, 23);
+            this.pingButton.TabIndex = 4;
+            this.pingButton.Text = "ping";
+            this.pingButton.UseVisualStyleBackColor = true;
+            this.pingButton.Click += new System.EventHandler(this.pingButton_Click);
+            // 
+            // IPtoPingTextBox
+            // 
+            this.IPtoPingTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel13.SetColumnSpan(this.IPtoPingTextBox, 3);
+            this.IPtoPingTextBox.Location = new System.Drawing.Point(3, 18);
+            this.IPtoPingTextBox.Name = "IPtoPingTextBox";
+            this.IPtoPingTextBox.Size = new System.Drawing.Size(237, 23);
+            this.IPtoPingTextBox.TabIndex = 3;
+            // 
+            // pingProgressBar
+            // 
+            this.pingProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel13.SetColumnSpan(this.pingProgressBar, 4);
+            this.pingProgressBar.Location = new System.Drawing.Point(3, 109);
+            this.pingProgressBar.Name = "pingProgressBar";
+            this.pingProgressBar.Size = new System.Drawing.Size(321, 19);
+            this.pingProgressBar.TabIndex = 0;
             // 
             // appSettingTab
             // 
@@ -963,8 +1060,8 @@ namespace Router
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
             this.tableLayoutPanel9.RowCount = 4;
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.19002F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.738717F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
             this.tableLayoutPanel9.Size = new System.Drawing.Size(994, 421);
             this.tableLayoutPanel9.TabIndex = 3;
@@ -1036,7 +1133,7 @@ namespace Router
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 4F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(988, 78);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(988, 79);
             this.tableLayoutPanel11.TabIndex = 1;
             // 
             // label27
@@ -1163,18 +1260,18 @@ namespace Router
             this.tableLayoutPanel12.Controls.Add(this.RIPv2NetworkTextBox, 1, 0);
             this.tableLayoutPanel12.Controls.Add(this.button11, 2, 0);
             this.tableLayoutPanel12.Controls.Add(this.button12, 4, 0);
-            this.tableLayoutPanel12.Location = new System.Drawing.Point(3, 129);
+            this.tableLayoutPanel12.Location = new System.Drawing.Point(3, 130);
             this.tableLayoutPanel12.Name = "tableLayoutPanel12";
             this.tableLayoutPanel12.RowCount = 1;
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(988, 36);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(988, 35);
             this.tableLayoutPanel12.TabIndex = 2;
             // 
             // label29
             // 
             this.label29.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(142, 21);
+            this.label29.Location = new System.Drawing.Point(142, 20);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(52, 15);
             this.label29.TabIndex = 0;
@@ -1184,7 +1281,7 @@ namespace Router
             // 
             this.RIPv2NetworkTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.RIPv2NetworkTextBox.Location = new System.Drawing.Point(200, 10);
+            this.RIPv2NetworkTextBox.Location = new System.Drawing.Point(200, 9);
             this.RIPv2NetworkTextBox.Name = "RIPv2NetworkTextBox";
             this.RIPv2NetworkTextBox.Size = new System.Drawing.Size(191, 23);
             this.RIPv2NetworkTextBox.TabIndex = 1;
@@ -1193,7 +1290,7 @@ namespace Router
             // 
             this.button11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button11.Location = new System.Drawing.Point(397, 10);
+            this.button11.Location = new System.Drawing.Point(397, 9);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(191, 23);
             this.button11.TabIndex = 2;
@@ -1205,7 +1302,7 @@ namespace Router
             // 
             this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button12.Location = new System.Drawing.Point(791, 10);
+            this.button12.Location = new System.Drawing.Point(791, 9);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(194, 23);
             this.button12.TabIndex = 3;
@@ -1252,6 +1349,8 @@ namespace Router
             this.tableLayoutPanel2.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            this.tableLayoutPanel13.ResumeLayout(false);
+            this.tableLayoutPanel13.PerformLayout();
             this.appSettingTab.ResumeLayout(false);
             this.appSettingTab.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -1369,6 +1468,13 @@ namespace Router
         private System.Windows.Forms.ListView RIPv2NetworksListView;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel13;
+        private System.Windows.Forms.ProgressBar pingProgressBar;
+        private System.Windows.Forms.TextBox pingTextBox;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.TextBox IPtoPingTextBox;
+        private System.Windows.Forms.Button pingButton;
+        private System.Windows.Forms.Label label32;
     }
 }
 
