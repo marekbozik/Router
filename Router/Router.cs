@@ -26,6 +26,7 @@ namespace Router
         private static IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
         private ArpTable arpTable;
         private RoutingTable routingTable;
+        private ConcurrentStack<ICMPPacket> pingStack;
 
         private Stats out1;
         private Stats out2;
@@ -130,6 +131,7 @@ namespace Router
             out1 = new Stats();
             out2 = new Stats();
             routingTable = new RoutingTable(this);
+            pingStack = new ConcurrentStack<ICMPPacket>();
         }
 
 
@@ -244,12 +246,108 @@ namespace Router
 
         public void Ping(IpV4Address dstIp, ProgressBar bar, TextBox textBox, Label summaryLabel, Button pingButton)
         {
+            pingStack.Clear();
+            int port = 0;
+            try
+            {
+                port = routingTable.GetOutInt(dstIp);
+            }
+            catch (Exception)
+            {
+                pingButton.BeginInvoke(new Action(() => pingButton.Enabled = true));
+                return;
+            }
+            bar.Invoke(new Action(() => bar.Maximum = 5));
+            summaryLabel.Invoke(new Action(() => summaryLabel.Text = "0/0"));
+            textBox.Invoke(new Action(() => textBox.Text = ""));
 
+            RouterPort rp = null;
+            PacketCommunicator sender = null;
+            if (port == 1)
+            {
+                rp = port1;
+                sender = sender1;
+            }
+            else if (port == 2)
+            {
+                rp = port2;
+                sender = sender2;
+            }
+
+            int replies = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                bool found = false;
+                if (!arpTable.Contains(dstIp))
+                {
+                    sender.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, rp.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), rp.Ip, dstIp));
+                    Thread.Sleep(2000);
+                }
+                else
+                {
+                    var log = arpTable.GetLog(dstIp);
+                    var x = ICMPPacket.ICMPRequestPacketBuilder(rp.Mac, rp.Ip, log.Mac, log.Ip, (ushort)i);
+                    sender.SendPacket(x.requestPacket);
+
+                    //2s timeout
+                    
+                    for (int j = 0; j < 40; j++)
+                    {
+                        ICMPPacket icmpP;
+                        while (pingStack.TryPop(out icmpP))
+                        {
+                            if (icmpP.Id == x.identifier && icmpP.Seq == x.sequenceNumber && icmpP.Data.Length == x.data.Length)
+                            {
+                                bool br = false;
+                                for (int k = 0; k < icmpP.Data.Length; k++)
+                                {
+                                    if (icmpP.Data[k] != x.data[k])
+                                    {
+                                        br = true;
+                                        break;
+                                    }
+                                }
+                                if (!br)
+                                {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (found)
+                        {
+                            replies++;
+                            break;
+                        }
+                        Thread.Sleep(50);
+                    }
+                }
+
+                bar.Invoke(new Action(() => bar.Value = i + 1));
+                summaryLabel.Invoke(new Action(() => summaryLabel.Text = replies + "/" + (i + 1) ));
+                if (found)
+                {
+                    textBox.Invoke(new Action(() => textBox.AppendText("!")));
+                }
+                else
+                {
+                    textBox.Invoke(new Action(() => textBox.AppendText(".")));
+                }
+
+            }
+            ICMPPacket.NewPingSequence();
+            pingButton.BeginInvoke(new Action(() => pingButton.Enabled = true));
+            Thread.Sleep(10000);
+            bar.Invoke(new Action(() =>
+            {
+                if (bar.Value != 5) return;
+                else bar.Value = 0;
+            }));
         }
 
         private void PingRepliesHandler(ICMPPacket icmp, int port)
         {
-
+            pingStack.Push(icmp);
         }
 
         private void PingAutoReply(IpV4Packet ipp, int port)

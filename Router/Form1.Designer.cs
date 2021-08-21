@@ -485,6 +485,7 @@ namespace Router
             this.pingTextBox.ReadOnly = true;
             this.pingTextBox.Size = new System.Drawing.Size(237, 23);
             this.pingTextBox.TabIndex = 1;
+            this.pingTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label31
             // 
