@@ -11,13 +11,11 @@ namespace Router
 {
     class RoutingTable
     {
-		//ConcurrentBag<RoutingLog> bag;
         private SynchronizedCollection<RoutingLog> logs;
         private Router router;
 
         public RoutingTable(Router r)
         {
-            //bag = new ConcurrentBag<RoutingLog>();
             logs = new SynchronizedCollection<RoutingLog>();
             SetConnected(r);
             router = r;
@@ -25,34 +23,16 @@ namespace Router
 
         public void SetConnected(Router r)
         {
-            int[] arr = new int[2];
-            int c = 0;
-            int i = 0;
-            foreach (var log in logs)
+            if (logs.Count == 0)
             {
-                if (log.Type == RoutingLog.typeConnected)
-                {
-                    arr[c] = i;
-                    c++;
-                }
-                if (c == 2) break;
-                i++;
+                Add(RoutingLog.typeConnected, IpV4.ToNetworkAdress(r.Port1.Ip, r.Port1.Mask), r.Port1.Mask, 1, new IpV4Address());
+                Add(RoutingLog.typeConnected, IpV4.ToNetworkAdress(r.Port2.Ip, r.Port2.Mask), r.Port2.Mask, 2, new IpV4Address());
             }
-
-
-            try
+            else
             {
-                for (int j = 1; j >= 0; j--)
-                {
-                    logs.RemoveAt(arr[j]);
-                }
-            }
-            catch (Exception) { }
-
-
-            Add(RoutingLog.typeConnected, IpV4.ToNetworkAdress(r.Port1.Ip, r.Port1.Mask), r.Port1.Mask, 1, new IpV4Address());
-            Add(RoutingLog.typeConnected, IpV4.ToNetworkAdress(r.Port2.Ip, r.Port2.Mask), r.Port2.Mask, 2, new IpV4Address());
-
+                logs[0] = new RoutingLog(RoutingLog.typeConnected, IpV4.ToNetworkAdress(r.Port1.Ip, r.Port1.Mask), r.Port1.Mask, 1);
+                logs[1] = new RoutingLog(RoutingLog.typeConnected, IpV4.ToNetworkAdress(r.Port2.Ip, r.Port2.Mask), r.Port2.Mask, 2);
+            }          
         }
 
         public List<RIPv2Entry> GetRIPv2LogsFor(IpV4Address netIp, string netMask)
@@ -64,8 +44,9 @@ namespace Router
 
             List<RIPv2Entry> l = new List<RIPv2Entry>(cap);
 
-            foreach (var log in logs)
+            for (int i = 0; i < logs.Count; i++)
             {
+                var log = logs[i];
                 if (log.Type == RoutingLog.typeRIPv2)
                 {
                     if (!IpV4.IsInSubnet(netIp, netMask, log.NextHop))
@@ -77,8 +58,9 @@ namespace Router
 
         public string GetMask(IpV4Address netIp)
         {
-            foreach (var log in logs)
+            for (int i = 0; i < logs.Count; i++)
             {
+                var log = logs[i];
                 if (log.Ip == netIp && log.Type != RoutingLog.typeRIPv2)
                 {
                     return log.Mask;
@@ -89,8 +71,9 @@ namespace Router
 
         public bool Contains(IpV4Address netIp)
         {
-            foreach (var log in logs)
+            for (int i = 0; i < logs.Count; i++)
             {
+                var log = logs[i];
                 if (log.Ip == netIp && log.Type != RoutingLog.typeRIPv2)
                 {
                     return true;
@@ -101,17 +84,19 @@ namespace Router
 
         public bool Contains(RoutingLog rl)
         {
-            foreach (var i in logs)
+            for (int i = 0; i < logs.Count; i++)
             {
-                if (i == rl) return true;
+                var log = logs[i];
+                if (log == rl) return true;
             }
             return false;
         }
 
         public RoutingLog GetLog(IpV4Address ip, string mask)
         {
-            foreach (var log in logs)
+            for (int i = 0; i < logs.Count; i++)
             {
+                var log = logs[i];
                 if (log.Ip == ip && log.Mask == mask)
                     return log;
             }
@@ -142,16 +127,17 @@ namespace Router
 
         public void Remove(RoutingLog rl)
         {
-            int i = 0;
-            foreach (var log in logs)
+            int j = 0;
+            for (int i = 0; i < logs.Count; i++)
             {
+                var log = logs[i];
                 if (log == rl)
                 {
                     break;
                 }
-                i++;
+                j++;
             }
-            logs.RemoveAt(i);
+            logs.RemoveAt(j);
         }
 
 		public void Remove(int i)
@@ -188,16 +174,17 @@ namespace Router
         public void RIPv2TimersHandle(RIPv2Timer t)
         {
             List<int> toRemove = new List<int>();
-            int i = 0;
-            foreach (var log in logs)
+            int j = 0;
+            for (int i = 0; i < logs.Count; i++)
             {
+                var log = logs[i];
                 if (log.Type == RoutingLog.typeRIPv2)
                 {
                     var r = (RIPv2RoutingLog)log;
                     if (r.IsFlushed)
                     {
                         if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > (t.Holddown + t.Invalid))
-                            toRemove.Add(i);
+                            toRemove.Add(j);
                     }
                     else if (r.IsInvalid)
                     {
@@ -205,7 +192,7 @@ namespace Router
                         {
                             r.IsFlushed = true;
                             if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > (t.Holddown + t.Invalid))
-                                toRemove.Add(i);
+                                toRemove.Add(j);
                         }
                     }
                     else
@@ -217,12 +204,12 @@ namespace Router
                             {
                                 r.IsFlushed = true;
                                 if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > (t.Holddown + t.Invalid))
-                                    toRemove.Add(i);
+                                    toRemove.Add(j);
                             }
                         }
                     }
                 }
-                i++;
+                j++;
             }
 
             if (toRemove.Count > 0)
@@ -331,8 +318,9 @@ namespace Router
             List<string> l = new List<string>();
             //l.Add("Type |        Ip       |       Mask      | Out int | NextHop");
             // "  C  | 255.255.255.255 | 255.255.255.255 |    1    | "
-            foreach (var log in logs)
+            for (int i = 0; i < logs.Count; i++)
             {
+                var log = logs[i];
                 if (log.Type == RoutingLog.typeRIPv2)
                 {
                     if (((RIPv2RoutingLog)log).IsFlushed) continue;
