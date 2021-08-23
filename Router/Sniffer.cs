@@ -19,7 +19,7 @@ namespace Router
             this.stats = stats;
         }
 
-        public void Sniffing()
+        public void SniffingIn()
         {
             using (PacketCommunicator communicator =
                     deviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 1000))
@@ -28,9 +28,23 @@ namespace Router
             }
         }
 
+        public void SniffingOut()
+        {
+            using (PacketCommunicator communicator =
+                    deviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 1000))
+            {
+                communicator.ReceivePackets(0, Handler2);
+            }
+        }
+
         private void Handler(Packet p)
         {
-            stats.Increment(p);
+            stats.IncrementIn(p);
+        }
+
+        private void Handler2(Packet p)
+        {
+            stats.IncrementOut(p);
         }
 
     }

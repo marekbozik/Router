@@ -12,7 +12,7 @@ namespace Router
     {
         private Router router;
         private RIPv2Handler ripHandler;
-        private Stats in1, in2;
+        private Stats in1, in2, out1, out2;
         private bool arpViewFocus;
         private bool routingTableViewFocus;
 
@@ -123,8 +123,15 @@ namespace Router
                 in1 = s1;
                 Stats s2 = new Stats(router);
                 in2 = s2;
-                new Thread(() => { new Sniffer(router.Port1.DeviceInterface, s1).Sniffing(); }).Start();
-                new Thread(() => { new Sniffer(router.Port2.DeviceInterface, s2).Sniffing(); }).Start();
+                Stats s3 = new Stats(router);
+                Stats s4 = new Stats(router);
+                out1 = s3; out2 = s4;
+
+                new Thread(() => { new Sniffer(router.Port1.DeviceInterface, s1).SniffingIn(); }).Start();
+                new Thread(() => { new Sniffer(router.Port2.DeviceInterface, s2).SniffingIn(); }).Start();
+                new Thread(() => { new Sniffer(router.Port1.DeviceInterface, s3).SniffingOut(); }).Start();
+                new Thread(() => { new Sniffer(router.Port2.DeviceInterface, s4).SniffingOut(); }).Start();
+
                 new Thread(() =>
                 {
                     while (true)
@@ -143,12 +150,12 @@ namespace Router
                         richTextBox5.BeginInvoke(new Action(() =>
                         {
                             richTextBox5.Clear();
-                            richTextBox5.AppendText(router.Out1.GetStats());
+                            richTextBox5.AppendText(s3.GetStats());
                         }));
                         richTextBox4.BeginInvoke(new Action(() =>
                         {
                             richTextBox4.Clear();
-                            richTextBox4.AppendText(router.Out2.GetStats());
+                            richTextBox4.AppendText(s4.GetStats());
                         }));
                         
                         arpListView.BeginInvoke(new Action(() =>
@@ -583,8 +590,8 @@ namespace Router
             {
                 in1.ResetStats();
                 in2.ResetStats();
-                router.Out1.ResetStats();
-                router.Out2.ResetStats();
+                out1.ResetStats();
+                out2.ResetStats();
             }
         }
     }

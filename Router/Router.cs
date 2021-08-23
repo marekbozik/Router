@@ -28,9 +28,6 @@ namespace Router
         private RoutingTable routingTable;
         private ConcurrentStack<ICMPPacket> pingStack;
 
-        private Stats out1;
-        private Stats out2;
-
         public Router()
         {
             try
@@ -116,8 +113,7 @@ namespace Router
         public RouterPort Port1 { get => port1; set { port1 = value; arpTable.UpdatePortsIp(this); } }
         public RouterPort Port2 { get => port2; set { port2 = value; arpTable.UpdatePortsIp(this); } }
         internal ArpTable ArpTable { get => arpTable; }
-        internal Stats Out1 { get => out1; }
-        internal Stats Out2 { get => out2; }
+
         internal RoutingTable RoutingTable { get => routingTable; }
         public PacketCommunicator Sender1 { get => sender1; set => sender1 = value; }
         public PacketCommunicator Sender2 { get => sender2; set => sender2 = value; }
@@ -128,8 +124,6 @@ namespace Router
             arpTable = new ArpTable(20, this);
             sender1 = port1.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous | PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
             sender2 = port2.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous | PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
-            out1 = new Stats();
-            out2 = new Stats();
             routingTable = new RoutingTable(this);
             pingStack = new ConcurrentStack<ICMPPacket>();
         }
@@ -417,12 +411,10 @@ namespace Router
                 if (port == 1)
                 {
                     sender1.SendPacket(p);
-                    out1.Increment(p);
                 }
                 else if (port == 2)
                 {
                     sender2.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, rp.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), rp.Ip, ipp.DstIp));
-                    out2.Increment(p);
                 }
                 
                 new Thread(() =>
@@ -474,12 +466,12 @@ namespace Router
             if (port == 1)
             {
                 sender1.SendPacket(p);
-                out1.Increment(p);
+
             }
             else if (port == 2)
             {
                 sender2.SendPacket(p);
-                out2.Increment(p);
+
             }
         }
 
@@ -494,7 +486,6 @@ namespace Router
                     try { sender1.SendPacket(send); }
                     catch (Exception) { }
 
-                    out1.Increment(send);
                 }
                 else if (arp.IsReply())
                 {
@@ -510,7 +501,7 @@ namespace Router
                     try { sender2.SendPacket(send); }
                     catch (Exception) { }
 
-                    out2.Increment(send);
+
                 }
                 else if (arp.IsReply())
                 {
@@ -549,7 +540,7 @@ namespace Router
                         return;
                     }
                     sender2.SendPacket(pac);
-                    out2.Increment(pac);
+
                 }).Start();
             }
             if (arpTable.IsExpectedReply(ip.SrcIp, 2))
@@ -575,7 +566,6 @@ namespace Router
                         return;
                     }
                     sender1.SendPacket(pac);
-                    out1.Increment(pac);
                 }).Start();
             }
         }
@@ -654,7 +644,6 @@ namespace Router
                                                                     req.SourceIp
                                                                    );
                             sender1.SendPacket(pac);
-                            out1.Increment(pac);
                         }
                         else if (incomePort == 2)
                         {
@@ -665,7 +654,6 @@ namespace Router
                                                                     req.SourceIp
                                                                    );
                             sender2.SendPacket(pac);
-                            out2.Increment(pac);
                         }
 
                     }).Start();
@@ -684,7 +672,7 @@ namespace Router
                                                                    );
                             arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 2);
                             sender2.SendPacket(pac);
-                            out2.Increment(pac);
+
                         }).Start();
                     }
                 }
@@ -702,7 +690,6 @@ namespace Router
                                                                    );
                             arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 1);
                             sender1.SendPacket(pac);
-                            out1.Increment(pac);
                         }).Start();
                     }
                 }

@@ -17,6 +17,7 @@ namespace Router
         private int udp;
         private int icmp;
         private int http;
+        private int rip;
         private MacAddress [] macs;
 
 
@@ -31,6 +32,7 @@ namespace Router
             this.udp = 0;
             this.icmp = 0;
             this.http = 0;
+            this.rip = 0;
         }
 
         public Stats()
@@ -43,6 +45,7 @@ namespace Router
             this.udp = 0;
             this.icmp = 0;
             this.http = 0;
+            this.rip = 0;
         }
 
         public void ResetStats()
@@ -54,6 +57,7 @@ namespace Router
             this.udp = 0;
             this.icmp = 0;
             this.http = 0;
+            this.rip = 0;
         }
 
         public int Ethernet { get => ethernet; set => ethernet = value; }
@@ -92,11 +96,12 @@ namespace Router
             s += "UDP: " + this.udp + "\n";
             s += "ICMP: " + this.icmp + "\n";
             s += "HTTP: " + this.http + "\n";
+            s += "RIPv2: " + this.rip + "\n";
 
             return s;
         }
 
-        public void Increment(Packet p)
+        public void IncrementIn(Packet p)
         {
             if (p == null) return;
 
@@ -121,6 +126,54 @@ namespace Router
                     if (p.Ethernet.IpV4.Protocol == PcapDotNet.Packets.IpV4.IpV4Protocol.Udp)
                     {
                         this.udp++;
+                        if (p.Ethernet.IpV4.Udp.DestinationPort == 520 && p.Ethernet.IpV4.Udp.SourcePort == 520)
+                        {
+                            this.rip++;
+                        }
+                    }
+                    else if (p.Ethernet.IpV4.Protocol == PcapDotNet.Packets.IpV4.IpV4Protocol.Tcp)
+                    {
+                        this.tcp++;
+                        if (p.Ethernet.IpV4.Tcp.DestinationPort == 80 || p.Ethernet.IpV4.Tcp.SourcePort == 80)
+                        {
+                            this.http++;
+                        }
+                    }
+                    else if (p.Ethernet.IpV4.Protocol == PcapDotNet.Packets.IpV4.IpV4Protocol.InternetControlMessageProtocol)
+                    {
+                        this.icmp++;
+                    }
+                }
+            }
+        }
+
+        public void IncrementOut(Packet p)
+        {
+            if (p == null) return;
+
+            if (p.Ethernet.Source != macs[0] && p.Ethernet.Source != macs[1])
+            {
+                return;
+            }
+
+            int ethType = GetEthType(p.Buffer);
+            if (ethType >= 2048)
+            {
+                this.ethernet++;
+                if (p.Ethernet.EtherType == PcapDotNet.Packets.Ethernet.EthernetType.Arp)
+                {
+                    this.arp++;
+                }
+                else if (p.Ethernet.EtherType == PcapDotNet.Packets.Ethernet.EthernetType.IpV4)
+                {
+                    this.ip++;
+                    if (p.Ethernet.IpV4.Protocol == PcapDotNet.Packets.IpV4.IpV4Protocol.Udp)
+                    {
+                        this.udp++;
+                        if (p.Ethernet.IpV4.Udp.DestinationPort == 520 && p.Ethernet.IpV4.Udp.SourcePort == 520)
+                        {
+                            this.rip++;
+                        }
                     }
                     else if (p.Ethernet.IpV4.Protocol == PcapDotNet.Packets.IpV4.IpV4Protocol.Tcp)
                     {
