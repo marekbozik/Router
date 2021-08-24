@@ -79,10 +79,9 @@ namespace Router
 
         public static bool operator ==(RoutingLog obj1, RoutingLog obj2)
         {
-            if (obj1.Type == obj2.Type &&
+            if (
                 obj1.Ip == obj2.Ip &&
-                obj1.Mask == obj2.Mask &&
-                (obj1.OutInt == obj2.OutInt || obj1.NextHop == obj2.NextHop)
+                obj1.Mask == obj2.Mask 
                 )
                 return true;
             return false;

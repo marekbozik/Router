@@ -57,7 +57,6 @@ namespace Router
                     {
                         foreach (var entry in rip.Entries.Table)
                         {
-                            //var rl = new RoutingLog(RoutingLog.typeRIPv2, entry.Ip, entry.Mask, port);
                             var rl = new RIPv2RoutingLog(rip, entry);
                             if (!router.RoutingTable.Contains(rl))
                             {
@@ -69,10 +68,25 @@ namespace Router
                                 if (l.Type == RoutingLog.typeRIPv2)
                                 {
                                     var r = (RIPv2RoutingLog)l;
-                                    if ((r.Metric + 1) < r.Metric && !r.IsInvalid)
+                                    if ((rl.Metric + 1) < r.Metric && !r.IsInvalid)
                                     {
                                         router.RoutingTable.Remove(l);
                                         router.RoutingTable.Add(rl);
+                                    }
+                                    else if (rl.Metric == 16)
+                                    {
+                                        if (RIPHandler.Sender1.Rp == rp)
+                                        {
+                                            if (RIPHandler.Sender2.Sending)
+                                                RIPHandler.Sender2.SendRemovedInfo(rl);
+                                        }
+                                        else if (RIPHandler.Sender2.Rp == rp)
+                                        {
+                                            if (RIPHandler.Sender1.Sending)
+                                                RIPHandler.Sender1.SendRemovedInfo(rl);
+                                        }
+                                        router.RoutingTable.Remove(l);
+
                                     }
 
                                 }

@@ -33,7 +33,7 @@ namespace Router
             timers.Flush = 180; //240
             this.router = router;
             isRIPv2Enabled = false;
-            process = new RIPv2Process();
+            process = new RIPv2Process(this);
         }
 
         private bool SetIsEnabled(bool enabled)

@@ -66,6 +66,28 @@ namespace Router
             }
         }
 
+        public void SendRemovedInfo(RIPv2RoutingLog rl)
+        {
+            rl.Metric = 16;
+            List<byte[]> entries = new List<byte[]>(1);
+            entries.Add(new RIPv2Entry(rl).ToBytes());
+            sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+        }
+        public void SendRemovedInfo(RIPv2Entry e)
+        {
+            e.Metric = 16;
+            List<byte[]> entries = new List<byte[]>(1);
+            entries.Add(e.ToBytes());
+            sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+        }
+
+        public void SendAddedInfo(RIPv2Entry e)
+        {
+            List<byte[]> entries = new List<byte[]>(1);
+            entries.Add(e.ToBytes());
+            sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+        }
+
         public void TriggeredSend(IpV4Address dstIP)
         {
             var tableEntriesList = RIPHandler.Router.RoutingTable.GetRIPv2LogsFor(rp.Ip, rp.Mask);

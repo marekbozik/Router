@@ -12,15 +12,17 @@ namespace Router
     {
         private ConcurrentDictionary<int, RIPv2Entry> addedNetworks;
         private ConcurrentQueue<int> tickets;
+        private RIPv2Handler RIPHandler;
         private int id;
         private object locker;
 
-        public RIPv2Process()
+        public RIPv2Process(RIPv2Handler h)
         {
             tickets = new ConcurrentQueue<int>();
             addedNetworks = new ConcurrentDictionary<int, RIPv2Entry>();
             id = 0;
             locker = new object();
+            RIPHandler = h;
         }
 
         public void Add(RIPv2Entry e)
@@ -35,6 +37,17 @@ namespace Router
                     addedNetworks.TryAdd(id, e);
                     id++;
                 }
+                
+                if (RIPHandler.Sender1.Sending)
+                {
+                    if (!(IpV4.ToNetworkAdress(RIPHandler.Sender1.Rp.Ip, RIPHandler.Sender1.Rp.Mask) == e.Ip))
+                        RIPHandler.Sender1.SendAddedInfo(e);
+                }
+                else if (RIPHandler.Sender2.Sending)
+                {
+                    if (!(IpV4.ToNetworkAdress(RIPHandler.Sender2.Rp.Ip, RIPHandler.Sender2.Rp.Mask) == e.Ip))
+                        RIPHandler.Sender2.SendAddedInfo(e);
+                }
             }
 
         }
@@ -43,6 +56,15 @@ namespace Router
         {
             try
             {
+                var en = addedNetworks[id];
+                if (RIPHandler.Sender1.Sending)
+                {
+                    RIPHandler.Sender1.SendRemovedInfo(en);
+                }
+                else if (RIPHandler.Sender2.Sending)
+                {
+                    RIPHandler.Sender2.SendRemovedInfo(en);
+                }
                 addedNetworks.TryRemove(id, out _);
                 tickets.Enqueue(id);
             }
