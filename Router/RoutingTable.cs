@@ -49,8 +49,14 @@ namespace Router
                 var log = logs[i];
                 if (log.Type == RoutingLog.typeRIPv2)
                 {
+                    //split horizon
                     if (!IpV4.IsInSubnet(netIp, netMask, log.NextHop))
-                        l.Add(new RIPv2Entry((RIPv2RoutingLog)log));
+                    {
+                        var toAdd = new RIPv2Entry((RIPv2RoutingLog)log);
+                        if (((RIPv2RoutingLog)log).IsOnHoldDown)
+                            toAdd.Metric = 16;
+                        l.Add(toAdd);
+                    }
                 }
             }
             return l;
@@ -125,6 +131,23 @@ namespace Router
             logs.Add(new RIPv2RoutingLog(p, e));
         }
 
+        public void SetPossiblyDown(RIPv2RoutingLog rl, RIPv2Timer timers)
+        {
+            int j = 0;
+            for (int i = 0; i < logs.Count; i++)
+            {
+                var log = logs[i];
+                if (log == rl)
+                {
+                    ((RIPv2RoutingLog)logs[i]).LastUpdate = DateTime.Now - TimeSpan.FromSeconds(timers.Flush);
+                    ((RIPv2RoutingLog)logs[i]).IsInvalid = true;
+                    ((RIPv2RoutingLog)logs[i]).IsOnHoldDown = true;
+                    ((RIPv2RoutingLog)logs[i]).IsFlushed = true;
+                }
+                j++;
+            }
+        }
+
         public void Remove(RoutingLog rl)
         {
             int j = 0;
@@ -181,6 +204,13 @@ namespace Router
                 if (log.Type == RoutingLog.typeRIPv2)
                 {
                     var r = (RIPv2RoutingLog)log;
+
+                    if (r.IsOnHoldDown)
+                    {
+                        if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > (t.Holddown + t.Invalid))
+                            r.IsOnHoldDown = false;
+                    }
+
                     if (r.IsFlushed)
                     {
                         if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > (t.Holddown + t.Invalid))
@@ -200,6 +230,7 @@ namespace Router
                         if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > t.Invalid)
                         {
                             r.IsInvalid = true;
+                            r.IsOnHoldDown = true;
                             if (Math.Abs((DateTime.Now - r.LastUpdate).TotalSeconds) > t.Flush)
                             {
                                 r.IsFlushed = true;

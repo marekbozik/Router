@@ -75,6 +75,7 @@ namespace Router
                                     }
                                     else if (rl.Metric == 16)
                                     {
+
                                         if (RIPHandler.Sender1.Rp == rp)
                                         {
                                             if (RIPHandler.Sender2.Sending)
@@ -85,7 +86,7 @@ namespace Router
                                             if (RIPHandler.Sender1.Sending)
                                                 RIPHandler.Sender1.SendRemovedInfo(rl);
                                         }
-                                        router.RoutingTable.Remove(l);
+                                        router.RoutingTable.SetPossiblyDown(rl, RIPHandler.Timers);
 
                                     }
 

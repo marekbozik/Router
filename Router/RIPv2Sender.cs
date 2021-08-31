@@ -48,8 +48,12 @@ namespace Router
             while (added.TryDequeue(out res))
             {
                 if (IpV4.ToNetworkAdress(rp.Ip, rp.Mask) == res.Ip) allowed = true;
-                if (RIPHandler.Router.RoutingTable.GetOutInt(res.Ip) != port)
-                    validAdded.Add(res);
+                try
+                {
+                    if (RIPHandler.Router.RoutingTable.GetOutInt(res.Ip) != port)
+                        validAdded.Add(res);
+                }
+                catch (Exception) { }
             }
 
             if (allowed)

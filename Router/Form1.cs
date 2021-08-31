@@ -327,6 +327,8 @@ namespace Router
                 return;
             }
 
+
+            ripHandler.Process.DeleteConnected(router);
             router.Port1.Ip = ip1;
             router.Port1.Mask = port1MaskTextBox.Text;
             router.Port2.Ip = ip2;
@@ -339,6 +341,16 @@ namespace Router
             //
             router.ArpTable.UpdatePortsIp(router);
             router.RoutingTable.SetConnected(router);
+
+            
+            RIPv2NetworksListView.Items.Clear();
+            RIPv2NetworksListView.View = View.Details;
+            var en = ripHandler.Process.GetAddedNetworks();
+            RIPv2EntryOrdered res;
+            while (en.TryDequeue(out res))
+            {
+                RIPv2NetworksListView.Items.Add(res.Id.ToString() + " " + res.Ip.ToString());
+            }
 
 
             routerStatusBar.AppendText(DateTime.Now.ToString() + " IP address changed\n");

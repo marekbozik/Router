@@ -73,6 +73,26 @@ namespace Router
             }
         }
 
+        public void DeleteConnected(Router r)
+        {
+            List<int> toRemove = new List<int>(2);
+            for (int i = 0; i < id; i++)
+            {
+                RIPv2Entry e;
+                if (addedNetworks.TryGetValue(i, out e))
+                {
+                    if (e.Ip == IpV4.ToNetworkAdress(r.Port1.Ip, r.Port1.Mask) || e.Ip == IpV4.ToNetworkAdress(r.Port2.Ip, r.Port2.Mask))
+                    {
+                        toRemove.Add(i);
+                    }
+                }
+            }
+            foreach (var re in toRemove)
+            {
+                Delete(re);
+            }
+        }
+
         public bool IsInProcess(IpV4Address netIp)
         {
             var e = GetAddedNetworks();

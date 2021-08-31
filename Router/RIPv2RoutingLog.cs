@@ -12,7 +12,7 @@ namespace Router
         protected int metric;
         protected DateTime lastUpdate;
         protected bool isInvalid;
-        //protected bool isOnHoldDown;
+        protected bool isOnHoldDown;
         protected bool isFlushed;
 
         public int Metric { get => metric; set => metric = value; }
@@ -20,7 +20,7 @@ namespace Router
         public bool IsInvalid { get => isInvalid; set => isInvalid = value; }
         public bool IsFlushed { get => isFlushed; set => isFlushed = value; }
 
-        //public bool IsOnHoldDown { get => isOnHoldDown; set => isOnHoldDown = value; }
+        public bool IsOnHoldDown { get => isOnHoldDown; set => isOnHoldDown = value; }
 
         public RIPv2RoutingLog(RIPv2Packet p, RIPv2Entry e)
         {
@@ -32,7 +32,7 @@ namespace Router
             lastUpdate = DateTime.Now;
             isInvalid = false;
             isFlushed = false;
-            //isOnHoldDown = false;
+            isOnHoldDown = false;
         }
 
         public void RegisterUpdate()
