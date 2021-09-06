@@ -38,16 +38,22 @@ namespace Router
                     id++;
                 }
                 
-                if (RIPHandler.Sender1.Sending)
-                {
-                    if (!(IpV4.ToNetworkAdress(RIPHandler.Sender1.Rp.Ip, RIPHandler.Sender1.Rp.Mask) == e.Ip))
-                        RIPHandler.Sender1.SendAddedInfo(e);
-                }
-                else if (RIPHandler.Sender2.Sending)
-                {
-                    if (!(IpV4.ToNetworkAdress(RIPHandler.Sender2.Rp.Ip, RIPHandler.Sender2.Rp.Mask) == e.Ip))
-                        RIPHandler.Sender2.SendAddedInfo(e);
-                }
+            }
+
+            if (e.Ip == IpV4.ToNetworkAddress(RIPHandler.Router.Port1.Ip, RIPHandler.Router.Port1.Mask) && RIPHandler.Sender1.Sending)
+                RIPHandler.Sender1.SendRIPv2Request();
+            else if (e.Ip == IpV4.ToNetworkAddress(RIPHandler.Router.Port2.Ip, RIPHandler.Router.Port2.Mask) && RIPHandler.Sender2.Sending)
+                RIPHandler.Sender2.SendRIPv2Request();
+
+            if (RIPHandler.Sender1.Sending)
+            {
+                if (!(IpV4.ToNetworkAddress(RIPHandler.Sender1.Rp.Ip, RIPHandler.Sender1.Rp.Mask) == e.Ip))
+                    RIPHandler.Sender1.SendAddedInfo(e);
+            }
+            if (RIPHandler.Sender2.Sending)
+            {
+                if (!(IpV4.ToNetworkAddress(RIPHandler.Sender2.Rp.Ip, RIPHandler.Sender2.Rp.Mask) == e.Ip))
+                    RIPHandler.Sender2.SendAddedInfo(e);
             }
 
         }
@@ -61,7 +67,7 @@ namespace Router
                 {
                     RIPHandler.Sender1.SendRemovedInfo(en);
                 }
-                else if (RIPHandler.Sender2.Sending)
+                if (RIPHandler.Sender2.Sending)
                 {
                     RIPHandler.Sender2.SendRemovedInfo(en);
                 }
@@ -81,7 +87,7 @@ namespace Router
                 RIPv2Entry e;
                 if (addedNetworks.TryGetValue(i, out e))
                 {
-                    if (e.Ip == IpV4.ToNetworkAdress(r.Port1.Ip, r.Port1.Mask) || e.Ip == IpV4.ToNetworkAdress(r.Port2.Ip, r.Port2.Mask))
+                    if (e.Ip == IpV4.ToNetworkAddress(r.Port1.Ip, r.Port1.Mask) || e.Ip == IpV4.ToNetworkAddress(r.Port2.Ip, r.Port2.Mask))
                     {
                         toRemove.Add(i);
                     }
@@ -108,7 +114,7 @@ namespace Router
 
         public bool IsInProcess(IpV4Address ip, string mask)
         {
-            IpV4Address ipp = IpV4.ToNetworkAdress(ip, mask);
+            IpV4Address ipp = IpV4.ToNetworkAddress(ip, mask);
             var e = GetAddedNetworks();
             RIPv2EntryOrdered res;
 

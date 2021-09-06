@@ -174,25 +174,25 @@ namespace Router
                 {
                     IpV4Packet ipp = new IpV4Packet(p);
 
-                if (ArpPacket.IsArp(ipp.Packet)) { ArpHandle(ipp.Packet, 1); return; }
-                else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
-                    PingHandler(ipp, 1);
-                else if (IpV4.IsInSubnet(port2.Ip, port2.Mask, ipp.DstIp))
-                    ForwardTo(ipp, 2);
-                else if (arpTable.Contains(ipp.DstIp))
-                {
-                    ForwardTo(ipp, arpTable.GetPort(ipp.DstIp));
-                }
-                else
-                {
-                    int port = 0;
-                    try
+                    if (ArpPacket.IsArp(ipp.Packet)) { ArpHandle(ipp.Packet, 1); return; }
+                    else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
+                        PingHandler(ipp, 1);
+                    else if (IpV4.IsInSubnet(port2.Ip, port2.Mask, ipp.DstIp))
+                        ForwardTo(ipp, 2);
+                    else if (arpTable.Contains(ipp.DstIp))
                     {
-                        port = routingTable.GetOutInt(ipp.DstIp);
+                        ForwardTo(ipp, arpTable.GetPort(ipp.DstIp));
                     }
-                    catch (Exception) { return; }
-                    ForwardTo(ipp, port);
-                }
+                    else
+                    {
+                        int port = 0;
+                        try
+                        {
+                            port = routingTable.GetOutInt(ipp.DstIp);
+                        }
+                        catch (Exception) { return; }
+                        ForwardTo(ipp, port);
+                    }
 
                 }
             //});

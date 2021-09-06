@@ -37,6 +37,11 @@ namespace Router
             }
             return b;
         }
+
+        public void SendRIPv2Request()
+        {
+            sender.SendPacket(RIPv2Packet.RIPv2RequestPacketBuilder(rp));
+        }
         
         private void SendRIPv2()
         {
@@ -47,13 +52,18 @@ namespace Router
             bool allowed = false;
             while (added.TryDequeue(out res))
             {
-                if (IpV4.ToNetworkAdress(rp.Ip, rp.Mask) == res.Ip) allowed = true;
+                if (IpV4.ToNetworkAddress(rp.Ip, rp.Mask) == res.Ip) allowed = true;
                 try
                 {
                     if (RIPHandler.Router.RoutingTable.GetOutInt(res.Ip) != port)
                         validAdded.Add(res);
                 }
-                catch (Exception) { }
+                catch (Exception) {
+                    if (res.Ip == new IpV4Address("0.0.0.0"))
+                    {
+                        validAdded.Add(res);
+                    }
+                }
             }
 
             if (allowed)
@@ -101,7 +111,7 @@ namespace Router
             bool allowed = false;
             while (added.TryDequeue(out res))
             {
-                if (IpV4.ToNetworkAdress(rp.Ip, rp.Mask) == res.Ip) allowed = true;
+                if (IpV4.ToNetworkAddress(rp.Ip, rp.Mask) == res.Ip) allowed = true;
                 if (RIPHandler.Router.RoutingTable.GetOutInt(res.Ip) != port)
                     validAdded.Add(res);
             }

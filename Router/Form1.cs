@@ -32,6 +32,8 @@ namespace Router
                 button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
                 tableLayoutPanel2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             }
+            RIPv2Port1StateButton.Enabled = false;
+            RIPv2Port2StateButton.Enabled = false;
 
             router = null;
             try
@@ -518,11 +520,19 @@ namespace Router
                 label21.Text = "Off";
                 label22.Text = "Off";
                 label23.Text = "Off";
+                ripHandler.Reciever2.Recieving = false;
+                ripHandler.Sender2.Sending = false;
+                ripHandler.Reciever1.Recieving = false;
+                ripHandler.Sender1.Sending = false;
+                RIPv2Port1StateButton.Enabled = false;
+                RIPv2Port2StateButton.Enabled = false;
             }
             else
             {
                 ripHandler.IsRIPv2Enabled = true;
                 label23.Text = "On";
+                RIPv2Port1StateButton.Enabled = true;
+                RIPv2Port2StateButton.Enabled = true;
             }
         }
 
@@ -551,7 +561,18 @@ namespace Router
                     {
                         RIPv2NetworksListView.Items.Add(res.Id.ToString() + " " + res.Ip.ToString());
                     }
-                    
+                }
+                else if (ip == new IpV4Address("0.0.0.0") && !ripHandler.Process.IsInProcess(ip))
+                {
+                    ripHandler.Process.Add(new RIPv2Entry(ip, "0.0.0.0", 1));
+                    RIPv2NetworksListView.Items.Clear();
+                    RIPv2NetworksListView.View = View.Details;
+                    var en = ripHandler.Process.GetAddedNetworks();
+                    RIPv2EntryOrdered res;
+                    while (en.TryDequeue(out res))
+                    {
+                        RIPv2NetworksListView.Items.Add(res.Id.ToString() + " " + res.Ip.ToString());
+                    }
                 }
             }
         }

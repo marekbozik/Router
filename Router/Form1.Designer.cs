@@ -97,9 +97,9 @@ namespace Router
             this.RIPv2 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
-            this.button7 = new System.Windows.Forms.Button();
+            this.RIPv2Port1StateButton = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
-            this.button8 = new System.Windows.Forms.Button();
+            this.RIPv2Port2StateButton = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
@@ -971,9 +971,9 @@ namespace Router
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel8.Controls.Add(this.button7, 0, 0);
+            this.tableLayoutPanel8.Controls.Add(this.RIPv2Port1StateButton, 0, 0);
             this.tableLayoutPanel8.Controls.Add(this.label21, 1, 0);
-            this.tableLayoutPanel8.Controls.Add(this.button8, 2, 0);
+            this.tableLayoutPanel8.Controls.Add(this.RIPv2Port2StateButton, 2, 0);
             this.tableLayoutPanel8.Controls.Add(this.label22, 3, 0);
             this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 454);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
@@ -982,16 +982,16 @@ namespace Router
             this.tableLayoutPanel8.Size = new System.Drawing.Size(994, 34);
             this.tableLayoutPanel8.TabIndex = 0;
             // 
-            // button7
+            // RIPv2Port1StateButton
             // 
-            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.button7.Location = new System.Drawing.Point(4, 5);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(241, 23);
-            this.button7.TabIndex = 0;
-            this.button7.Text = "Change state";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.port1RipStateButton_Click);
+            this.RIPv2Port1StateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.RIPv2Port1StateButton.Location = new System.Drawing.Point(4, 5);
+            this.RIPv2Port1StateButton.Name = "RIPv2Port1StateButton";
+            this.RIPv2Port1StateButton.Size = new System.Drawing.Size(241, 23);
+            this.RIPv2Port1StateButton.TabIndex = 0;
+            this.RIPv2Port1StateButton.Text = "Change state";
+            this.RIPv2Port1StateButton.UseVisualStyleBackColor = true;
+            this.RIPv2Port1StateButton.Click += new System.EventHandler(this.port1RipStateButton_Click);
             // 
             // label21
             // 
@@ -1003,16 +1003,16 @@ namespace Router
             this.label21.TabIndex = 1;
             this.label21.Text = "Off";
             // 
-            // button8
+            // RIPv2Port2StateButton
             // 
-            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.button8.Location = new System.Drawing.Point(500, 5);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(241, 23);
-            this.button8.TabIndex = 3;
-            this.button8.Text = "Change state";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.port2RipStateButton_Click);
+            this.RIPv2Port2StateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.RIPv2Port2StateButton.Location = new System.Drawing.Point(500, 5);
+            this.RIPv2Port2StateButton.Name = "RIPv2Port2StateButton";
+            this.RIPv2Port2StateButton.Size = new System.Drawing.Size(241, 23);
+            this.RIPv2Port2StateButton.TabIndex = 3;
+            this.RIPv2Port2StateButton.Text = "Change state";
+            this.RIPv2Port2StateButton.UseVisualStyleBackColor = true;
+            this.RIPv2Port2StateButton.Click += new System.EventHandler(this.port2RipStateButton_Click);
             // 
             // label22
             // 
@@ -1443,9 +1443,9 @@ namespace Router
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button RIPv2Port1StateButton;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button RIPv2Port2StateButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
         private System.Windows.Forms.Button button9;

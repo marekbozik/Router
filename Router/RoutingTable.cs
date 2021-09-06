@@ -25,13 +25,13 @@ namespace Router
         {
             if (logs.Count == 0)
             {
-                Add(RoutingLog.typeConnected, IpV4.ToNetworkAdress(r.Port1.Ip, r.Port1.Mask), r.Port1.Mask, 1, new IpV4Address());
-                Add(RoutingLog.typeConnected, IpV4.ToNetworkAdress(r.Port2.Ip, r.Port2.Mask), r.Port2.Mask, 2, new IpV4Address());
+                Add(RoutingLog.typeConnected, IpV4.ToNetworkAddress(r.Port1.Ip, r.Port1.Mask), r.Port1.Mask, 1, new IpV4Address());
+                Add(RoutingLog.typeConnected, IpV4.ToNetworkAddress(r.Port2.Ip, r.Port2.Mask), r.Port2.Mask, 2, new IpV4Address());
             }
             else
             {
-                logs[0] = new RoutingLog(RoutingLog.typeConnected, IpV4.ToNetworkAdress(r.Port1.Ip, r.Port1.Mask), r.Port1.Mask, 1);
-                logs[1] = new RoutingLog(RoutingLog.typeConnected, IpV4.ToNetworkAdress(r.Port2.Ip, r.Port2.Mask), r.Port2.Mask, 2);
+                logs[0] = new RoutingLog(RoutingLog.typeConnected, IpV4.ToNetworkAddress(r.Port1.Ip, r.Port1.Mask), r.Port1.Mask, 1);
+                logs[1] = new RoutingLog(RoutingLog.typeConnected, IpV4.ToNetworkAddress(r.Port2.Ip, r.Port2.Mask), r.Port2.Mask, 2);
             }          
         }
 
@@ -116,7 +116,7 @@ namespace Router
 
         public void Add(int type, IpV4Address ip, string mask, int outInt, IpV4Address nextHop)
         {
-            ip = IpV4.ToNetworkAdress(ip, mask);
+            ip = IpV4.ToNetworkAddress(ip, mask);
 			if ((outInt == 1 || outInt == 2) && nextHop != new IpV4Address())
 				logs.Add(new RoutingLog(type, ip, mask, outInt, nextHop));
 			else if ((outInt == 1 || outInt == 2))

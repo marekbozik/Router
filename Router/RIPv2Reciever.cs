@@ -1,5 +1,6 @@
 ﻿using PcapDotNet.Core;
 using PcapDotNet.Packets;
+using PcapDotNet.Packets.IpV4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,44 +56,73 @@ namespace Router
                     rip = new RIPv2Packet(ipp.Packet);
                     if (rip.Command == RIPv2Packet.RIPv2CommandResponse)
                     {
+                        //IpV4Address[] addedIps = new IpV4Address[16];
+                        //int added = 0;
+                        bool triggerSend = false;
                         foreach (var entry in rip.Entries.Table)
                         {
                             var rl = new RIPv2RoutingLog(rip, entry);
-                            if (!router.RoutingTable.Contains(rl))
+                            if (!router.RoutingTable.Contains(rl) && rl.Metric < 16)
                             {
                                 router.RoutingTable.Add(rl);
+                                triggerSend = true;
+
+                                //addedIps[added++] = rl.Ip;
+                                //if (RIPHandler.Sender1.Rp == rp)
+                                //    RIPHandler.Sender2.TriggeredSend(rip.SrcIp);
+                                //else if (RIPHandler.Sender2.Rp == rp)
+                                //    RIPHandler.Sender1.TriggeredSend(rip.SrcIp);
                             }
                             else
                             {
-                                var l = router.RoutingTable.GetLog(entry.Ip, entry.Mask);
-                                if (l.Type == RoutingLog.typeRIPv2)
+                                try
                                 {
-                                    var r = (RIPv2RoutingLog)l;
-                                    if ((rl.Metric + 1) < r.Metric && !r.IsInvalid)
+                                    var l = router.RoutingTable.GetLog(entry.Ip, entry.Mask);
+                                    if (l.Type == RoutingLog.typeRIPv2)
                                     {
-                                        router.RoutingTable.Remove(l);
-                                        router.RoutingTable.Add(rl);
-                                    }
-                                    else if (rl.Metric == 16)
-                                    {
-
-                                        if (RIPHandler.Sender1.Rp == rp)
+                                        var r = (RIPv2RoutingLog)l;
+                                        if ((rl.Metric + 1) < r.Metric && !r.IsInvalid)
                                         {
-                                            if (RIPHandler.Sender2.Sending)
-                                                RIPHandler.Sender2.SendRemovedInfo(rl);
+                                            router.RoutingTable.Remove(l);
+                                            router.RoutingTable.Add(rl);
+                                            triggerSend = true;
+
+                                            //addedIps[added++] = rl.Ip;
+
+                                            //if (RIPHandler.Sender1.Rp == rp)
+                                            //    RIPHandler.Sender2.TriggeredSend(rip.SrcIp);
+                                            //else if (RIPHandler.Sender2.Rp == rp)
+                                            //    RIPHandler.Sender1.TriggeredSend(rip.SrcIp);
                                         }
-                                        else if (RIPHandler.Sender2.Rp == rp)
+                                        else if (rl.Metric == 16)
                                         {
-                                            if (RIPHandler.Sender1.Sending)
-                                                RIPHandler.Sender1.SendRemovedInfo(rl);
+
+                                            if (RIPHandler.Sender1.Rp == rp)
+                                            {
+                                                if (RIPHandler.Sender2.Sending)
+                                                    RIPHandler.Sender2.SendRemovedInfo(rl);
+                                            }
+                                            else if (RIPHandler.Sender2.Rp == rp)
+                                            {
+                                                if (RIPHandler.Sender1.Sending)
+                                                    RIPHandler.Sender1.SendRemovedInfo(rl);
+                                            }
+                                            router.RoutingTable.SetPossiblyDown(rl, RIPHandler.Timers);
+
                                         }
-                                        router.RoutingTable.SetPossiblyDown(rl, RIPHandler.Timers);
 
                                     }
-
                                 }
+                                catch (Exception) { }
                             }
 
+                        }
+                        if (triggerSend)
+                        {
+                            if (RIPHandler.Sender1.Rp == rp)
+                                RIPHandler.Sender2.TriggeredSend(rip.SrcIp);
+                            else if (RIPHandler.Sender2.Rp == rp)
+                                RIPHandler.Sender1.TriggeredSend(rip.SrcIp);
                         }
                     }
                     else if (rip.Command == RIPv2Packet.RIPv2CommandRequest)

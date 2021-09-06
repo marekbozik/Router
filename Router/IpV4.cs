@@ -34,7 +34,7 @@ namespace Router
             return masks.Contains(s);
         }
 
-        public static IpV4Address ToNetworkAdress(IpV4Address ip, string mask)
+        public static IpV4Address ToNetworkAddress(IpV4Address ip, string mask)
         {
 
 			string ip1 = ip.ToString();
