@@ -56,12 +56,15 @@ namespace Router
             return arr;
         }
 
-        public static Packet RIPv2ResponsePacketBuilder(RouterPort senderRp, List<byte[]> entries, IpV4Address dstIp)
+        public static Packet RIPv2ResponsePacketBuilder(RouterPort senderRp, List<byte[]> entries, MacAddress dstMac, IpV4Address dstIp)
         {
+
+            
+
             EthernetLayer ethernetLayer = new EthernetLayer
             {
                 Source = senderRp.Mac,
-                Destination = new MacAddress("01:00:5E:00:00:09")
+                Destination = dstMac
             };
 
             IpV4Layer ipV4Layer =

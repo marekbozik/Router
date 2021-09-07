@@ -177,6 +177,8 @@ namespace Router
                     if (ArpPacket.IsArp(ipp.Packet)) { ArpHandle(ipp.Packet, 1); return; }
                     else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
                         PingHandler(ipp, 1);
+                    else if (ipp.DstIp == port1.Ip)
+                        return;
                     else if (IpV4.IsInSubnet(port2.Ip, port2.Mask, ipp.DstIp))
                         ForwardTo(ipp, 2);
                     else if (arpTable.Contains(ipp.DstIp))
@@ -218,6 +220,8 @@ namespace Router
                     if (ArpPacket.IsArp(p)) { ArpHandle(p, 2); }
                     else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
                         PingHandler(ipp, 2);
+                    else if (ipp.DstIp == port2.Ip)
+                        return;
                     else if (IpV4.IsInSubnet(port1.Ip, port1.Mask, ipp.DstIp))
                         ForwardTo(ipp, 1);
                     else if (arpTable.Contains(ipp.DstIp))

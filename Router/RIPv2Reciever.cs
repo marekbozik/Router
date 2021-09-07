@@ -81,7 +81,7 @@ namespace Router
                                     if (l.Type == RoutingLog.typeRIPv2)
                                     {
                                         var r = (RIPv2RoutingLog)l;
-                                        if ((rl.Metric + 1) < r.Metric && !r.IsInvalid)
+                                        if ((rl.Metric) < r.Metric && !r.IsInvalid)
                                         {
                                             router.RoutingTable.Remove(l);
                                             router.RoutingTable.Add(rl);
@@ -94,7 +94,7 @@ namespace Router
                                             //else if (RIPHandler.Sender2.Rp == rp)
                                             //    RIPHandler.Sender1.TriggeredSend(rip.SrcIp);
                                         }
-                                        else if (rl.Metric == 16)
+                                        else if ((rl.Metric - 1) == 16)
                                         {
 
                                             if (RIPHandler.Sender1.Rp == rp)
@@ -107,12 +107,19 @@ namespace Router
                                                 if (RIPHandler.Sender1.Sending)
                                                     RIPHandler.Sender1.SendRemovedInfo(rl);
                                             }
-                                            router.RoutingTable.SetPossiblyDown(rl, RIPHandler.Timers);
+                                            if (!r.IsOnHoldDown)
+                                            {
+                                                router.RoutingTable.SetPossiblyDown(rl, RIPHandler.Timers);
+                                            }
 
                                         }
                                         else
                                         {
                                             r.RegisterUpdate();
+                                            r.IsOnHoldDown = false;
+                                            r.IsInvalid = false;
+                                            r.IsFlushed = false;
+                                            
                                         }
 
                                     }
@@ -124,9 +131,9 @@ namespace Router
                         if (triggerSend)
                         {
                             if (RIPHandler.Sender1.Rp == rp)
-                                RIPHandler.Sender2.TriggeredSend(rip.SrcIp);
+                                RIPHandler.Sender2.TriggeredSend();
                             else if (RIPHandler.Sender2.Rp == rp)
-                                RIPHandler.Sender1.TriggeredSend(rip.SrcIp);
+                                RIPHandler.Sender1.TriggeredSend();
                         }
                     }
                     else if (rip.Command == RIPv2Packet.RIPv2CommandRequest)

@@ -1,4 +1,5 @@
 ﻿using PcapDotNet.Core;
+using PcapDotNet.Packets.Ethernet;
 using PcapDotNet.Packets.IpV4;
 using System;
 using System.Collections.Generic;
@@ -79,30 +80,71 @@ namespace Router
                     entries.Add(en.ToBytes());
                 }
                 if (entries.Count > 0)
-                    sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+                {
+                    if (RIPHandler.Process.IsInProcess(IpV4.ToNetworkAddress(rp.Ip, rp.Mask)))
+                        sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+
+                }
             }
         }
 
         public void SendRemovedInfo(RIPv2RoutingLog rl)
         {
+            int metric = rl.Metric;
             rl.Metric = 16;
             List<byte[]> entries = new List<byte[]>(1);
             entries.Add(new RIPv2Entry(rl).ToBytes());
-            sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+            rl.Metric = metric;
+            if (RIPHandler.Process.IsInProcess(IpV4.ToNetworkAddress(rp.Ip, rp.Mask)))
+                sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+
         }
         public void SendRemovedInfo(RIPv2Entry e)
         {
+            byte metric = e.Metric;
             e.Metric = 16;
             List<byte[]> entries = new List<byte[]>(1);
             entries.Add(e.ToBytes());
-            sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+            e.Metric = metric;
+            if (RIPHandler.Process.IsInProcess(IpV4.ToNetworkAddress(rp.Ip, rp.Mask)))
+                sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
         }
 
         public void SendAddedInfo(RIPv2Entry e)
         {
             List<byte[]> entries = new List<byte[]>(1);
             entries.Add(e.ToBytes());
-            sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+            if (RIPHandler.Process.IsInProcess(IpV4.ToNetworkAddress(rp.Ip, rp.Mask)))
+                sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+        }
+
+        public void TriggeredSend()
+        {
+            var tableEntriesList = RIPHandler.Router.RoutingTable.GetRIPv2LogsFor(rp.Ip, rp.Mask);
+            var added = RIPHandler.Process.GetAddedNetworks();
+            List<RIPv2Entry> validAdded = new List<RIPv2Entry>(added.Count);
+            RIPv2EntryOrdered res;
+            bool allowed = false;
+            while (added.TryDequeue(out res))
+            {
+                if (IpV4.ToNetworkAddress(rp.Ip, rp.Mask) == res.Ip) allowed = true;
+                if (RIPHandler.Router.RoutingTable.GetOutInt(res.Ip) != port)
+                    validAdded.Add(res);
+            }
+
+            if (allowed)
+            {
+                tableEntriesList.AddRange(validAdded);
+
+                List<byte[]> entries = new List<byte[]>(tableEntriesList.Count);
+                foreach (var en in tableEntriesList)
+                {
+                    entries.Add(en.ToBytes());
+                }
+                if (entries.Count > 0)
+                    if (RIPHandler.Process.IsInProcess(IpV4.ToNetworkAddress(rp.Ip, rp.Mask)))
+                        sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries));
+            }
         }
 
         public void TriggeredSend(IpV4Address dstIP)
@@ -128,8 +170,36 @@ namespace Router
                 {
                     entries.Add(en.ToBytes());
                 }
+
+                MacAddress dstMac = new MacAddress();
+                if (RIPHandler.Router.ArpTable.Contains(dstIP))
+                    dstMac = RIPHandler.Router.ArpTable.GetLog(dstIP).Mac;
+                else
+                {
+                    sender.SendPacket(
+                        ArpPacket.ArpPacketBuilder(PcapDotNet.Packets.Arp.ArpOperation.Request,
+                        rp.Mac,
+                        new MacAddress("FF:FF:FF:FF:FF:FF"),
+                        rp.Ip,
+                        dstIP));
+                    bool success = false;
+                    for (int i = 0; i < 20; i++)
+                    {
+                        if (RIPHandler.Router.ArpTable.Contains(dstIP))
+                        {
+                            dstMac = RIPHandler.Router.ArpTable.GetLog(dstIP).Mac;
+                            success = true;
+                            break;
+                        }
+                        Thread.Sleep(100);
+                    }
+                    if (!success) return;
+
+                }
+
                 if (entries.Count > 0)
-                    sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries, dstIP));
+                    if (RIPHandler.Process.IsInProcess(IpV4.ToNetworkAddress(rp.Ip, rp.Mask)))
+                        sender.SendPacket(RIPv2Packet.RIPv2ResponsePacketBuilder(rp, entries, dstMac, dstIP));
             }
         }
 
