@@ -75,6 +75,8 @@ namespace Router
             throw new Exception();
         }
 
+
+
         public bool Contains(IpV4Address netIp)
         {
             for (int i = 0; i < logs.Count; i++)

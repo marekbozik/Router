@@ -27,10 +27,10 @@ namespace Router
             reciever1 = new RIPv2Reciever(router.Port1, router, this);
             reciever2 = new RIPv2Reciever(router.Port2, router, this);
             timers = new RIPv2Timer();
-            timers.Update = 30;
-            timers.Invalid = 60; //180
-            timers.Holddown = 30; //180
-            timers.Flush = 180; //240
+            timers.Update = 15;//30;
+            timers.Invalid = 30;//60; //180
+            timers.Holddown = 60;//30; //180
+            timers.Flush = 60;//180; //240
             this.router = router;
             isRIPv2Enabled = false;
             process = new RIPv2Process(this);

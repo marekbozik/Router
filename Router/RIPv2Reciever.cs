@@ -110,6 +110,10 @@ namespace Router
                                             router.RoutingTable.SetPossiblyDown(rl, RIPHandler.Timers);
 
                                         }
+                                        else
+                                        {
+                                            r.RegisterUpdate();
+                                        }
 
                                     }
                                 }

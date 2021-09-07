@@ -40,7 +40,10 @@ namespace Router
 
         public void SendRIPv2Request()
         {
-            sender.SendPacket(RIPv2Packet.RIPv2RequestPacketBuilder(rp));
+            if (RIPHandler.Process.IsInProcess(IpV4.ToNetworkAddress(rp.Ip, rp.Mask)))
+            {
+                sender.SendPacket(RIPv2Packet.RIPv2RequestPacketBuilder(rp));
+            }
         }
         
         private void SendRIPv2()
