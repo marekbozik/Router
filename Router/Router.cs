@@ -22,7 +22,6 @@ namespace Router
     {
         private RouterPort port1;
         private RouterPort port2;
-        private PacketCommunicator sender1, sender2;
         private static IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
         private ArpTable arpTable;
         private RoutingTable routingTable;
@@ -115,15 +114,13 @@ namespace Router
         internal ArpTable ArpTable { get => arpTable; }
 
         internal RoutingTable RoutingTable { get => routingTable; }
-        public PacketCommunicator Sender1 { get => sender1; set => sender1 = value; }
-        public PacketCommunicator Sender2 { get => sender2; set => sender2 = value; }
 
 
         private void Initialize()
         {
             arpTable = new ArpTable(20, this);
-            sender1 = port1.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous | PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
-            sender2 = port2.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous | PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
+            port1.Sender = port1.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous | PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
+            port2.Sender = port2.DeviceInterface.Open(65536, PacketDeviceOpenAttributes.Promiscuous | PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
             routingTable = new RoutingTable(this);
             pingStack = new ConcurrentStack<ICMPPacket>();
         }
@@ -156,90 +153,51 @@ namespace Router
             }
         }
 
+        private void Forwarder(Packet p, RouterPort port, RouterPort mirrorPort)
+        {
+            if (p.Ethernet.Source == port1.Mac || p.Ethernet.Source == port2.Mac)
+                return;
+            
+            if (IpV4Packet.IsIpV4Packet(p))
+            {
+                IpV4Packet ipp = new IpV4Packet(p);
+
+                if (ArpPacket.IsArp(ipp.Packet)) 
+                { 
+                    ArpHandle(ipp.Packet, port); 
+                    return; 
+                }
+                else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
+                    PingHandler(ipp, port);
+                else if (ipp.DstIp == port.Ip)
+                    return;
+                else if (IpV4.IsInSubnet(mirrorPort.Ip, mirrorPort.Mask, ipp.DstIp))
+                    ForwardTo(ipp, mirrorPort);
+                else if (arpTable.Contains(ipp.DstIp))
+                {
+                    ForwardTo(ipp, arpTable.GetPort(ipp.DstIp) == 1 ? port1 : port2);
+                }
+                else
+                {
+                    int pr = 0;
+                    try
+                    {
+                        pr = routingTable.GetOutInt(ipp.DstIp);
+                    }
+                    catch (Exception) { return; }
+                    ForwardTo(ipp, pr == 1 ? port1 : port2);
+                }
+            }
+
+        }
 
         private void ForwardHandler1(Packet p)
         {
-            //new Thread(() =>
-            //{
-                MacAddress[] macs = { port1.Mac, port2.Mac };
-                foreach (var mac in macs)
-                {
-                    if (p.Ethernet.Source == mac)
-                    {
-                        return;
-                    }
-                }
-
-                if (IpV4Packet.IsIpV4Packet(p))
-                {
-                    IpV4Packet ipp = new IpV4Packet(p);
-
-                    if (ArpPacket.IsArp(ipp.Packet)) { ArpHandle(ipp.Packet, 1); return; }
-                    else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
-                        PingHandler(ipp, 1);
-                    else if (ipp.DstIp == port1.Ip)
-                        return;
-                    else if (IpV4.IsInSubnet(port2.Ip, port2.Mask, ipp.DstIp))
-                        ForwardTo(ipp, 2);
-                    else if (arpTable.Contains(ipp.DstIp))
-                    {
-                        ForwardTo(ipp, arpTable.GetPort(ipp.DstIp));
-                    }
-                    else
-                    {
-                        int port = 0;
-                        try
-                        {
-                            port = routingTable.GetOutInt(ipp.DstIp);
-                        }
-                        catch (Exception) { return; }
-                        ForwardTo(ipp, port);
-                    }
-
-                }
-            //});
+            Forwarder(p, port1, port2);
         }
-
         private void ForwardHandler2(Packet p)
         {
-            //new Thread(() =>
-            //{
-                MacAddress[] macs = { port1.Mac, port2.Mac };
-                foreach (var mac in macs)
-                {
-                    if (p.Ethernet.Source == mac)
-                    {
-                        return;
-                    }
-                }
-
-                if (IpV4Packet.IsIpV4Packet(p))
-                {
-                    IpV4Packet ipp = new IpV4Packet(p);
-
-                    if (ArpPacket.IsArp(p)) { ArpHandle(p, 2); }
-                    else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
-                        PingHandler(ipp, 2);
-                    else if (ipp.DstIp == port2.Ip)
-                        return;
-                    else if (IpV4.IsInSubnet(port1.Ip, port1.Mask, ipp.DstIp))
-                        ForwardTo(ipp, 1);
-                    else if (arpTable.Contains(ipp.DstIp))
-                    {
-                        ForwardTo(ipp, arpTable.GetPort(ipp.DstIp));
-                    }
-                    else
-                    {
-                        int port = 0;
-                        try
-                        {
-                            port = routingTable.GetOutInt(ipp.DstIp);
-                        }
-                        catch (Exception) { return; }
-                        ForwardTo(ipp, port);
-                    }
-                }
-            //});
+            Forwarder(p, port2, port1);
         }
 
         public void Ping(IpV4Address dstIp, ProgressBar bar, TextBox textBox, Label summaryLabel, Button pingButton)
@@ -264,12 +222,12 @@ namespace Router
             if (port == 1)
             {
                 rp = port1;
-                sender = sender1;
+                sender = port1.Sender;
             }
             else if (port == 2)
             {
                 rp = port2;
-                sender = sender2;
+                sender = port2.Sender;
             }
 
             int replies = 0;
@@ -278,13 +236,71 @@ namespace Router
                 bool found = false;
                 if (!arpTable.Contains(dstIp))
                 {
-                    sender.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, rp.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), rp.Ip, dstIp));
-                    Thread.Sleep(2000);
+                    bool end = false;
+                    IpV4Address nxtH = new IpV4Address();
+                    try
+                    {
+                        nxtH = routingTable.GetNextHop(dstIp);
+                    }
+                    catch (Exception)
+                    {
+                        end = true;
+                        sender.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, rp.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), rp.Ip, dstIp));
+                        Thread.Sleep(2000);
+                    }
+                    if (!end)
+                    {
+                        if (arpTable.Contains(nxtH))
+                        {
+                            var log = arpTable.GetLog(nxtH);
+                            var x = ICMPPacket.ICMPRequestPacketBuilder(rp.Mac, rp.Ip, log.Mac, dstIp, (ushort)i);
+                            sender.SendPacket(x.requestPacket);
+
+                            //2s timeout
+
+                            for (int j = 0; j < 40; j++)
+                            {
+                                ICMPPacket icmpP;
+                                while (pingStack.TryPop(out icmpP))
+                                {
+                                    if (icmpP.Id == x.identifier && icmpP.Seq == x.sequenceNumber && icmpP.Data.Length == x.data.Length)
+                                    {
+                                        bool br = false;
+                                        for (int k = 0; k < icmpP.Data.Length; k++)
+                                        {
+                                            if (icmpP.Data[k] != x.data[k])
+                                            {
+                                                br = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!br)
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (found)
+                                {
+                                    replies++;
+                                    break;
+                                }
+                                Thread.Sleep(50);
+                            }
+                        }
+                        else
+                        {
+                            sender.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, rp.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), rp.Ip, nxtH));
+                            Thread.Sleep(2000);
+                        }
+                    }
+                    
                 }
                 else
                 {
                     var log = arpTable.GetLog(dstIp);
-                    var x = ICMPPacket.ICMPRequestPacketBuilder(rp.Mac, rp.Ip, log.Mac, log.Ip, (ushort)i);
+                    var x = ICMPPacket.ICMPRequestPacketBuilder(rp.Mac, rp.Ip, log.Mac, dstIp, (ushort)i);
                     sender.SendPacket(x.requestPacket);
 
                     //2s timeout
@@ -343,7 +359,7 @@ namespace Router
             }));
         }
 
-        private void PingRepliesHandler(ICMPPacket icmp, int port)
+        private void PingRepliesHandler(ICMPPacket icmp)
         {
             pingStack.Push(icmp);
         }
@@ -351,18 +367,18 @@ namespace Router
         private void PingAutoReply(IpV4Packet ipp, int port)
         {
             if (port == 1 && ipp.DstIp == port1.Ip)
-                sender1.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port1.Mac, port1.Ip));
+                port1.Sender.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port1.Mac, port1.Ip));
             else if (port == 1 && ipp.DstIp == port2.Ip)
-                sender1.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port1.Mac, port2.Ip));
+                port1.Sender.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port1.Mac, port2.Ip));
             else if (port == 2 && ipp.DstIp == port1.Ip)
-                sender2.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port2.Mac, port1.Ip));
+                port2.Sender.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port2.Mac, port1.Ip));
             else if (port == 2 && ipp.DstIp == port2.Ip)
-                sender1.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port2.Mac, port2.Ip));
+                port2.Sender.SendPacket(ICMPPacket.ICMPReplyPacketBuilder(new ICMPPacket(ipp.Packet), port2.Mac, port2.Ip));
         }
 
 
 
-        private void PingHandler(IpV4Packet ipp, int port)
+        private void PingHandler(IpV4Packet ipp, RouterPort port)
         {
             if (new ICMPPacket(ipp.Packet).IsRequest())
             {
@@ -370,17 +386,15 @@ namespace Router
                 {
                     new Thread(() =>
                     {
-                        if (port == 1)
-                            sender1.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port1.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port1.Ip, ipp.SrcIp));
-                        else if (port == 2)
-                            sender2.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port2.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port2.Ip, ipp.SrcIp));
+                        port.Sender.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port.Ip, ipp.SrcIp));
 
                         //Try to get arp response in max 1s 
                         for (int i = 0; i < 20; i++)
                         {
                             if (arpTable.Contains(ipp.SrcIp))
                             {
-                                PingAutoReply(ipp, port);
+                                int pport = port.Mac == port1.Mac ? 1 : 2;
+                                PingAutoReply(ipp, pport);
                                 return;
                             }
                             Thread.Sleep(50);
@@ -389,17 +403,18 @@ namespace Router
                 }
                 else
                 {
-                    PingAutoReply(ipp, port);
+                    int pport = port.Mac == port1.Mac ? 1 : 2;
+                    PingAutoReply(ipp, pport);
                 }
             }
             else if (new ICMPPacket(ipp.Packet).IsReply())
             {
-                PingRepliesHandler(new ICMPPacket(ipp.Packet), port);
+                PingRepliesHandler(new ICMPPacket(ipp.Packet));
             }
 
         }
 
-        private void ForwardTo(IpV4Packet ipp, int port)
+        private void ForwardTo(IpV4Packet ipp, RouterPort port)
         {
             if (arpTable.Contains(ipp.DstIp))
             {
@@ -407,48 +422,114 @@ namespace Router
             }
             else
             {
-                RouterPort rp = null;
-                if (port == 1) rp = port1;
-                else if (port == 2) rp = port2;
-                else return;
-                Packet p = ArpPacket.ArpPacketBuilder(ArpOperation.Request, rp.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), rp.Ip, ipp.DstIp);
-                if (port == 1)
+                IpV4Address nextHop = new IpV4Address();
+                try
                 {
-                    sender1.SendPacket(p);
+                    nextHop = routingTable.GetNextHop(ipp.DstIp);
                 }
-                else if (port == 2)
+                catch (Exception)
                 {
-                    sender2.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, rp.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), rp.Ip, ipp.DstIp));
-                }
-                
-                new Thread(() =>
-                {
-                    //Try to get arp response in max 1s 
-                    for (int i = 0; i < 20; i++)
+                    port.Sender.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port.Ip, ipp.DstIp));
+
+                    new Thread(() =>
                     {
-                        if (arpTable.Contains(ipp.DstIp))
+                        //Try to get arp response in max 1s 
+                        for (int i = 0; i < 20; i++)
                         {
-                            ContainsForward(ipp, port);
-                            return;
+                            if (arpTable.Contains(ipp.DstIp))
+                            {
+                                ContainsForward(ipp, port);
+                                return;
+                            }
+                            Thread.Sleep(50);
                         }
-                        Thread.Sleep(50);
+                    }).Start();
+                }
+                if (nextHop == IpV4.ToNetworkAddress(port1.Ip, port1.Mask) || nextHop == IpV4.ToNetworkAddress(port2.Ip, port2.Mask))
+                {
+                    port.Sender.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port.Ip, ipp.DstIp));
+
+                    new Thread(() =>
+                    {
+                        //Try to get arp response in max 1s 
+                        for (int i = 0; i < 20; i++)
+                        {
+                            if (arpTable.Contains(ipp.DstIp))
+                            {
+                                ContainsForward(ipp, port);
+                                return;
+                            }
+                            Thread.Sleep(50);
+                        }
+                    }).Start();
+                }
+                else
+                {
+                    if (arpTable.Contains(nextHop))
+                    {
+                        ContainsForward(ipp, port, nextHop);
                     }
-                }).Start();
-                
+                    else
+                    {
+                        int p = routingTable.GetOutInt(nextHop);
+                        if (p == 1)
+                            port1.Sender.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port1.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port1.Ip, nextHop));
+                        else
+                            port2.Sender.SendPacket(ArpPacket.ArpPacketBuilder(ArpOperation.Request, port2.Mac, new MacAddress("FF:FF:FF:FF:FF:FF"), port2.Ip, nextHop));
+
+                        new Thread(() =>
+                        {
+                            //Try to get arp response in max 1s 
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if (arpTable.Contains(nextHop))
+                                {
+                                    ContainsForward(ipp, port, nextHop);
+                                    return;
+                                }
+                                Thread.Sleep(50);
+                            }
+                        }).Start();
+                    }
+                }
+
+
             }
 
 
         }
 
-        private void ContainsForward(IpV4Packet ipp, int port)
+        private void ContainsForward(IpV4Packet ipp, RouterPort port, IpV4Address nextHop)
         {
-            MacAddress srcM = new MacAddress();
-            if (port == 1) srcM = new MacAddress(port1.Mac.ToString()); 
-            else if (port == 2) srcM = new MacAddress(port2.Mac.ToString()); 
-
             EthernetLayer ethernetLayer = new EthernetLayer
             {
-                Source = srcM,
+                Source = port.Mac,
+                Destination = new MacAddress(arpTable.GetLog(nextHop).Mac.ToString()),
+                EtherType = EthernetType.IpV4
+            };
+
+            PacketBuilder pb = new PacketBuilder(ethernetLayer);
+            Packet pE = pb.Build(DateTime.Now);
+            Packet pI = ipp.Packet;
+
+            var eBytes = pE.Buffer;
+            var iBytes = pI.Buffer;
+
+            for (int i = 0; i < eBytes.Length; i++)
+                iBytes[i] = eBytes[i];
+
+            string hexS = BitConverter.ToString(iBytes).Replace("-", string.Empty);
+
+            Packet p = Packet.FromHexadecimalString(hexS, DateTime.Now, DataLinkKind.Ethernet);
+
+            port.Sender.SendPacket(p);
+        }
+
+        private void ContainsForward(IpV4Packet ipp, RouterPort port)
+        {
+            EthernetLayer ethernetLayer = new EthernetLayer
+            {
+                Source = port.Mac,
                 Destination = new MacAddress(arpTable.GetLog(ipp.DstIp).Mac.ToString()),
                 EtherType = EthernetType.IpV4
             };
@@ -467,61 +548,38 @@ namespace Router
 
             Packet p = Packet.FromHexadecimalString(hexS, DateTime.Now, DataLinkKind.Ethernet);
 
-            if (port == 1)
-            {
-                sender1.SendPacket(p);
-
-            }
-            else if (port == 2)
-            {
-                sender2.SendPacket(p);
-
-            }
+            port.Sender.SendPacket(p);
         }
 
-        private void ArpHandle(Packet p, int port)
+        private void ArpHandle(Packet p, RouterPort port)
         {
-            if (port == 1)
+            ArpPacket arp = new ArpPacket(p);
+            if (arp.IsRequest())
             {
-                ArpPacket arp = new ArpPacket(p);
-                if (arp.IsRequest())
-                {
-                    Packet send = MakeArpReply(arp, 1);
-                    try { sender1.SendPacket(send); }
-                    catch (Exception) { }
-
-                }
-                else if (arp.IsReply())
-                {
-                    ArpReply(arp, new IpV4Packet(p), port);
-                }
+                Packet send = MakeArpReply(arp, port);
+                try { port.Sender.SendPacket(send); }
+                catch (Exception) { }
             }
-            else if (port == 2)
+            else if (arp.IsReply())
             {
-                ArpPacket arp = new ArpPacket(p);
-                if (arp.IsRequest())
-                {
-                    Packet send = MakeArpReply(arp, 2);
-                    try { sender2.SendPacket(send); }
-                    catch (Exception) { }
-
-
-                }
-                else if (arp.IsReply())
-                {
-                    ArpReply(arp, new IpV4Packet(p), port);
-                }
+                ArpReply(arp, new IpV4Packet(p));
             }
 
         }
 
-        private void ArpReply(ArpPacket arp, IpV4Packet ip, int port)
+        private void ArpReply(ArpPacket arp, IpV4Packet ip)
         {
-            if (arp.DestinationIp == port1.Ip || arp.DestinationIp == port2.Ip)
+            if (arp.DestinationIp == port1.Ip)
             {
-                arpTable.Add(arp, port);
+                arpTable.Add(arp, 1);
                 return;
             }
+            else if (arp.DestinationIp == port2.Ip)
+            {
+                arpTable.Add(arp, 2);
+                return;
+            }   
+
             if (arpTable.IsExpectedReply(ip.SrcIp, 1))
             {
                 arpTable.Add(arp, 1);
@@ -543,7 +601,7 @@ namespace Router
 
                         return;
                     }
-                    sender2.SendPacket(pac);
+                    port2.Sender.SendPacket(pac);
 
                 }).Start();
             }
@@ -569,56 +627,45 @@ namespace Router
 
                         return;
                     }
-                    sender1.SendPacket(pac);
+                    port1.Sender.SendPacket(pac);
                 }).Start();
             }
         }
 
-        private Packet ArpRouterReply(ArpPacket req, int incomePort)
+        private Packet ArpRouterReply(ArpPacket req, RouterPort incomePort)
         {
-            RouterPort rp;
-            if (incomePort == 1)
-                rp = Port1;
-            else
-                rp = Port2;
-
             return ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
-                                     rp.Mac,
+                                     incomePort.Mac,
                                      req.SourceMacAddress,
                                      req.DestinationIp,
                                      req.SourceIp
                                     );
         }
 
-        private Packet ArpTableReply(ArpPacket req, ArpLog l, int incomePort)
+        private Packet ArpTableReply(ArpPacket req, RouterPort port)
         {
-            RouterPort rp;
-            if (incomePort == 1)
-                rp = Port1;
-            else
-                rp = Port2;
             return ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
-                                     rp.Mac,
+                                     port.Mac,
                                      req.SourceMacAddress,
                                      req.DestinationIp,
                                      req.SourceIp
                                     );
         }
 
-        private Packet MakeArpReply(ArpPacket req, int incomePort)
+        private Packet MakeArpReply(ArpPacket req, RouterPort port)
         {
             if (!req.IsRequest()) throw new Exception();
 
             if (req.DestinationIp == Port1.Ip || req.DestinationIp == Port2.Ip)
-                return ArpRouterReply(req, incomePort);
+                return ArpRouterReply(req, port);
 
             ArpLog l;
             if (arpTable.Contains(req.DestinationIp))
             {
                 l = arpTable.GetLog(req.DestinationIp);
-                if (l.Port != incomePort)
+                if (l.Mac != port.Mac)
                 {
-                    return ArpTableReply(req, l, incomePort);
+                    return ArpTableReply(req, port);
                 }
             }
             else
@@ -639,30 +686,17 @@ namespace Router
                 {
                     new Thread(() =>
                     {
-                        if (incomePort == 1)
-                        {
-                            Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
-                                                                    port1.Mac,
-                                                                    req.SourceMacAddress,
-                                                                    req.DestinationIp,
-                                                                    req.SourceIp
-                                                                   );
-                            sender1.SendPacket(pac);
-                        }
-                        else if (incomePort == 2)
-                        {
-                            Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
-                                                                    port2.Mac,
-                                                                    req.SourceMacAddress,
-                                                                    req.DestinationIp,
-                                                                    req.SourceIp
-                                                                   );
-                            sender2.SendPacket(pac);
-                        }
+                        Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
+                                                                port.Mac,
+                                                                req.SourceMacAddress,
+                                                                req.DestinationIp,
+                                                                req.SourceIp
+                                                                );
+                        port.Sender.SendPacket(pac);
 
                     }).Start();
                 }
-                else if (incomePort == 1)
+                else if (port.Mac == port1.Mac)
                 {
                     if (IpV4.IsInSubnet(port2.Ip, port2.Mask, req.DestinationIp))
                     {
@@ -675,12 +709,12 @@ namespace Router
                                                                     req.DestinationIp
                                                                    );
                             arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 2);
-                            sender2.SendPacket(pac);
+                            port2.Sender.SendPacket(pac);
 
                         }).Start();
                     }
                 }
-                else if (incomePort == 2)
+                else if (port.Mac == port2.Mac)
                 {
                     if (IpV4.IsInSubnet(port1.Ip, port1.Mask, req.DestinationIp))
                     {
@@ -693,12 +727,11 @@ namespace Router
                                                                     req.DestinationIp
                                                                    );
                             arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 1);
-                            sender1.SendPacket(pac);
+                            port1.Sender.SendPacket(pac);
                         }).Start();
                     }
                 }
             }
-
 
             return null;
         }

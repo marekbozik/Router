@@ -98,35 +98,6 @@ namespace Router
 
             }
 
-
-            //while (true)
-            //{
-            //    int time = agingTime;
-            //    var ip = FindNextDelete();
-            //    double x;
-            //    if (Contains(ip))
-            //    {
-            //        x = agingTime - (GetLog(ip).Time - DateTime.Now).TotalSeconds;
-            //        bool flag = false;
-            //        for (int i = 0; i < x; i++)
-            //        {
-            //            if (time != agingTime)
-            //            {
-            //                flag = true;
-            //                break;
-            //            }
-            //            Thread.Sleep(1000);
-            //        }
-            //        if (flag == false)
-            //        {
-            //            Remove(ip);
-            //        }
-                    
-            //    }
-            //    Thread.Sleep(100);
-
-            //}
-
         }
 
         private int TimeToDelete(DateTime dt)

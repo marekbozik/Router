@@ -22,8 +22,8 @@ namespace Router
 
         public RIPv2Handler(Router router)
         {
-            sender1 = new RIPv2Sender(router.Port1, this, router.Sender1, 1);
-            sender2 = new RIPv2Sender(router.Port2, this, router.Sender2, 2);
+            sender1 = new RIPv2Sender(router.Port1, this, router.Port1.Sender, 1);
+            sender2 = new RIPv2Sender(router.Port2, this, router.Port2.Sender, 2);
             reciever1 = new RIPv2Reciever(router.Port1, router, this);
             reciever2 = new RIPv2Reciever(router.Port2, router, this);
             timers = new RIPv2Timer();

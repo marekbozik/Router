@@ -12,6 +12,7 @@ namespace Router
 {
     class RouterPort
     {
+        private PacketCommunicator sender;
         private PacketDevice deviceInterface;
         private IpV4Address ipAddress;
         private MacAddress mac;
@@ -43,5 +44,6 @@ namespace Router
         public PacketDevice DeviceInterface { get => deviceInterface; set => deviceInterface = value; }
         public bool Forwarding { get => forwarding; set => forwarding = value; }
         public MacAddress Mac { get => mac; }
+        public PacketCommunicator Sender { get => sender; set => sender = value; }
     }
 }

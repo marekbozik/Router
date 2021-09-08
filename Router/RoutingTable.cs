@@ -256,6 +256,44 @@ namespace Router
 
         }
 
+        private IpV4Address NextHop(IpV4Address ip, IOrderedEnumerable<RoutingLog> coll)
+        {
+            foreach (var z in coll)
+            {
+                if (IpV4.IsInSubnet(z.Ip, z.Mask, ip))
+                {
+                    if (z.Type == RoutingLog.typeRIPv2)
+                    {
+                        var log = (RIPv2RoutingLog)z;
+                        if (log.IsFlushed) throw new Exception();
+                    }
+                    if (z.OutInt != 1 && z.OutInt != 2)
+                    {
+                        return NextHop(z.NextHop, coll);
+                    }
+                    else
+                    {
+                        return ip;
+                    }
+                }
+            }
+            throw new Exception();
+        }
+        public IpV4Address GetNextHop(IpV4Address ip)
+        {
+            IOrderedEnumerable<RoutingLog> coll = logs.OrderBy(b => b.Mask, new MaskComparer());
+
+            try
+            {
+                return NextHop(ip, coll);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
 		public int GetOutInt(IpV4Address ip)
         {
             IOrderedEnumerable<RoutingLog> coll = logs.OrderBy(b => b.Mask, new MaskComparer());
@@ -302,7 +340,7 @@ namespace Router
 					{
 						return z.OutInt;
 					}
-					else continue;
+					else return RecursiveInt(z.NextHop, coll);
 				}
 			}
 
