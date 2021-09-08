@@ -157,37 +157,40 @@ namespace Router
         {
             if (p.Ethernet.Source == port1.Mac || p.Ethernet.Source == port2.Mac)
                 return;
-            
-            if (IpV4Packet.IsIpV4Packet(p))
-            {
-                IpV4Packet ipp = new IpV4Packet(p);
+            new Thread(() => {
+                if (IpV4Packet.IsIpV4Packet(p))
+                {
+                    IpV4Packet ipp = new IpV4Packet(p);
 
-                if (ArpPacket.IsArp(ipp.Packet)) 
-                { 
-                    ArpHandle(ipp.Packet, port); 
-                    return; 
-                }
-                else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
-                    PingHandler(ipp, port);
-                else if (ipp.DstIp == port.Ip)
-                    return;
-                else if (IpV4.IsInSubnet(mirrorPort.Ip, mirrorPort.Mask, ipp.DstIp))
-                    ForwardTo(ipp, mirrorPort);
-                else if (arpTable.Contains(ipp.DstIp))
-                {
-                    ForwardTo(ipp, arpTable.GetPort(ipp.DstIp) == 1 ? port1 : port2);
-                }
-                else
-                {
-                    int pr = 0;
-                    try
-                    {
-                        pr = routingTable.GetOutInt(ipp.DstIp);
+                    if (ArpPacket.IsArp(ipp.Packet)) 
+                    { 
+                        ArpHandle(ipp.Packet, port); 
+                        return; 
                     }
-                    catch (Exception) { return; }
-                    ForwardTo(ipp, pr == 1 ? port1 : port2);
+                    else if (ipp.IsIcmp() && (ipp.DstIp == port1.Ip || ipp.DstIp == port2.Ip))
+                        PingHandler(ipp, port);
+                    else if (ipp.DstIp == port.Ip)
+                        return;
+                    else if (IpV4.IsInSubnet(mirrorPort.Ip, mirrorPort.Mask, ipp.DstIp))
+                        ForwardTo(ipp, mirrorPort);
+                    else if (arpTable.Contains(ipp.DstIp))
+                    {
+                        ForwardTo(ipp, arpTable.GetPort(ipp.DstIp) == 1 ? port1 : port2);
+                    }
+                    else
+                    {
+                        int pr = 0;
+                        try
+                        {
+                            pr = routingTable.GetOutInt(ipp.DstIp);
+                        }
+                        catch (Exception) { return; }
+                        ForwardTo(ipp, pr == 1 ? port1 : port2);
+                    }
                 }
-            }
+            
+            
+            }).Start();
 
         }
 
@@ -670,33 +673,33 @@ namespace Router
             }
             else
             {
-                bool stop = false;
-                int pp = 0;
-                try
-                {
-                    pp = routingTable.GetOutInt(req.DestinationIp);
-                }
-                catch (Exception)
-                {
+                //bool stop = false;
+                //int pp = 0;
+                //try
+                //{
+                //    pp = routingTable.GetOutInt(req.DestinationIp);
+                //}
+                //catch (Exception)
+                //{
 
-                    stop = true;
-                }
+                //    stop = true;
+                //}
 
-                if (!stop)
-                {
-                    new Thread(() =>
-                    {
-                        Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
-                                                                port.Mac,
-                                                                req.SourceMacAddress,
-                                                                req.DestinationIp,
-                                                                req.SourceIp
-                                                                );
-                        port.Sender.SendPacket(pac);
+                //if (!stop)
+                //{
+                //    new Thread(() =>
+                //    {
+                //        Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Reply,
+                //                                                port.Mac,
+                //                                                req.SourceMacAddress,
+                //                                                req.DestinationIp,
+                //                                                req.SourceIp
+                //                                                );
+                //        port.Sender.SendPacket(pac);
 
-                    }).Start();
-                }
-                else if (port.Mac == port1.Mac)
+                //    }).Start();
+                //}
+                if (port.Mac == port1.Mac)
                 {
                     if (IpV4.IsInSubnet(port2.Ip, port2.Mask, req.DestinationIp))
                     {
