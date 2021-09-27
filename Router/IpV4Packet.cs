@@ -10,8 +10,8 @@ namespace Router
 {
     class IpV4Packet : GenericPacket
     {
-        private IpV4Address srcIp;
-        private IpV4Address dstIp;
+        protected IpV4Address srcIp;
+        protected IpV4Address dstIp;
 
         public IpV4Packet(Packet p) : base(p)
         {
@@ -46,6 +46,14 @@ namespace Router
         {
             if (packet.Ethernet.IpV4.Protocol == IpV4Protocol.InternetControlMessageProtocol)
                 return true;
+            return false;
+        }
+
+        public bool IsDHCP()
+        {
+            if (packet.Ethernet.IpV4.Protocol == IpV4Protocol.Udp)
+                if (packet.Ethernet.IpV4.Udp.SourcePort == 68 && packet.Ethernet.IpV4.Udp.DestinationPort == 67)
+                    return true;
             return false;
         }
 

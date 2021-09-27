@@ -157,7 +157,7 @@ namespace Router
         {
             if (p.Ethernet.Source == port1.Mac || p.Ethernet.Source == port2.Mac)
                 return;
-            new Thread(() => {
+            //new Thread(() => {
                 if (IpV4Packet.IsIpV4Packet(p))
                 {
                     IpV4Packet ipp = new IpV4Packet(p);
@@ -171,6 +171,12 @@ namespace Router
                         PingHandler(ipp, port);
                     else if (ipp.DstIp == port.Ip)
                         return;
+                    else if (ipp.IsDHCP()) 
+                    { 
+                        DHCPPacket dhcp = new DHCPPacket(ipp.Packet); 
+                        port.Sender.SendPacket(DHCPPacket.DHCPOfferPacketBuilder(port, dhcp.SourceMacAddress, dhcp.TransactionID, new IpV4Address("192.168.0.2"), "255.255.255.0"));
+                        return; 
+                    }
                     else if (IpV4.IsInSubnet(mirrorPort.Ip, mirrorPort.Mask, ipp.DstIp))
                         ForwardTo(ipp, mirrorPort);
                     else if (arpTable.Contains(ipp.DstIp))
@@ -190,7 +196,7 @@ namespace Router
                 }
             
             
-            }).Start();
+            //}).Start();
 
         }
 
