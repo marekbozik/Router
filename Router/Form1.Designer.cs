@@ -126,6 +126,46 @@ namespace Router
             this.button12 = new System.Windows.Forms.Button();
             this.RIPv2NetworksListView = new System.Windows.Forms.ListView();
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label42 = new System.Windows.Forms.Label();
+            this.label43 = new System.Windows.Forms.Label();
+            this.label44 = new System.Windows.Forms.Label();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
+            this.button15 = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
+            this.button17 = new System.Windows.Forms.Button();
+            this.button18 = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.textBox10 = new System.Windows.Forms.TextBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.richTextBox7 = new System.Windows.Forms.RichTextBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
+            this.label35 = new System.Windows.Forms.Label();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label40 = new System.Windows.Forms.Label();
+            this.label41 = new System.Windows.Forms.Label();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
+            this.dhcpPoolPort1IPTextBox = new System.Windows.Forms.TextBox();
+            this.dhcpPoolPort1MaskTextBox = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.dhcpPort1RichTextBox = new System.Windows.Forms.RichTextBox();
             this.tabs.SuspendLayout();
             this.routerTab.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -144,6 +184,10 @@ namespace Router
             this.tableLayoutPanel10.SuspendLayout();
             this.tableLayoutPanel11.SuspendLayout();
             this.tableLayoutPanel12.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tableLayoutPanel14.SuspendLayout();
+            this.tableLayoutPanel16.SuspendLayout();
+            this.tableLayoutPanel15.SuspendLayout();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -163,6 +207,7 @@ namespace Router
             this.tabs.Controls.Add(this.appSettingTab);
             this.tabs.Controls.Add(this.tabPage1);
             this.tabs.Controls.Add(this.RIPv2);
+            this.tabs.Controls.Add(this.tabPage2);
             this.tabs.Location = new System.Drawing.Point(12, 12);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
@@ -1332,6 +1377,482 @@ namespace Router
             this.columnHeader3.Text = "ID | Network";
             this.columnHeader3.Width = 400;
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.tableLayoutPanel14);
+            this.tabPage2.Location = new System.Drawing.Point(4, 24);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(1006, 494);
+            this.tabPage2.TabIndex = 4;
+            this.tabPage2.Text = "DHCP server";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel14
+            // 
+            this.tableLayoutPanel14.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel14.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel14.ColumnCount = 2;
+            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel14.Controls.Add(this.tableLayoutPanel16, 0, 1);
+            this.tableLayoutPanel14.Controls.Add(this.label33, 0, 0);
+            this.tableLayoutPanel14.Controls.Add(this.label34, 1, 0);
+            this.tableLayoutPanel14.Controls.Add(this.tableLayoutPanel15, 0, 1);
+            this.tableLayoutPanel14.Location = new System.Drawing.Point(6, 6);
+            this.tableLayoutPanel14.Name = "tableLayoutPanel14";
+            this.tableLayoutPanel14.RowCount = 2;
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 95F));
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(994, 482);
+            this.tableLayoutPanel14.TabIndex = 0;
+            // 
+            // tableLayoutPanel16
+            // 
+            this.tableLayoutPanel16.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel16.ColumnCount = 3;
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tableLayoutPanel16.Controls.Add(this.label39, 1, 0);
+            this.tableLayoutPanel16.Controls.Add(this.label42, 0, 1);
+            this.tableLayoutPanel16.Controls.Add(this.label43, 1, 1);
+            this.tableLayoutPanel16.Controls.Add(this.label44, 0, 3);
+            this.tableLayoutPanel16.Controls.Add(this.label45, 0, 5);
+            this.tableLayoutPanel16.Controls.Add(this.label46, 1, 5);
+            this.tableLayoutPanel16.Controls.Add(this.button15, 2, 0);
+            this.tableLayoutPanel16.Controls.Add(this.button16, 2, 2);
+            this.tableLayoutPanel16.Controls.Add(this.button17, 2, 4);
+            this.tableLayoutPanel16.Controls.Add(this.button18, 2, 6);
+            this.tableLayoutPanel16.Controls.Add(this.textBox4, 0, 2);
+            this.tableLayoutPanel16.Controls.Add(this.textBox7, 1, 2);
+            this.tableLayoutPanel16.Controls.Add(this.textBox8, 0, 4);
+            this.tableLayoutPanel16.Controls.Add(this.textBox9, 0, 6);
+            this.tableLayoutPanel16.Controls.Add(this.textBox10, 1, 6);
+            this.tableLayoutPanel16.Controls.Add(this.checkBox2, 1, 4);
+            this.tableLayoutPanel16.Controls.Add(this.richTextBox7, 0, 7);
+            this.tableLayoutPanel16.Location = new System.Drawing.Point(500, 28);
+            this.tableLayoutPanel16.Name = "tableLayoutPanel16";
+            this.tableLayoutPanel16.RowCount = 8;
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(490, 450);
+            this.tableLayoutPanel16.TabIndex = 3;
+            // 
+            // label39
+            // 
+            this.label39.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(232, 8);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(91, 15);
+            this.label39.TabIndex = 0;
+            this.label39.Text = "DHCP server off";
+            // 
+            // label42
+            // 
+            this.label42.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(61, 49);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(41, 15);
+            this.label42.TabIndex = 1;
+            this.label42.Text = "NET IP";
+            // 
+            // label43
+            // 
+            this.label43.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(207, 49);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(75, 15);
+            this.label43.TabIndex = 2;
+            this.label43.Text = "Subnet mask";
+            // 
+            // label44
+            // 
+            this.label44.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(55, 113);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(53, 15);
+            this.label44.TabIndex = 3;
+            this.label44.Text = "Timer (s)";
+            // 
+            // label45
+            // 
+            this.label45.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(43, 177);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(77, 15);
+            this.label45.TabIndex = 5;
+            this.label45.Text = "MAC address";
+            // 
+            // label46
+            // 
+            this.label46.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(214, 177);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(60, 15);
+            this.label46.TabIndex = 6;
+            this.label46.Text = "IP address";
+            // 
+            // button15
+            // 
+            this.button15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button15.Location = new System.Drawing.Point(329, 3);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(158, 23);
+            this.button15.TabIndex = 7;
+            this.button15.Text = "Change state";
+            this.button15.UseVisualStyleBackColor = true;
+            // 
+            // button16
+            // 
+            this.button16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button16.Location = new System.Drawing.Point(329, 67);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(158, 23);
+            this.button16.TabIndex = 8;
+            this.button16.Text = "Set pool";
+            this.button16.UseVisualStyleBackColor = true;
+            // 
+            // button17
+            // 
+            this.button17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button17.Location = new System.Drawing.Point(329, 131);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(158, 23);
+            this.button17.TabIndex = 9;
+            this.button17.Text = "Set timer";
+            this.button17.UseVisualStyleBackColor = true;
+            // 
+            // button18
+            // 
+            this.button18.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button18.Location = new System.Drawing.Point(329, 195);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(158, 23);
+            this.button18.TabIndex = 10;
+            this.button18.Text = "Set client IP";
+            this.button18.UseVisualStyleBackColor = true;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox4.Location = new System.Drawing.Point(3, 67);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(157, 23);
+            this.textBox4.TabIndex = 11;
+            // 
+            // textBox7
+            // 
+            this.textBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox7.Location = new System.Drawing.Point(166, 67);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(157, 23);
+            this.textBox7.TabIndex = 12;
+            // 
+            // textBox8
+            // 
+            this.textBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox8.Location = new System.Drawing.Point(3, 131);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(157, 23);
+            this.textBox8.TabIndex = 13;
+            // 
+            // textBox9
+            // 
+            this.textBox9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox9.Location = new System.Drawing.Point(3, 195);
+            this.textBox9.Name = "textBox9";
+            this.textBox9.Size = new System.Drawing.Size(157, 23);
+            this.textBox9.TabIndex = 15;
+            // 
+            // textBox10
+            // 
+            this.textBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox10.Location = new System.Drawing.Point(166, 195);
+            this.textBox10.Name = "textBox10";
+            this.textBox10.Size = new System.Drawing.Size(157, 23);
+            this.textBox10.TabIndex = 16;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(166, 131);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(63, 19);
+            this.checkBox2.TabIndex = 17;
+            this.checkBox2.Text = "Infinite";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox7
+            // 
+            this.richTextBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel16.SetColumnSpan(this.richTextBox7, 3);
+            this.richTextBox7.Location = new System.Drawing.Point(3, 227);
+            this.richTextBox7.Name = "richTextBox7";
+            this.richTextBox7.Size = new System.Drawing.Size(484, 220);
+            this.richTextBox7.TabIndex = 18;
+            this.richTextBox7.Text = "";
+            // 
+            // label33
+            // 
+            this.label33.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(229, 5);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(38, 15);
+            this.label33.TabIndex = 0;
+            this.label33.Text = "Port 1";
+            // 
+            // label34
+            // 
+            this.label34.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(726, 5);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(38, 15);
+            this.label34.TabIndex = 1;
+            this.label34.Text = "Port 2";
+            // 
+            // tableLayoutPanel15
+            // 
+            this.tableLayoutPanel15.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel15.ColumnCount = 3;
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tableLayoutPanel15.Controls.Add(this.label35, 1, 0);
+            this.tableLayoutPanel15.Controls.Add(this.label36, 0, 1);
+            this.tableLayoutPanel15.Controls.Add(this.label37, 1, 1);
+            this.tableLayoutPanel15.Controls.Add(this.label38, 0, 3);
+            this.tableLayoutPanel15.Controls.Add(this.label40, 0, 5);
+            this.tableLayoutPanel15.Controls.Add(this.label41, 1, 5);
+            this.tableLayoutPanel15.Controls.Add(this.button7, 2, 0);
+            this.tableLayoutPanel15.Controls.Add(this.button8, 2, 2);
+            this.tableLayoutPanel15.Controls.Add(this.button13, 2, 4);
+            this.tableLayoutPanel15.Controls.Add(this.button14, 2, 6);
+            this.tableLayoutPanel15.Controls.Add(this.dhcpPoolPort1IPTextBox, 0, 2);
+            this.tableLayoutPanel15.Controls.Add(this.dhcpPoolPort1MaskTextBox, 1, 2);
+            this.tableLayoutPanel15.Controls.Add(this.textBox3, 0, 4);
+            this.tableLayoutPanel15.Controls.Add(this.textBox5, 0, 6);
+            this.tableLayoutPanel15.Controls.Add(this.textBox6, 1, 6);
+            this.tableLayoutPanel15.Controls.Add(this.checkBox1, 1, 4);
+            this.tableLayoutPanel15.Controls.Add(this.dhcpPort1RichTextBox, 0, 7);
+            this.tableLayoutPanel15.Location = new System.Drawing.Point(4, 28);
+            this.tableLayoutPanel15.Name = "tableLayoutPanel15";
+            this.tableLayoutPanel15.RowCount = 8;
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(489, 450);
+            this.tableLayoutPanel15.TabIndex = 2;
+            // 
+            // label35
+            // 
+            this.label35.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(231, 8);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(91, 15);
+            this.label35.TabIndex = 0;
+            this.label35.Text = "DHCP server off";
+            // 
+            // label36
+            // 
+            this.label36.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(60, 49);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(41, 15);
+            this.label36.TabIndex = 1;
+            this.label36.Text = "NET IP";
+            this.label36.Click += new System.EventHandler(this.label36_Click);
+            // 
+            // label37
+            // 
+            this.label37.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(206, 49);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(75, 15);
+            this.label37.TabIndex = 2;
+            this.label37.Text = "Subnet mask";
+            // 
+            // label38
+            // 
+            this.label38.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(54, 113);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(53, 15);
+            this.label38.TabIndex = 3;
+            this.label38.Text = "Timer (s)";
+            // 
+            // label40
+            // 
+            this.label40.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(42, 177);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(77, 15);
+            this.label40.TabIndex = 5;
+            this.label40.Text = "MAC address";
+            // 
+            // label41
+            // 
+            this.label41.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(213, 177);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(60, 15);
+            this.label41.TabIndex = 6;
+            this.label41.Text = "IP address";
+            // 
+            // button7
+            // 
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button7.Location = new System.Drawing.Point(328, 3);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(158, 23);
+            this.button7.TabIndex = 7;
+            this.button7.Text = "Change state";
+            this.button7.UseVisualStyleBackColor = true;
+            // 
+            // button8
+            // 
+            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button8.Location = new System.Drawing.Point(328, 67);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(158, 23);
+            this.button8.TabIndex = 8;
+            this.button8.Text = "Set pool";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.SetDHCPPoolPort1_Click);
+            // 
+            // button13
+            // 
+            this.button13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button13.Location = new System.Drawing.Point(328, 131);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(158, 23);
+            this.button13.TabIndex = 9;
+            this.button13.Text = "Set timer";
+            this.button13.UseVisualStyleBackColor = true;
+            // 
+            // button14
+            // 
+            this.button14.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button14.Location = new System.Drawing.Point(328, 195);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(158, 23);
+            this.button14.TabIndex = 10;
+            this.button14.Text = "Set client IP";
+            this.button14.UseVisualStyleBackColor = true;
+            // 
+            // dhcpPoolPort1IPTextBox
+            // 
+            this.dhcpPoolPort1IPTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dhcpPoolPort1IPTextBox.Location = new System.Drawing.Point(3, 67);
+            this.dhcpPoolPort1IPTextBox.Name = "dhcpPoolPort1IPTextBox";
+            this.dhcpPoolPort1IPTextBox.Size = new System.Drawing.Size(156, 23);
+            this.dhcpPoolPort1IPTextBox.TabIndex = 11;
+            // 
+            // dhcpPoolPort1MaskTextBox
+            // 
+            this.dhcpPoolPort1MaskTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dhcpPoolPort1MaskTextBox.Location = new System.Drawing.Point(165, 67);
+            this.dhcpPoolPort1MaskTextBox.Name = "dhcpPoolPort1MaskTextBox";
+            this.dhcpPoolPort1MaskTextBox.Size = new System.Drawing.Size(157, 23);
+            this.dhcpPoolPort1MaskTextBox.TabIndex = 12;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox3.Location = new System.Drawing.Point(3, 131);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(156, 23);
+            this.textBox3.TabIndex = 13;
+            // 
+            // textBox5
+            // 
+            this.textBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox5.Location = new System.Drawing.Point(3, 195);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(156, 23);
+            this.textBox5.TabIndex = 15;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox6.Location = new System.Drawing.Point(165, 195);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(157, 23);
+            this.textBox6.TabIndex = 16;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(165, 131);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(63, 19);
+            this.checkBox1.TabIndex = 17;
+            this.checkBox1.Text = "Infinite";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // dhcpPort1RichTextBox
+            // 
+            this.dhcpPort1RichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel15.SetColumnSpan(this.dhcpPort1RichTextBox, 3);
+            this.dhcpPort1RichTextBox.Location = new System.Drawing.Point(3, 227);
+            this.dhcpPort1RichTextBox.Name = "dhcpPort1RichTextBox";
+            this.dhcpPort1RichTextBox.Size = new System.Drawing.Size(483, 220);
+            this.dhcpPort1RichTextBox.TabIndex = 18;
+            this.dhcpPort1RichTextBox.Text = "";
+            // 
             // RouterGui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1373,6 +1894,13 @@ namespace Router
             this.tableLayoutPanel11.PerformLayout();
             this.tableLayoutPanel12.ResumeLayout(false);
             this.tableLayoutPanel12.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tableLayoutPanel14.ResumeLayout(false);
+            this.tableLayoutPanel14.PerformLayout();
+            this.tableLayoutPanel16.ResumeLayout(false);
+            this.tableLayoutPanel16.PerformLayout();
+            this.tableLayoutPanel15.ResumeLayout(false);
+            this.tableLayoutPanel15.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1476,6 +2004,46 @@ namespace Router
         private System.Windows.Forms.TextBox IPtoPingTextBox;
         private System.Windows.Forms.Button pingButton;
         private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel14;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel15;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.TextBox dhcpPoolPort1IPTextBox;
+        private System.Windows.Forms.TextBox dhcpPoolPort1MaskTextBox;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.RichTextBox dhcpPort1RichTextBox;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel16;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.TextBox textBox10;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.RichTextBox richTextBox7;
     }
 }
 

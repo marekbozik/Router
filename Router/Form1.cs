@@ -577,6 +577,26 @@ namespace Router
             }
         }
 
+        private void label36_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SetDHCPPoolPort1_Click(object sender, EventArgs e)
+        {
+            dhcpPort1RichTextBox.Clear();
+            var ip = new IpV4Address(dhcpPoolPort1IPTextBox.Text);
+            string mask = dhcpPoolPort1MaskTextBox.Text;
+
+            var server = new DHCPServer(router.Port1);
+            server.SetPool(ip, mask);
+            foreach (var ipp in server.Pool)
+            {
+                dhcpPort1RichTextBox.AppendText(ipp.ToString() + "\n");
+            }
+
+        }
+
         private void RemoveRIPv2NetworkButton_Click(object sender, EventArgs e)
         {
             try

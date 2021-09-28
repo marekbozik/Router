@@ -1,4 +1,5 @@
-﻿using PcapDotNet.Packets.IpV4;
+﻿using PcapDotNet.Packets.Ethernet;
+using PcapDotNet.Packets.IpV4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,61 @@ using System.Threading.Tasks;
 
 namespace Router
 {
-    public class DHCPServer
+    class DHCPServer
     {
-        private Queue<IpV4Address> pool;
-        
-        public DHCPServer() 
+        private Stack<IpV4Address> pool;
+        private Dictionary<IpV4Address, MacAddress> reservedIPs;
+        private Dictionary<MacAddress, IpV4Address> manualAllocIPs;
+        private Dictionary<byte[], IpV4Address> transactions;
+
+        private bool isEnabled;
+        private RouterPort rp;
+        public DHCPServer(RouterPort rp) 
         {
-            pool = new Queue<IpV4Address>();
+            pool = new Stack<IpV4Address>();
+            reservedIPs = new Dictionary<IpV4Address, MacAddress>();
+            manualAllocIPs = new Dictionary<MacAddress, IpV4Address>();
+            transactions = new Dictionary<byte[], IpV4Address>();
+
+            isEnabled = false;
+            this.rp = rp;
+        }
+
+        public bool IsEnabled { get => isEnabled; set => isEnabled = value; }
+        public Stack<IpV4Address> Pool { get => pool; set => pool = value; }
+
+        public void ManualAlloc(MacAddress mac, IpV4Address ip)
+        {
+            reservedIPs[ip] = mac;
+            manualAllocIPs[mac] = ip;
+        }
+
+        private IpV4Address GetNextIP(MacAddress srcMac)
+        {
+            if (manualAllocIPs.ContainsKey(srcMac))
+            {
+                return manualAllocIPs[srcMac];
+            }
+            try
+            {
+                IpV4Address nextIp = new IpV4Address();
+                while (true)
+                {
+                    nextIp = pool.Pop();
+                    if (nextIp == rp.Ip || reservedIPs.ContainsKey(nextIp))
+                    {
+                        continue;
+                    }
+                    else break;
+                }
+                return nextIp;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
         public void SetPool(IpV4Address netIp, string subMask)
@@ -53,6 +102,7 @@ namespace Router
                         }
                     }
                 }
+                else ip[3]++;
                 bool end = false;
                 for (int i = 0; i < 4; i++)
                 {
@@ -69,8 +119,17 @@ namespace Router
                 }
                 else
                 {
-                    pool.Enqueue(new IpV4Address(ip[0].ToString() + "." + ip[1].ToString() + "." + ip[2].ToString() + "." + ip[3].ToString()));
+                    pool.Push(new IpV4Address(ip[0].ToString() + "." + ip[1].ToString() + "." + ip[2].ToString() + "." + ip[3].ToString()));
                 }
+            }
+
+            try
+            {
+                pool.Pop();
+            }
+            catch (Exception)
+            {
+
             }
 
         }
