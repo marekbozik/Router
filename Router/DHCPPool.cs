@@ -14,19 +14,34 @@ namespace Router
         private Dictionary<IpV4Address, MacAddress> reservedIPs;
         private Dictionary<MacAddress, IpV4Address> manualAllocIPs;
         private Dictionary<byte[], DHCPTransaction> transactions;
+        private Dictionary<IpV4Address, DHCPTransaction> usedIPs;
+
         private bool isPoolSet;
         private string subnetMask;
 
         public bool IsPoolSet { get => isPoolSet; set => isPoolSet = value; }
         public string SubnetMask { get => subnetMask; set => subnetMask = value; }
+        internal Dictionary<IpV4Address, DHCPTransaction> UsedIPs { get => usedIPs; set => usedIPs = value; }
+        internal Dictionary<MacAddress, IpV4Address> ManualAllocIPs { get => manualAllocIPs; set => manualAllocIPs = value; }
 
         public DHCPPool()
         {
             pool = new Stack<IpV4Address>();
             reservedIPs = new Dictionary<IpV4Address, MacAddress>();
             manualAllocIPs = new Dictionary<MacAddress, IpV4Address>();
-            transactions = new Dictionary<byte[], DHCPTransaction>();
+            transactions = new Dictionary<byte[], DHCPTransaction>(new ByteEqualityComparer());
+            usedIPs = new Dictionary<IpV4Address, DHCPTransaction>();
             isPoolSet = false;
+        }
+
+        public void Release(byte [] transId)
+        {
+            if (transactions.ContainsKey(transId))
+            {
+                var ipRem = transactions[transId].OfferedIP;
+                usedIPs.Remove(ipRem);
+                pool.Push(ipRem);
+            }
         }
 
         public bool HasAllocatedIP(byte[] transId)
@@ -50,29 +65,50 @@ namespace Router
             return transactions[id];
         }
 
-        public void NewTransaction(byte[] id)
+        //step 1
+        public void NewTransaction(byte[] id, MacAddress mac)
         {
-            transactions[id] = new DHCPTransaction(id);
+            transactions[id] = new DHCPTransaction(id, mac);
         }
 
+        //step 2
         public void NewIpOffer(byte[] transId, IpV4Address offerIp)
         {
             transactions[transId].OfferedIP = offerIp;
+            usedIPs[offerIp] = transactions[transId];
         }
 
-        public IpV4Address AllocIP(byte[] transId)
+        //step 3
+        public void AllocIP(byte[] transId)
         {
             transactions[transId].IsAllocated = true;
-            return transactions[transId].OfferedIP;
         }
 
 
         public void ManualAlloc(MacAddress mac, IpV4Address ip)
         {
+            if (usedIPs.ContainsKey(ip) || reservedIPs.ContainsKey(ip))
+            {
+                throw new Exception();
+            }
             if (isPoolSet)
             {
+                if (manualAllocIPs.ContainsKey(mac))
+                {
+                    var remIp = new IpV4Address();
+                    foreach (var i in reservedIPs)
+                    {
+                        if (i.Value == mac)
+                        {
+                            remIp = i.Key;
+                        }
+                    }
+                    reservedIPs.Remove(remIp);
+                    return;
+                }
                 reservedIPs[ip] = mac;
                 manualAllocIPs[mac] = ip;
+                //usedIPs[ip] = new DHCPTransaction(;
             }
         }
 
@@ -174,5 +210,36 @@ namespace Router
             isPoolSet = true;
         }
 
+        public class ByteEqualityComparer : IEqualityComparer<byte[]>
+        {
+            public bool Equals(byte[] x, byte[] y)
+            {
+                if (x.Length != y.Length)
+                {
+                    return false;
+                }
+                for (int i = 0; i < x.Length; i++)
+                {
+                    if (x[i] != y[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            public int GetHashCode(byte[] obj)
+            {
+                int result = 17;
+                for (int i = 0; i < obj.Length; i++)
+                {
+                    unchecked
+                    {
+                        result = result * 23 + obj[i];
+                    }
+                }
+                return result;
+            }
+        }
     }
 }

@@ -80,6 +80,12 @@ namespace Router
             if (router != null)
                 arpAgingTimerBox.Text = router.ArpTable.AgingTime.ToString();
 
+            if (router != null)
+            {
+                router.Port1.DhcpServer.Rich = dhcpPort1RichTextBox;
+                router.Port2.DhcpServer.Rich = dhcpPort2RichTextBox;
+            }
+
             new Thread(() => { router.Forward(router.Port1); }).Start();
             new Thread(() => { router.Forward(router.Port2); }).Start();
             /* RIPv2 */
@@ -585,16 +591,177 @@ namespace Router
         private void SetDHCPPoolPort1_Click(object sender, EventArgs e)
         {
             dhcpPort1RichTextBox.Clear();
-            var ip = new IpV4Address(dhcpPoolPort1IPTextBox.Text);
+            var ip = new IpV4Address();
+            try {
+                ip = new IpV4Address(dhcpPoolPort1IPTextBox.Text); }
+            catch (Exception) { 
+                return; }
             string mask = dhcpPoolPort1MaskTextBox.Text;
+            router.Port1.DhcpServer.DhcpIpPool.SetPool(ip, mask);
+        }
 
-            var server = new DHCPServer(router.Port1);
-            server.SetPool(ip, mask);
-            foreach (var ipp in server.Pool)
+        private void label38_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            router.Port1.DhcpServer.IsEnabled = !router.Port1.DhcpServer.IsEnabled;
+            if (router.Port1.DhcpServer.IsEnabled)
+                label35.Text = "DHCP server on";
+            else
+                label35.Text = "DHCP server off";
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            router.Port2.DhcpServer.IsEnabled = !router.Port2.DhcpServer.IsEnabled;
+            if (router.Port2.DhcpServer.IsEnabled)
+                label39.Text = "DHCP server on";
+            else
+                label39.Text = "DHCP server off";
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            dhcpPort2RichTextBox.Clear();
+            var ip = new IpV4Address();
+            try
             {
-                dhcpPort1RichTextBox.AppendText(ipp.ToString() + "\n");
+                ip = new IpV4Address(dhcpPoolPort2IPTextBox.Text);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            string mask = dhcpPoolPort2MaskTextBox.Text;
+            router.Port2.DhcpServer.DhcpIpPool.SetPool(ip, mask);
+        }
+
+        //dhcp timer port 1
+        private void button13_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                router.Port1.DhcpServer.IsLeasing = false;
+                return;
+            }
+            else
+            {
+                uint leaseTime;
+                try
+                {
+                    leaseTime = UInt32.Parse(textBox3.Text);
+                }
+                catch (Exception)
+                {
+
+                    return;
+                }
+                router.Port1.DhcpServer.IsLeasing = true;
+                router.Port1.DhcpServer.LeaseTime = leaseTime;
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                textBox3.Enabled = false;
+                textBox3.Text = "";
+            }
+            else
+                textBox3.Enabled = true;
+
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                textBox8.Enabled = false;
+                textBox8.Text = "";
+            }
+            else
+                textBox8.Enabled = true;
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                router.Port2.DhcpServer.IsLeasing = false;
+                return;
+            }
+            else
+            {
+                uint leaseTime;
+                try
+                {
+                    leaseTime = UInt32.Parse(textBox8.Text);
+                }
+                catch (Exception)
+                {
+
+                    return;
+                }
+                router.Port2.DhcpServer.IsLeasing = true;
+                router.Port2.DhcpServer.LeaseTime = leaseTime;
             }
 
+        }
+
+        //manual alloc port1
+        private void button14_Click(object sender, EventArgs e)
+        {
+            var ip = new IpV4Address();
+            var mac = new MacAddress();
+            try
+            {
+                mac = new MacAddress(textBox5.Text);
+                ip = new IpV4Address(textBox6.Text);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            try
+            {
+                router.Port1.DhcpServer.DhcpIpPool.ManualAlloc(mac, ip);
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("IP is already allocated", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                
+            }
+        }
+
+        //manual alloc port2
+        private void button18_Click(object sender, EventArgs e)
+        {
+            var ip = new IpV4Address();
+            var mac = new MacAddress();
+            try
+            {
+                mac = new MacAddress(textBox9.Text);
+                ip = new IpV4Address(textBox10.Text);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            try
+            {
+                router.Port2.DhcpServer.DhcpIpPool.ManualAlloc(mac, ip);
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("IP is already allocated", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            }
         }
 
         private void RemoveRIPv2NetworkButton_Click(object sender, EventArgs e)

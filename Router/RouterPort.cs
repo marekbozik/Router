@@ -14,6 +14,7 @@ namespace Router
     {
         private PacketCommunicator sender;
         private PacketDevice deviceInterface;
+        private DHCPServer dhcpServer;
         private IpV4Address ipAddress;
         private MacAddress mac;
         private string mask;
@@ -29,6 +30,7 @@ namespace Router
                 this.mask = "255.255.255.0";
             this.mac = mac;
             forwarding = false;
+            dhcpServer = new DHCPServer(this);
         }
 
         private string SetMask(string value)
@@ -45,5 +47,6 @@ namespace Router
         public bool Forwarding { get => forwarding; set => forwarding = value; }
         public MacAddress Mac { get => mac; }
         public PacketCommunicator Sender { get => sender; set => sender = value; }
+        internal DHCPServer DhcpServer { get => dhcpServer; set => dhcpServer = value; }
     }
 }

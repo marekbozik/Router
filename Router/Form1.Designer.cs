@@ -139,13 +139,13 @@ namespace Router
             this.button16 = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.dhcpPoolPort2IPTextBox = new System.Windows.Forms.TextBox();
+            this.dhcpPoolPort2MaskTextBox = new System.Windows.Forms.TextBox();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox10 = new System.Windows.Forms.TextBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.richTextBox7 = new System.Windows.Forms.RichTextBox();
+            this.dhcpPort2RichTextBox = new System.Windows.Forms.RichTextBox();
             this.label33 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
@@ -1428,13 +1428,13 @@ namespace Router
             this.tableLayoutPanel16.Controls.Add(this.button16, 2, 2);
             this.tableLayoutPanel16.Controls.Add(this.button17, 2, 4);
             this.tableLayoutPanel16.Controls.Add(this.button18, 2, 6);
-            this.tableLayoutPanel16.Controls.Add(this.textBox4, 0, 2);
-            this.tableLayoutPanel16.Controls.Add(this.textBox7, 1, 2);
+            this.tableLayoutPanel16.Controls.Add(this.dhcpPoolPort2IPTextBox, 0, 2);
+            this.tableLayoutPanel16.Controls.Add(this.dhcpPoolPort2MaskTextBox, 1, 2);
             this.tableLayoutPanel16.Controls.Add(this.textBox8, 0, 4);
             this.tableLayoutPanel16.Controls.Add(this.textBox9, 0, 6);
             this.tableLayoutPanel16.Controls.Add(this.textBox10, 1, 6);
             this.tableLayoutPanel16.Controls.Add(this.checkBox2, 1, 4);
-            this.tableLayoutPanel16.Controls.Add(this.richTextBox7, 0, 7);
+            this.tableLayoutPanel16.Controls.Add(this.dhcpPort2RichTextBox, 0, 7);
             this.tableLayoutPanel16.Location = new System.Drawing.Point(500, 28);
             this.tableLayoutPanel16.Name = "tableLayoutPanel16";
             this.tableLayoutPanel16.RowCount = 8;
@@ -1483,11 +1483,11 @@ namespace Router
             // 
             this.label44.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(55, 113);
+            this.label44.Location = new System.Drawing.Point(42, 113);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(53, 15);
+            this.label44.Size = new System.Drawing.Size(79, 15);
             this.label44.TabIndex = 3;
-            this.label44.Text = "Timer (s)";
+            this.label44.Text = "Lease time (s)";
             // 
             // label45
             // 
@@ -1519,6 +1519,7 @@ namespace Router
             this.button15.TabIndex = 7;
             this.button15.Text = "Change state";
             this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
             // button16
             // 
@@ -1530,6 +1531,7 @@ namespace Router
             this.button16.TabIndex = 8;
             this.button16.Text = "Set pool";
             this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
             // 
             // button17
             // 
@@ -1541,6 +1543,7 @@ namespace Router
             this.button17.TabIndex = 9;
             this.button17.Text = "Set timer";
             this.button17.UseVisualStyleBackColor = true;
+            this.button17.Click += new System.EventHandler(this.button17_Click);
             // 
             // button18
             // 
@@ -1552,24 +1555,25 @@ namespace Router
             this.button18.TabIndex = 10;
             this.button18.Text = "Set client IP";
             this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click);
             // 
-            // textBox4
+            // dhcpPoolPort2IPTextBox
             // 
-            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.dhcpPoolPort2IPTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox4.Location = new System.Drawing.Point(3, 67);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(157, 23);
-            this.textBox4.TabIndex = 11;
+            this.dhcpPoolPort2IPTextBox.Location = new System.Drawing.Point(3, 67);
+            this.dhcpPoolPort2IPTextBox.Name = "dhcpPoolPort2IPTextBox";
+            this.dhcpPoolPort2IPTextBox.Size = new System.Drawing.Size(157, 23);
+            this.dhcpPoolPort2IPTextBox.TabIndex = 11;
             // 
-            // textBox7
+            // dhcpPoolPort2MaskTextBox
             // 
-            this.textBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.dhcpPoolPort2MaskTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox7.Location = new System.Drawing.Point(166, 67);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(157, 23);
-            this.textBox7.TabIndex = 12;
+            this.dhcpPoolPort2MaskTextBox.Location = new System.Drawing.Point(166, 67);
+            this.dhcpPoolPort2MaskTextBox.Name = "dhcpPoolPort2MaskTextBox";
+            this.dhcpPoolPort2MaskTextBox.Size = new System.Drawing.Size(157, 23);
+            this.dhcpPoolPort2MaskTextBox.TabIndex = 12;
             // 
             // textBox8
             // 
@@ -1607,18 +1611,20 @@ namespace Router
             this.checkBox2.TabIndex = 17;
             this.checkBox2.Text = "Infinite";
             this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
-            // richTextBox7
+            // dhcpPort2RichTextBox
             // 
-            this.richTextBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.dhcpPort2RichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel16.SetColumnSpan(this.richTextBox7, 3);
-            this.richTextBox7.Location = new System.Drawing.Point(3, 227);
-            this.richTextBox7.Name = "richTextBox7";
-            this.richTextBox7.Size = new System.Drawing.Size(484, 220);
-            this.richTextBox7.TabIndex = 18;
-            this.richTextBox7.Text = "";
+            this.tableLayoutPanel16.SetColumnSpan(this.dhcpPort2RichTextBox, 3);
+            this.dhcpPort2RichTextBox.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.dhcpPort2RichTextBox.Location = new System.Drawing.Point(3, 227);
+            this.dhcpPort2RichTextBox.Name = "dhcpPort2RichTextBox";
+            this.dhcpPort2RichTextBox.Size = new System.Drawing.Size(484, 220);
+            this.dhcpPort2RichTextBox.TabIndex = 18;
+            this.dhcpPort2RichTextBox.Text = "";
             // 
             // label33
             // 
@@ -1715,11 +1721,12 @@ namespace Router
             // 
             this.label38.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(54, 113);
+            this.label38.Location = new System.Drawing.Point(41, 113);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(53, 15);
+            this.label38.Size = new System.Drawing.Size(79, 15);
             this.label38.TabIndex = 3;
-            this.label38.Text = "Timer (s)";
+            this.label38.Text = "Lease time (s)";
+            this.label38.Click += new System.EventHandler(this.label38_Click);
             // 
             // label40
             // 
@@ -1751,6 +1758,7 @@ namespace Router
             this.button7.TabIndex = 7;
             this.button7.Text = "Change state";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button8
             // 
@@ -1774,6 +1782,7 @@ namespace Router
             this.button13.TabIndex = 9;
             this.button13.Text = "Set timer";
             this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
             // button14
             // 
@@ -1785,6 +1794,7 @@ namespace Router
             this.button14.TabIndex = 10;
             this.button14.Text = "Set client IP";
             this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
             // 
             // dhcpPoolPort1IPTextBox
             // 
@@ -1840,6 +1850,7 @@ namespace Router
             this.checkBox1.TabIndex = 17;
             this.checkBox1.Text = "Infinite";
             this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // dhcpPort1RichTextBox
             // 
@@ -1847,6 +1858,7 @@ namespace Router
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel15.SetColumnSpan(this.dhcpPort1RichTextBox, 3);
+            this.dhcpPort1RichTextBox.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.dhcpPort1RichTextBox.Location = new System.Drawing.Point(3, 227);
             this.dhcpPort1RichTextBox.Name = "dhcpPort1RichTextBox";
             this.dhcpPort1RichTextBox.Size = new System.Drawing.Size(483, 220);
@@ -2037,13 +2049,13 @@ namespace Router
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.Button button17;
         private System.Windows.Forms.Button button18;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox dhcpPoolPort2IPTextBox;
+        private System.Windows.Forms.TextBox dhcpPoolPort2MaskTextBox;
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.TextBox textBox9;
         private System.Windows.Forms.TextBox textBox10;
         private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.RichTextBox richTextBox7;
+        private System.Windows.Forms.RichTextBox dhcpPort2RichTextBox;
     }
 }
 
