@@ -721,6 +721,59 @@ namespace Router
 
                         }).Start();
                     }
+                    else
+                    {
+                        IpV4Address nxh;
+                        try
+                        {
+                            nxh = routingTable.GetNextHop(req.DestinationIp);
+                        }
+                        catch (Exception) { return null; }
+                        if (arpTable.Contains(nxh))
+                        {
+                            return ArpTableReply(req, port);
+                        }
+                        else
+                        {
+                            int o;
+                            try
+                            {
+                                o = routingTable.GetOutInt(req.DestinationIp);
+                            }
+                            catch (Exception) { return null; }
+                            if (o == 1)
+                            {
+                                
+                                    new Thread(() =>
+                                    {
+                                        Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Request,
+                                                                                port1.Mac,
+                                                                                new MacAddress("FF:FF:FF:FF:FF:FF"),
+                                                                                port1.Ip,
+                                                                                nxh
+                                                                                );
+                                        //arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 1);
+                                        port1.Sender.SendPacket(pac);
+                                    }).Start();
+                               
+                            }
+                            else if (o == 2)
+                            {
+                                new Thread(() =>
+                                {
+                                    Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Request,
+                                                                            port2.Mac,
+                                                                            new MacAddress("FF:FF:FF:FF:FF:FF"),
+                                                                            port2.Ip,
+                                                                            nxh
+                                                                            );
+                                    //arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 2);
+                                    port2.Sender.SendPacket(pac);
+
+                                }).Start();
+                            }
+                        }
+                    }
                 }
                 else if (port.Mac == port2.Mac)
                 {
@@ -738,7 +791,106 @@ namespace Router
                             port1.Sender.SendPacket(pac);
                         }).Start();
                     }
+                    else
+                    {
+                        IpV4Address nxh;
+                        try
+                        {
+                            nxh = routingTable.GetNextHop(req.DestinationIp);
+                        }
+                        catch (Exception) { return null; }
+                        if (arpTable.Contains(nxh))
+                        {
+                            return ArpTableReply(req, port);
+                        }
+                        else
+                        {
+                            int o;
+                            try
+                            {
+                                o = routingTable.GetOutInt(req.DestinationIp);
+                            }
+                            catch (Exception) { return null; }
+                            if (o == 1)
+                            {
+                                
+                                    new Thread(() =>
+                                    {
+                                        Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Request,
+                                                                                port1.Mac,
+                                                                                new MacAddress("FF:FF:FF:FF:FF:FF"),
+                                                                                port1.Ip,
+                                                                                nxh
+                                                                                );
+                                        //arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 1);
+                                        port1.Sender.SendPacket(pac);
+                                    }).Start();
+                                
+                            }
+                            else if (o == 2)
+                            {
+                                new Thread(() =>
+                                {
+                                    Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Request,
+                                                                            port2.Mac,
+                                                                            new MacAddress("FF:FF:FF:FF:FF:FF"),
+                                                                            port2.Ip,
+                                                                            nxh
+                                                                            );
+                                    //arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 2);
+                                    port2.Sender.SendPacket(pac);
+
+                                }).Start();
+                            }
+                        }
+                    }
                 }
+                //else
+                //{
+                    
+                //}
+                //else 
+                //{
+                //    int o;
+                //    try
+                //    {
+                //        o = routingTable.GetOutInt(req.DestinationIp);
+                //    }
+                //    catch (Exception) { return null; }
+                //    if (o == 1)
+                //    {
+                //        if (IpV4.IsInSubnet(port1.Ip, port1.Mask, req.DestinationIp))
+                //        {
+                //            new Thread(() =>
+                //            {
+                //                Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Request,
+                //                                                        port1.Mac,
+                //                                                        new MacAddress("FF:FF:FF:FF:FF:FF"),
+                //                                                        port1.Ip,
+                //                                                        req.DestinationIp
+                //                                                       );
+                //                arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 1);
+                //                port1.Sender.SendPacket(pac);
+                //            }).Start();
+                //        }
+                //    }
+                //    else if(o == 2)
+                //    {
+                //        new Thread(() =>
+                //        {
+                //            Packet pac = ArpPacket.ArpPacketBuilder(ArpOperation.Request,
+                //                                                    port2.Mac,
+                //                                                    new MacAddress("FF:FF:FF:FF:FF:FF"),
+                //                                                    port2.Ip,
+                //                                                    req.DestinationIp
+                //                                                   );
+                //            arpTable.RegisterArpRequest(req.DestinationIp, req.SourceIp, req.SourceMacAddress, 2);
+                //            port2.Sender.SendPacket(pac);
+
+                //        }).Start();
+                //    }
+
+                //}
             }
 
             return null;
